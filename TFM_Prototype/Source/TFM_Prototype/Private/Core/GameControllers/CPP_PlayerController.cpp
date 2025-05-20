@@ -4,7 +4,7 @@
 #include "Actors/Cell/CPP_Cell.h"
 #include "Utils/FunctionLibraries/CPP_CellFunctionLibrary.h"
 #include "Utils/Macros/Macros.h"
-#include "Core/Subsystems/CPP_SS_CellsManager.h"
+#include "Core/Subsystems/Managers/CPP_SS_CellsManager.h"
 
 
 

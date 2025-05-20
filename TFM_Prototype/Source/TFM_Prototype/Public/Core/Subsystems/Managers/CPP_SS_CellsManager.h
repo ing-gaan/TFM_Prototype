@@ -12,6 +12,7 @@ class ACPP_Cell;
 class UCPP_DA_GameSettings;
 class UCPP_DA_GridSettings;
 class ACPP_PlayerController;
+class UCPP_SS_InputEventBus;
 
 
 
@@ -31,7 +32,7 @@ public:/*Functions*/
 	void ConfigureManager(const UCPP_DA_GameSettings* GameSettingsDA,
 		const UCPP_DA_GridSettings* GridSettingsDA, const ACPP_PlayerController* PlayerController);
 
-	void SpawnNewCell();
+	void DuplicateCell();
 	
 
 
@@ -52,21 +53,32 @@ private:/*Properties*/
 	UPROPERTY()
 	TArray<const ACPP_Cell*> CellsBirthOrder;
 
-	/*UPROPERTY()
-	ACPP_Cell* FirstCell { nullptr };*/
+	UPROPERTY()
+	UCPP_SS_InputEventBus* InputEventBus;
 
 	UPROPERTY()
 	const ACPP_PlayerController* PlayerContller { nullptr };
 
-
+	UPROPERTY()
+	const ACPP_Cell* ClickdCell { nullptr };
 
 
 private:/*Functions*/
 
+	UFUNCTION()
+	void ClickOnCellEvent(const ACPP_Cell* ClickedCell);
+
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
+
+	void InitEventBuses();
+	void RegisterEventFunctions() const;
+	void UnRegisterEventFunctions() const;
+
 	void AddFirstCell();
 	ACPP_Cell* SpawnFirstCell();
-	void AddCellSpawned(const ACPP_Cell* NewCell);
+	FVector2f AddCellSpawned(const ACPP_Cell* NewCell);
 
-
+	
 
 };

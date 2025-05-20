@@ -5,6 +5,9 @@
 
 
 
+const FVector2f UCPP_CellFunctionLibrary::BadAxialLocation{ FVector2f(-1, -1) };
+
+
 /**
  * @brief Calculates the world location/rotation of an relative location
 	based on player location/rotation 
@@ -169,5 +172,5 @@ FVector2f UCPP_CellFunctionLibrary::GetAxialLocationByShortName(ECPP_Neighbours 
 		return FVector2f(1, -1);
 	}
 
-	return FVector2f(-1, -1);
+	return BadAxialLocation;
 }

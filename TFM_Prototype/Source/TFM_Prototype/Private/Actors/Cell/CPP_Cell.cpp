@@ -19,7 +19,7 @@ void ACPP_Cell::BeginPlay()
 {
 	Super::BeginPlay();
 	PlayerController = Cast<ACPP_PlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-	checkf(PlayerController, TEXT("***> No PlayerController (nullptr) <***"));
+	checkf(PlayerController, TEXT("***> No PlayerController. Cast fail (nullptr) <***"));
 }
 
 

@@ -9,6 +9,8 @@
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FClickOnCellEvent, const ACPP_Cell*, Cell);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FClickOnGridEvent, int32, StaticMeshInstance);
+
 
 
 
@@ -27,6 +29,8 @@ public: /*Properties*/
 	UPROPERTY(BlueprintAssignable)
 	FClickOnCellEvent ClickOnCellEventDelegate;
 
+	UPROPERTY(BlueprintAssignable)
+	FClickOnGridEvent ClickOnGridEventDelegate;
 
 
 
@@ -40,18 +44,14 @@ public: /*Functions*/
 		ClickOnCellEventDelegate.Broadcast(Cell);
 	}
 
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void RaiseClickOnGridEvent(int32 StaticMeshInstance)
+	{
+		ClickOnGridEventDelegate.Broadcast(StaticMeshInstance);
+	}
 
 
 
-protected:
-
-
-
-
-
-
-
-private:
 
 
 

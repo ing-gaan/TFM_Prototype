@@ -98,6 +98,6 @@ protected:/*Functions*/
 	/*void SpawnFirstCell();
 	void AddCellSpawned(const ACPP_Cell* NewCell);*/
 
-	void AddNewFreeNeighbours(const ACPP_Cell* NewCell);
+	//void AddNewFreeNeighbours(const ACPP_Cell* NewCell);
 
 };
