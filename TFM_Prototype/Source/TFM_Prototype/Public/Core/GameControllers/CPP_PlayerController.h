@@ -79,12 +79,17 @@ protected:/*Properties*/
 	UPROPERTY()
 	UCPP_SS_CellsManager* CellsManager { nullptr };
 
-	
+	FTimerDelegate TimerDelegate;
+	FTimerHandle TimerHandle;
+
 
 protected:/*Functions*/
 
 	/*UFUNCTION(BlueprintCallable)
 	void AddFirstCell();*/
+
+	UFUNCTION()
+	void StartCellsManager();
 
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -95,9 +100,14 @@ protected:/*Functions*/
 	void RegisterEventFunctions() const;
 	void UnRegisterEventFunctions() const;
 
+	
+
 	/*void SpawnFirstCell();
 	void AddCellSpawned(const ACPP_Cell* NewCell);*/
 
 	//void AddNewFreeNeighbours(const ACPP_Cell* NewCell);
+
+
+
 
 };

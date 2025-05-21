@@ -20,7 +20,7 @@ public:
 	int InitGridElementsNum{ 10 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General settings")
-	int NewGridElementsNum{ 10 };
+	int NewExtraGridElementsNum{ 10 };
 
 
 

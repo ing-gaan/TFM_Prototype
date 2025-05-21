@@ -24,10 +24,22 @@ void ACPP_PlayerController::BeginPlay()
 
 
 	//CellsManager = NewObject<UCPP_SS_CellsManager>();
-	CellsManager->ConfigureManager(GameSettings, GridSettings, this);
+	
 	//CellsManager->AddFirstCell();
 	//AddFirstCell();
+
+
+	TimerDelegate.BindUFunction(this, FName("StartCellsManager"));
+	GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, GameSettings->StartCellsManagerAfter, false);
 }
+
+
+
+void ACPP_PlayerController::StartCellsManager()
+{
+	CellsManager->StartManager(GameSettings, GridSettings, this);
+}
+
 
 
 void ACPP_PlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)

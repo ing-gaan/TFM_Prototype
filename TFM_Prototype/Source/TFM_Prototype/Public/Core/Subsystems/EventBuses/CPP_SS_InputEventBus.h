@@ -9,7 +9,7 @@
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FClickOnCellEvent, const ACPP_Cell*, Cell);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FClickOnGridEvent, int32, StaticMeshInstance);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FClickOnGridEvent, FVector2f, AxialLocation);
 
 
 
@@ -45,9 +45,9 @@ public: /*Functions*/
 	}
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void RaiseClickOnGridEvent(int32 StaticMeshInstance)
+	FORCEINLINE void RaiseClickOnGridEvent(FVector2f AxialLocation)
 	{
-		ClickOnGridEventDelegate.Broadcast(StaticMeshInstance);
+		ClickOnGridEventDelegate.Broadcast(AxialLocation);
 	}
 
 

@@ -13,6 +13,9 @@ class UCPP_DA_GameSettings;
 class UCPP_DA_GridSettings;
 class ACPP_PlayerController;
 class UCPP_SS_InputEventBus;
+class UCPP_SS_CellsManagerEventBus;
+
+
 
 
 
@@ -29,7 +32,7 @@ public:/*Properties*/
 
 public:/*Functions*/
 
-	void ConfigureManager(const UCPP_DA_GameSettings* GameSettingsDA,
+	void StartManager(const UCPP_DA_GameSettings* GameSettingsDA,
 		const UCPP_DA_GridSettings* GridSettingsDA, const ACPP_PlayerController* PlayerController);
 
 	void DuplicateCell();
@@ -57,6 +60,9 @@ private:/*Properties*/
 	UCPP_SS_InputEventBus* InputEventBus;
 
 	UPROPERTY()
+	UCPP_SS_CellsManagerEventBus* CellsManagerEventBus;
+
+	UPROPERTY()
 	const ACPP_PlayerController* PlayerContller { nullptr };
 
 	UPROPERTY()
@@ -67,6 +73,8 @@ private:/*Functions*/
 
 	UFUNCTION()
 	void ClickOnCellEvent(const ACPP_Cell* ClickedCell);
+
+	
 
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;

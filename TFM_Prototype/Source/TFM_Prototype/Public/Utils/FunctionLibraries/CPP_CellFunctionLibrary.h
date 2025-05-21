@@ -21,7 +21,7 @@ class TFM_PROTOTYPE_API UCPP_CellFunctionLibrary : public UBlueprintFunctionLibr
 public:
 
 	static constexpr float sin60{ 0.86602540378443864676372317075294 };
-	static const FVector2f BadAxialLocation;
+	static const FVector2f BadAxialLocation; //(INT_MAX, INT_MAX)
 
 
 	UFUNCTION(BlueprintCallable)

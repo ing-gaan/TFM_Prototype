@@ -5,7 +5,7 @@
 
 
 
-const FVector2f UCPP_CellFunctionLibrary::BadAxialLocation{ FVector2f(-1, -1) };
+const FVector2f UCPP_CellFunctionLibrary::BadAxialLocation{ FVector2f(static_cast<float>(INT_MAX), static_cast<float>(INT_MAX)) };
 
 
 /**
