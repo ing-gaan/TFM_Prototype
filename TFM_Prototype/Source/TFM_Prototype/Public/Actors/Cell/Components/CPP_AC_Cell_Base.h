@@ -4,11 +4,13 @@
 #include "Components/ActorComponent.h"
 
 
-
 #include "CPP_AC_Cell_Base.generated.h"
 
 
+
+
 class ACPP_Cell;
+class UCPP_SS_InputEventBus;
 
 
 
@@ -27,7 +29,8 @@ protected:/*Properties*/
 	UPROPERTY()
 	ACPP_Cell* OwnerCell{ nullptr };
 
-
+	UPROPERTY()
+	UCPP_SS_InputEventBus* InputEventBus;
 
 
 protected:/*Functions*/

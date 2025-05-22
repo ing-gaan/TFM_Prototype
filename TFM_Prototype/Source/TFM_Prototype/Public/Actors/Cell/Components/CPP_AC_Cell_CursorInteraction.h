@@ -32,6 +32,9 @@ protected:/*Properties*/
 	UMaterialInstanceDynamic* MaterialInstance;
 
 
+
+
+
 protected:/*Functions*/
 
 	UFUNCTION()
@@ -53,6 +56,6 @@ protected:/*Functions*/
 
 	virtual void InitComponent() override;
 
-
+	void SetMaterialColorParameter(const FLinearColor& MaterialColor);
 
 };
