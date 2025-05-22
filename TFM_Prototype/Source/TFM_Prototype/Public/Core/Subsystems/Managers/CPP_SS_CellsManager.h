@@ -35,8 +35,7 @@ public:/*Functions*/
 	void StartManager(const UCPP_DA_GameSettings* GameSettingsDA,
 		const UCPP_DA_GridSettings* GridSettingsDA, const ACPP_PlayerController* PlayerController);
 
-	void DuplicateCell();
-	
+		
 
 
 
@@ -74,8 +73,10 @@ private:/*Functions*/
 	UFUNCTION()
 	void ClickOnCellEvent(const ACPP_Cell* ClickedCell);
 
-	
+	UFUNCTION()
+	void ClickOnGridEvent(FVector2f AxialLocation);
 
+	
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 
@@ -83,9 +84,13 @@ private:/*Functions*/
 	void RegisterEventFunctions() const;
 	void UnRegisterEventFunctions() const;
 
+	void DuplicateCell(FVector2f AxialLocation);
+	ACPP_Cell* SpawnCell(FVector CellLocation, FRotator CellRotation, TSubclassOf<ACPP_Cell> CellClass);
+	void ConfigureNewCell(ACPP_Cell* NewCell, FVector2f AxialLocation);
+
 	void AddFirstCell();
 	ACPP_Cell* SpawnFirstCell();
-	FVector2f AddCellSpawned(const ACPP_Cell* NewCell);
+	void AddCellSpawned(const ACPP_Cell* NewCell);
 
 	
 

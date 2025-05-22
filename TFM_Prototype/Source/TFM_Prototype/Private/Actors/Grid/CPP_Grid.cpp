@@ -132,8 +132,10 @@ void ACPP_Grid::FinishDuplicateCellEvent(FVector2f SpawnAxialLocation)
 {
 	//PRINT("Cell spawned");
 	FreeNeighbours.Remove(SpawnAxialLocation);
+	UsedAxialLocations.Emplace(SpawnAxialLocation);
 	AddNewFreeNeighbours(SpawnAxialLocation);
 
+	SetGridVisibility(false);
 }
 
 

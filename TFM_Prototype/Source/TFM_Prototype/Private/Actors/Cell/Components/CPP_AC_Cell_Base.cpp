@@ -9,15 +9,20 @@ UCPP_AC_Cell_Base::UCPP_AC_Cell_Base()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
+
 void UCPP_AC_Cell_Base::BeginPlay()
 {
 	Super::BeginPlay();
+
+	InitComponent();
 }
+
 
 void UCPP_AC_Cell_Base::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 }
+
 
 void UCPP_AC_Cell_Base::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {

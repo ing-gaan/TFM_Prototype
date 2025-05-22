@@ -38,10 +38,11 @@ public: /*Properties*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	const UCPP_DA_GridSettings* GridSettings { nullptr };
 	
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	const UCPP_DA_CellType* CellType;
 
-
+	UPROPERTY()
+	UStaticMeshComponent* CellStaticMeshComponent{ nullptr };
 
 
 
@@ -80,15 +81,21 @@ protected: /*Functions*/
 	UFUNCTION(BlueprintCallable)
 	void SetRelativeLocation();
 
+	
 
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float DeltaTime) override;
 
+	void RegisterEventFunctions() const;
+	void UnRegisterEventFunctions() const;
+
+	void InitCell();
+	void LoadComponents();
+
 	void MoveCell();
 
 
-
-
+	
 	
 };

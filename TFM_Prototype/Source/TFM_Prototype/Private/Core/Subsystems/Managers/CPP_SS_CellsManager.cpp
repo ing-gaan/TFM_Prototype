@@ -50,6 +50,8 @@ void UCPP_SS_CellsManager::RegisterEventFunctions() const
 {
 	InputEventBus->ClickOnCellEventDelegate.AddUniqueDynamic(
 		this, &UCPP_SS_CellsManager::ClickOnCellEvent);
+	InputEventBus->ClickOnGridEventDelegate.AddUniqueDynamic(
+		this, &UCPP_SS_CellsManager::ClickOnGridEvent);
 
 }
 
@@ -58,6 +60,8 @@ void UCPP_SS_CellsManager::UnRegisterEventFunctions() const
 {
 	InputEventBus->ClickOnCellEventDelegate.RemoveDynamic(
 		this, &UCPP_SS_CellsManager::ClickOnCellEvent);
+	InputEventBus->ClickOnGridEventDelegate.RemoveDynamic(
+		this, &UCPP_SS_CellsManager::ClickOnGridEvent);
 
 }
 
@@ -69,7 +73,7 @@ void UCPP_SS_CellsManager::StartManager(const UCPP_DA_GameSettings* GameSettings
 	GameSettings = GameSettingsDA;
 	GridSettings = GridSettingsDA;
 	PlayerContller = PlayerController;
-		
+	CellsMap.Empty();
 	AddFirstCell();
 }
 
@@ -78,7 +82,14 @@ void UCPP_SS_CellsManager::StartManager(const UCPP_DA_GameSettings* GameSettings
 void UCPP_SS_CellsManager::ClickOnCellEvent(const ACPP_Cell* ClickedCell)
 {
 	ClickdCell = ClickedCell;
-	PRINT("Receive clicked cell");
+	//PRINT("Receive clicked cell");
+}
+
+
+
+void UCPP_SS_CellsManager::ClickOnGridEvent(FVector2f AxialLocation)
+{
+	DuplicateCell(AxialLocation);
 }
 
 
@@ -90,7 +101,7 @@ void UCPP_SS_CellsManager::AddFirstCell()
 		return;
 	}
 
-	AddCellSpawned( SpawnFirstCell() );
+	AddCellSpawned(SpawnFirstCell());
 	return;
 }
 
@@ -102,28 +113,67 @@ ACPP_Cell* UCPP_SS_CellsManager::SpawnFirstCell()
 	Location.Z = GameSettings->DefaultHeightFromGround;
 	FRotator Rotation = FRotator::ZeroRotator;
 	TSubclassOf<ACPP_Cell> FirstCellClass = GameSettings->FirstCellBPClass;
-	FActorSpawnParameters SpawnParam;
-	SpawnParam.Name = FName(TEXT("FIRST_CELL"));
 
-	checkf(GetWorld(), TEXT("***> No GetWorld (nullptr) <***"));
-	ACPP_Cell* FirstCell = GetWorld()->SpawnActor<ACPP_Cell>(FirstCellClass, Location, Rotation, SpawnParam);
-
-	if (!FirstCell)
-	{
-		checkf(FirstCell, TEXT("***> No OriginCell (nullptr) <***"));
-		return nullptr;
-	}
-
-	FVector2f CellAxialLocation = GridSettings->FirstAxialLocation;
-	const FString StrName = UCPP_CellFunctionLibrary::GetCellOutlinerLabel(CellAxialLocation);
-	FirstCell->SetActorLabel(StrName);
-	FirstCell->SetAxialLocation(CellAxialLocation);
+	ACPP_Cell* FirstCell = SpawnCell(Location, Rotation, FirstCellClass);
+	FVector2f FirstCellAxialLocation = GridSettings->FirstAxialLocation;
+	ConfigureNewCell(FirstCell, FirstCellAxialLocation);
 
 	return FirstCell;
 }
 
 
-FVector2f UCPP_SS_CellsManager::AddCellSpawned(const ACPP_Cell* NewCell)
+
+void UCPP_SS_CellsManager::DuplicateCell(FVector2f AxialLocation)
+{	
+	float Distance = GridSettings->DistanceBetweenNeighbours;
+	FVector2f OriginAxLoc = FVector2f::Zero();
+	FVector2D RelativeLoc;
+	UCPP_CellFunctionLibrary::GetRelativeLocationFromAnOrigin(Distance, OriginAxLoc, AxialLocation, RelativeLoc);
+	
+	FVector Location;
+	Location.X = RelativeLoc.X;
+	Location.Y = RelativeLoc.Y;
+	Location.Z = GameSettings->DefaultHeightFromGround;	
+	FRotator Rotation = FRotator::ZeroRotator;
+	TSubclassOf<ACPP_Cell> NewCellClass = ClickdCell->GetClass();
+
+	ACPP_Cell* CellSpawned = SpawnCell(Location, Rotation, NewCellClass);
+	ConfigureNewCell(CellSpawned, AxialLocation);
+
+	AddCellSpawned(CellSpawned);
+}
+
+
+
+ACPP_Cell* UCPP_SS_CellsManager::SpawnCell(FVector CellLocation, FRotator CellRotation, TSubclassOf<ACPP_Cell> CellClass)
+{
+	checkf(GetWorld(), TEXT("***> No GetWorld (nullptr) <***"));
+
+	FActorSpawnParameters SpawnParam;
+	SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	ACPP_Cell* CellSpawned = GetWorld()->SpawnActor<ACPP_Cell>(CellClass, CellLocation, CellRotation, SpawnParam);
+	checkf(CellSpawned, TEXT("***> No CellSpawned (nullptr) <***"));
+
+	return CellSpawned;
+}
+
+
+void UCPP_SS_CellsManager::ConfigureNewCell(ACPP_Cell* NewCell, FVector2f AxialLocation)
+{
+	const FString StrName = UCPP_CellFunctionLibrary::GetCellOutlinerLabel(AxialLocation);
+	NewCell->SetActorLabel(StrName);
+	NewCell->SetAxialLocation(AxialLocation);
+	
+	//NewCell->ChangeCellType(OwnerCell->CellType);
+	//CellSpawned->CurrentClickedCell = OwnerCell->CurrentClickedCell;
+	//CellSpawned->ChangeCellCursorState(ECPP_CursorStateEnum::Init);
+	//OwnerCell->PlayerController->AddCellSpawned(CellSpawned);
+	//GameEventBus->RaiseCellSpawnedEvent(CellSpawned);
+}
+
+
+
+void UCPP_SS_CellsManager::AddCellSpawned(const ACPP_Cell* NewCell)
 {
 	FVector2f NewAxialLoc = NewCell->GetAxialLocation();
 	const ACPP_Cell** Cellptr = CellsMap.Find(NewAxialLoc);
@@ -133,15 +183,14 @@ FVector2f UCPP_SS_CellsManager::AddCellSpawned(const ACPP_Cell* NewCell)
 		if (*Cellptr != nullptr)
 		{
 			PRINT("ERROR: EXIST A CELL IN AXIAL LOCATION");
-			return UCPP_CellFunctionLibrary::BadAxialLocation;
+			return;// UCPP_CellFunctionLibrary::BadAxialLocation;
 		}
 		CellsMap[NewAxialLoc] = NewCell;
-		return UCPP_CellFunctionLibrary::BadAxialLocation;
+		return;// UCPP_CellFunctionLibrary::BadAxialLocation;
 	}
 	CellsMap.Emplace(NewAxialLoc, NewCell);
 	CellsBirthOrder.Add(NewCell);
-	
-	
+		
 	CellsManagerEventBus->RaiseFinishDuplicateCellEvent(NewAxialLoc);
-	return NewAxialLoc;
+	//return NewAxialLoc;
 }

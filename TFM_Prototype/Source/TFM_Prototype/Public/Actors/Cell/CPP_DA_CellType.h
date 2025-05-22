@@ -19,12 +19,27 @@ class TFM_PROTOTYPE_API UCPP_DA_CellType : public UPrimaryDataAsset
 public:/*Properties*/
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Basics")
-	const UStaticMesh* CellStaticMesh{ nullptr };
+	UStaticMesh* CellStaticMesh{ nullptr };
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Colors")
+	FLinearColor NormalColor { FLinearColor::White };
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Colors")
+	FLinearColor CursorOverColor{ FLinearColor::White };
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Colors")
+	FLinearColor ClickedColor{ FLinearColor::White };
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Materials")
+	UMaterial* CellNormalMaterial { nullptr };
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Materials")
+	FName MaterialColorParameterName { };
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Properties|Necessary actor components")
 	TSet<TSubclassOf<UCPP_AC_Cell_Base>> NecessaryCellComponents;
-
-
+	
+	
 
 public:/*Functions*/
 	
