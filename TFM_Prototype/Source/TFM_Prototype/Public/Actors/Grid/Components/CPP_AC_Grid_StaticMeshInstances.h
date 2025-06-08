@@ -46,10 +46,10 @@ protected:/*Properties*/
 	UPROPERTY()
 	const ACPP_Grid* GridOwner;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY()
 	const UCPP_DA_GridSettings* GridSettings;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY()
 	const UCPP_DA_GameSettings* GameSettings { nullptr };
 
 	UPROPERTY()

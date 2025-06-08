@@ -79,10 +79,10 @@ protected:/*Fucntions*/
 	void ClickOnCellEvent(const ACPP_Cell* NewClickedCell);
 
 	UFUNCTION()
-	void BeginDuplicateCellEvent();
+	void BeginCellDivisionEvent();
 
 	UFUNCTION()
-	void FinishDuplicateCellEvent(FVector2f SpawnAxialLocation);
+	void FinishCellDivisionEvent(FVector2f SpawnAxialLocation);
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;

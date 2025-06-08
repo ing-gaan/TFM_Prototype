@@ -14,6 +14,8 @@ class UCPP_DA_GridSettings;
 class ACPP_PlayerController;
 class UCPP_SS_InputEventBus;
 class UCPP_SS_CellsManagerEventBus;
+class UCPP_SS_UIEventBus;
+class UCPP_DA_CellType;
 
 
 
@@ -32,8 +34,7 @@ public:/*Properties*/
 
 public:/*Functions*/
 
-	void StartManager(const UCPP_DA_GameSettings* GameSettingsDA,
-		const UCPP_DA_GridSettings* GridSettingsDA, const ACPP_PlayerController* PlayerController);
+	void StartManager(const ACPP_PlayerController* PlayerController);
 
 		
 
@@ -62,6 +63,9 @@ private:/*Properties*/
 	UCPP_SS_CellsManagerEventBus* CellsManagerEventBus;
 
 	UPROPERTY()
+	UCPP_SS_UIEventBus* UIEventBus;
+
+	UPROPERTY()
 	const ACPP_PlayerController* PlayerContller { nullptr };
 
 	UPROPERTY()
@@ -76,6 +80,9 @@ private:/*Functions*/
 	UFUNCTION()
 	void ClickOnGridEvent(FVector2f AxialLocation);
 
+	UFUNCTION()
+	void FinishCellDifferentiationEvent(const UCPP_DA_CellType* NewCellType);
+
 	
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
@@ -83,13 +90,13 @@ private:/*Functions*/
 	void InitEventBuses();
 	void RegisterEventFunctions() const;
 	void UnRegisterEventFunctions() const;
-
-	void DuplicateCell(FVector2f AxialLocation);
-	ACPP_Cell* SpawnCell(FVector CellLocation, FRotator CellRotation, TSubclassOf<ACPP_Cell> CellClass);
-	void ConfigureNewCell(ACPP_Cell* NewCell, FVector2f AxialLocation);
-
+	
 	void AddFirstCell();
 	ACPP_Cell* SpawnFirstCell();
+	ACPP_Cell* SpawnCell(FVector CellLocation, FRotator CellRotation, TSubclassOf<ACPP_Cell> CellClass);
+	void ConfigureFirstCell(ACPP_Cell* NewCell, FVector2f AxialLocation);
+	
+	void DuplicateCell(FVector2f AxialLocation);		
 	void AddCellSpawned(const ACPP_Cell* NewCell);
 
 	

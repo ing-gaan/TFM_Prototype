@@ -4,28 +4,36 @@
 #include "Components/ActorComponent.h"
 
 
-#include "UCPP_AC_Grid_Base.generated.h"
+#include "CPP_AC_Grid_Base.generated.h"
 
 
 class ACPP_Grid;
+class UCPP_DA_GameSettings;
+class UCPP_DA_GridSettings;
+
 
 
 UCLASS(Abstract, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
-class TFM_PROTOTYPE_API UUCPP_AC_Grid_Base : public UActorComponent
+class TFM_PROTOTYPE_API UCPP_AC_Grid_Base : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 
-	UUCPP_AC_Grid_Base();
+	UCPP_AC_Grid_Base();
 
 
 
 protected:/*Properties*/
+
 	UPROPERTY()
 	ACPP_Grid* OwnerGrid{ nullptr };
 
+	UPROPERTY()
+	const UCPP_DA_GameSettings* GameSettings{ nullptr };
 
+	UPROPERTY()
+	const UCPP_DA_GridSettings* GridSettings{ nullptr };
 
 
 protected:/*Functions*/

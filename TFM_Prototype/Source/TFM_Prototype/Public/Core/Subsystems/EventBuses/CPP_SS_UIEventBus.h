@@ -8,8 +8,11 @@
 #include "CPP_SS_UIEventBus.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginDuplicateCellEvent);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginTransformCellEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginCellDivisionEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginCellDifferentiationEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFinishCellDifferentiationEvent, const UCPP_DA_CellType*, NewCellType);
+
+
 
 
 UCLASS()
@@ -21,12 +24,13 @@ class TFM_PROTOTYPE_API UCPP_SS_UIEventBus : public UGameInstanceSubsystem
 public: /*Properties*/
 
 	UPROPERTY(BlueprintAssignable)
-	FBeginDuplicateCellEvent BeginDuplicateCellEventDelegate;
+	FBeginCellDivisionEvent BeginCellDivisionEventDelegate;
 
 	UPROPERTY(BlueprintAssignable)
-	FBeginTransformCellEvent BeginTransformCellEventDelegate;
+	FBeginCellDifferentiationEvent BeginCellDifferentiationEventDelegate;
 
-	
+	UPROPERTY(BlueprintAssignable)
+	FFinishCellDifferentiationEvent FinishCellDifferentiationEventDelegate;
 
 
 
@@ -34,18 +38,22 @@ public: /*Properties*/
 public: /*Functions*/
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void RaiseBeginDuplicateCellEvent()
+	FORCEINLINE void RaiseBeginCellDivisionEvent()
 	{
-		BeginDuplicateCellEventDelegate.Broadcast();
+		BeginCellDivisionEventDelegate.Broadcast();
 	}
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void RaiseBeginTransformCellEvent()
+	FORCEINLINE void RaiseBeginCellDifferentiationEvent()
 	{
-		BeginTransformCellEventDelegate.Broadcast();
+		BeginCellDifferentiationEventDelegate.Broadcast();
 	}
 	
-	
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void RaiseFinishCellDifferentiationEvent(const UCPP_DA_CellType* NewCellType)
+	{
+		FinishCellDifferentiationEventDelegate.Broadcast(NewCellType);
+	}
 	
 
 

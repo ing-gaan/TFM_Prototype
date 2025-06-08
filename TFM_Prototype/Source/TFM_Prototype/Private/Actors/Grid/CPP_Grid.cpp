@@ -80,11 +80,11 @@ void ACPP_Grid::RegisterEventFunctions()
 	InputEventBus->ClickOnCellEventDelegate.AddUniqueDynamic(
 		this, &ACPP_Grid::ClickOnCellEvent);
 
-	UIEventBus->BeginDuplicateCellEventDelegate.AddUniqueDynamic(
-		this, &ACPP_Grid::BeginDuplicateCellEvent);
+	UIEventBus->BeginCellDivisionEventDelegate.AddUniqueDynamic(
+		this, &ACPP_Grid::BeginCellDivisionEvent);
 
-	CellsManagerEventBus->FinishDuplicateCellEventDelegate.AddUniqueDynamic(
-		this, &ACPP_Grid::FinishDuplicateCellEvent);
+	CellsManagerEventBus->FinishCellDivisionEventDelegate.AddUniqueDynamic(
+		this, &ACPP_Grid::FinishCellDivisionEvent);
 }
 
 
@@ -93,11 +93,11 @@ void ACPP_Grid::UnRegisterEventFunctions()
 	InputEventBus->ClickOnCellEventDelegate.RemoveDynamic(
 		this, &ACPP_Grid::ClickOnCellEvent);
 
-	UIEventBus->BeginDuplicateCellEventDelegate.RemoveDynamic(
-		this, &ACPP_Grid::BeginDuplicateCellEvent);
+	UIEventBus->BeginCellDivisionEventDelegate.RemoveDynamic(
+		this, &ACPP_Grid::BeginCellDivisionEvent);
 
-	CellsManagerEventBus->FinishDuplicateCellEventDelegate.RemoveDynamic(
-		this, &ACPP_Grid::FinishDuplicateCellEvent);
+	CellsManagerEventBus->FinishCellDivisionEventDelegate.RemoveDynamic(
+		this, &ACPP_Grid::FinishCellDivisionEvent);
 }
 
 
@@ -121,14 +121,14 @@ void ACPP_Grid::ClickOnCellEvent(const ACPP_Cell* NewClickedCell)
 }
 
 
-void ACPP_Grid::BeginDuplicateCellEvent()
+void ACPP_Grid::BeginCellDivisionEvent()
 {
 	StaticMeshInstancesComponent->SetInstancesTransforms(FreeNeighbours);
 	SetGridVisibility(true);
 }
 
 
-void ACPP_Grid::FinishDuplicateCellEvent(FVector2f SpawnAxialLocation)
+void ACPP_Grid::FinishCellDivisionEvent(FVector2f SpawnAxialLocation)
 {
 	//PRINT("Cell spawned");
 	FreeNeighbours.Remove(SpawnAxialLocation);

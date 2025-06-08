@@ -42,6 +42,21 @@ void UCPP_AC_Cell_CursorInteraction::UnRegisterEventFunctions() const
 }
 
 
+
+void UCPP_AC_Cell_CursorInteraction::InitComponent()
+{
+	Super::InitComponent();
+
+	UMaterial* Material = OwnerCell->CellType->CellNormalMaterial;
+	MaterialInstance = UMaterialInstanceDynamic::Create(Material, nullptr);
+	checkf(MaterialInstance, TEXT("*****> No MaterialInstance (nullptr) <*****"));
+
+	OwnerCell->CellStaticMeshComponent->SetMaterial(0, MaterialInstance);
+	SetMaterialColorParameter(OwnerCell->CellType->NormalColor);
+}
+
+
+
 void UCPP_AC_Cell_CursorInteraction::BeginCursorOver(AActor* TouchedActor)
 {
 	SetMaterialColorParameter(OwnerCell->CellType->CursorOverColor);
@@ -61,19 +76,6 @@ void UCPP_AC_Cell_CursorInteraction::Clicked(AActor* TouchedActor, FKey ButtonPr
 	InputEventBus->RaiseClickOnCellEvent(OwnerCell);
 }
 
-
-
-void UCPP_AC_Cell_CursorInteraction::InitComponent()
-{
-	Super::InitComponent();
-
-	UMaterial* Material = OwnerCell->CellType->CellNormalMaterial;
-	MaterialInstance = UMaterialInstanceDynamic::Create(Material, nullptr);
-	checkf(MaterialInstance, TEXT("*****> No MaterialInstance (nullptr) <*****"));
-
-	OwnerCell->CellStaticMeshComponent->SetMaterial(0, MaterialInstance);		
-	SetMaterialColorParameter(OwnerCell->CellType->NormalColor);
-}
 
 
 void UCPP_AC_Cell_CursorInteraction::SetMaterialColorParameter(const FLinearColor& MaterialColor)

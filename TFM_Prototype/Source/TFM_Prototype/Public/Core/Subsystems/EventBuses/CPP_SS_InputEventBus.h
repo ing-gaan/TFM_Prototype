@@ -28,16 +28,18 @@ public: /*Properties*/
 
 	UPROPERTY(BlueprintAssignable)
 	FClickOnCellEvent ClickOnCellEventDelegate;
+	
 
 	UPROPERTY(BlueprintAssignable)
 	FClickOnGridEvent ClickOnGridEventDelegate;
 
 
 
+	
 
 
 public: /*Functions*/
-
+	
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void RaiseClickOnCellEvent(const ACPP_Cell* Cell)
 	{

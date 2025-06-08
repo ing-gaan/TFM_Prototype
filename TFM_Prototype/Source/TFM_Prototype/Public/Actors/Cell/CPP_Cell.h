@@ -8,11 +8,19 @@
 
 
 
+
 class UCPP_DA_GridSettings;
+class UCPP_DA_GameSettings;
 class ACPP_PlayerController;
 class UCPP_DA_CellType;
 class ACPP_Player;
+class UCPP_AC_Cell_Base;
 
+
+
+
+DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(ACPP_Cell*, FDivideEvent, FVector2f, NewAxialLocation);
+DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(bool, FDifferentiateEvent, const UCPP_DA_CellType*, Newtype);
 
 
 
@@ -30,16 +38,28 @@ public:
 public: /*Properties*/
 
 	UPROPERTY()
+	FDivideEvent DivideEventDelegate;
+
+	UPROPERTY()
+	FDifferentiateEvent DifferentiateEventDelegate;
+
+
+
+	UPROPERTY()
 	const ACPP_PlayerController* PlayerController{ nullptr };
 
 	UPROPERTY()
 	const ACPP_Player* Player{ nullptr };
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	const UCPP_DA_GridSettings* GridSettings { nullptr };
+	UPROPERTY()
+	const UCPP_DA_GridSettings* GridSettings{ nullptr };
+
+	UPROPERTY()
+	const UCPP_DA_GameSettings* GameSettings{ nullptr };
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY()
 	const UCPP_DA_CellType* CellType;
+	
 
 	UPROPERTY()
 	UStaticMeshComponent* CellStaticMeshComponent{ nullptr };
@@ -57,8 +77,17 @@ public: /*Functions*/
 	UFUNCTION(BlueprintCallable)
 	FVector2D GetRelativeLocation() const;
 
-	
+	UFUNCTION()
+	ACPP_Cell* Divide(FVector2f NewAxialLocation) const;
 
+	UFUNCTION()
+	bool Differentiate(const UCPP_DA_CellType* Newtype) const;
+
+	UFUNCTION()
+	bool HasThisAbility(TSubclassOf<UCPP_AC_Cell_Base> Ability) const;
+
+	UFUNCTION()
+	bool LoadCellTypeComponents(const UCPP_DA_CellType* NewCellType);
 
 
 
@@ -74,6 +103,7 @@ protected: /*Properties*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool bIsCellMoving{false};
 
+	
 
 
 protected: /*Functions*/
@@ -91,11 +121,13 @@ protected: /*Functions*/
 	void UnRegisterEventFunctions() const;
 
 	void InitCell();
-	void LoadComponents();
+	//void LoadStaticMeshComponent();
+	
+
 
 	void MoveCell();
 
-
+	
 	
 	
 };

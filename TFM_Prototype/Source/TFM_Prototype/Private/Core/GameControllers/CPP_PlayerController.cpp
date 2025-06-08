@@ -5,6 +5,7 @@
 #include "Utils/FunctionLibraries/CPP_CellFunctionLibrary.h"
 #include "Utils/Macros/Macros.h"
 #include "Core/Subsystems/Managers/CPP_SS_CellsManager.h"
+#include "Core/GameInstance/CPP_GameInstance.h"
 
 
 
@@ -29,7 +30,7 @@ void ACPP_PlayerController::BeginPlay()
 	//AddFirstCell();
 
 
-	TimerDelegate.BindUFunction(this, FName("StartCellsManager"));
+	TimerDelegate.BindUFunction(this, FName(TEXT("StartCellsManager")));
 	GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, GameSettings->StartCellsManagerAfter, false);
 }
 
@@ -37,7 +38,7 @@ void ACPP_PlayerController::BeginPlay()
 
 void ACPP_PlayerController::StartCellsManager()
 {
-	CellsManager->StartManager(GameSettings, GridSettings, this);
+	CellsManager->StartManager(this);
 }
 
 
@@ -61,8 +62,10 @@ void ACPP_PlayerController::InitEventBuses()
 	UWorld* World = GetWorld();
 	checkf(World, TEXT("***> No World (nullptr) <***"));
 
-	UGameInstance* GameInstance = World->GetGameInstance();
+	UCPP_GameInstance* GameInstance = Cast<UCPP_GameInstance>(World->GetGameInstance());
 	checkf(GameInstance, TEXT("***> No GameInstance (nullptr) <***"));
+
+	GameSettings = GameInstance->GameSettings;
 	
 	/*InputEventBus = GameInstance->GetSubsystem<UCPP_SS_InputEventBus>();
 	checkf(InputEventBus, TEXT("***> No InputEventBus (nullptr) <***"));

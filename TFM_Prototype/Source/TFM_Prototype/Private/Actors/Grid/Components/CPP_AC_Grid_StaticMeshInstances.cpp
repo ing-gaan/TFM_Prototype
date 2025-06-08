@@ -6,7 +6,7 @@
 #include "Core/GameSettings/CPP_DA_GameSettings.h"
 #include "Utils/Macros/Macros.h"
 #include "Core/GameControllers/CPP_PlayerController.h"
-
+#include "Core/GameInstance/CPP_GameInstance.h"
 
 
 
@@ -25,6 +25,15 @@ void UCPP_AC_Grid_StaticMeshInstances::InitComponent()
 
 	GridOwner = Cast<ACPP_Grid>(GetOwner());
 	checkf(GridOwner, TEXT("*****> No OwnerCell (nullptr) <*****"));
+
+	UWorld* World = GetWorld();
+	checkf(World, TEXT("***> No World (nullptr) <***"));
+
+	UCPP_GameInstance* GameInstance = Cast<UCPP_GameInstance>(World->GetGameInstance());
+	checkf(GameInstance, TEXT("***> No GameInstance (nullptr) <***"));
+
+	GameSettings = GameInstance->GameSettings;
+	GridSettings = GameSettings->GridSettings;
 
 	SetNumCustomDataFloats(GridSettings->DefaultDataValues.Num());
 	AddNewInstances(GridSettings->InitGridElementsNum);	

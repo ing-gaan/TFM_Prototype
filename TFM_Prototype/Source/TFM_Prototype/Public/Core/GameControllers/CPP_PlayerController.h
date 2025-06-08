@@ -55,17 +55,18 @@ protected:/*Properties*/
 	/*UPROPERTY()
 	UCPP_SS_GameEventBus* GameEventBus{ nullptr };*/
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY()
 	const UCPP_DA_GameSettings* GameSettings { nullptr };
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	const UCPP_DA_GridSettings* GridSettings { nullptr };
+	/*UPROPERTY()
+	const UCPP_DA_GridSettings* GridSettings { nullptr };*/
 
 	/*UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	const ACPP_Player* Player { nullptr };*/
 
 	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TMap<FVector2f, const ACPP_Cell*> CellsMap;*/
+
 
 	UPROPERTY()
 	TArray<const ACPP_Cell*> CellsBirthOrder;

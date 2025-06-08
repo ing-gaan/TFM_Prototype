@@ -1,6 +1,8 @@
 #include "Characters/Player/CPP_Player.h"
+#include "Core/GameInstance/CPP_GameInstance.h"
 #include "Core/GameSettings/CPP_DA_GridSettings.h"
 #include "Core/GameSettings/CPP_DA_GameSettings.h"
+
 
 
 
@@ -13,6 +15,9 @@ ACPP_Player::ACPP_Player()
 void ACPP_Player::BeginPlay()
 {
 	Super::BeginPlay();
+
+	InitPlayer();
+
 
 	SetAxialLocation(GridSettings->FirstAxialLocation);
 	
@@ -30,6 +35,18 @@ void ACPP_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void ACPP_Player::InitPlayer()
+{
+	UWorld* World = GetWorld();
+	checkf(World, TEXT("***> No World (nullptr) <***"));
+
+	UCPP_GameInstance* GameInstance = Cast<UCPP_GameInstance>(World->GetGameInstance());
+	checkf(GameInstance, TEXT("***> No GameInstance (nullptr) <***"));
+
+	GameSettings = GameInstance->GameSettings;
+	GridSettings = GameSettings->GridSettings;
 }
 
 

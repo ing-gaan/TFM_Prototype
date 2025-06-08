@@ -1,6 +1,8 @@
 #include "Actors/Cell/Components/CPP_AC_Cell_Base.h"
 #include "Actors/Cell/CPP_Cell.h"
 #include "Core/Subsystems/EventBuses/CPP_SS_InputEventBus.h"
+#include "Core/GameInstance/CPP_GameInstance.h"
+#include "Core/GameSettings/CPP_DA_GameSettings.h"
 
 
 
@@ -40,8 +42,11 @@ void UCPP_AC_Cell_Base::InitComponent()
 	UWorld* World = GetWorld();
 	checkf(World, TEXT("***> No World (nullptr) <***"));
 
-	UGameInstance* GameInstance = World->GetGameInstance();
+	UCPP_GameInstance* GameInstance = Cast<UCPP_GameInstance>(World->GetGameInstance());
 	checkf(GameInstance, TEXT("***> No GameInstance (nullptr) <***"));
+
+	GameSettings = GameInstance->GameSettings;
+	GridSettings = GameSettings->GridSettings;
 
 	InputEventBus = GameInstance->GetSubsystem<UCPP_SS_InputEventBus>();
 	checkf(InputEventBus, TEXT("***> No InputEventBus (nullptr) <***"));

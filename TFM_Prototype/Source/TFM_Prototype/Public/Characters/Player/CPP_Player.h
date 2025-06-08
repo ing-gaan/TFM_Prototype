@@ -49,10 +49,10 @@ protected:/*Properties*/
 	UPROPERTY()
 	FVector2D RelativeLocation{ FVector2D(0, 0) };
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY()
 	const UCPP_DA_GridSettings* GridSettings { nullptr };
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY()
 	const UCPP_DA_GameSettings* GameSettings { nullptr };
 
 
@@ -62,9 +62,10 @@ protected:/*Functions*/
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-
+	void InitPlayer();
 
 
 	

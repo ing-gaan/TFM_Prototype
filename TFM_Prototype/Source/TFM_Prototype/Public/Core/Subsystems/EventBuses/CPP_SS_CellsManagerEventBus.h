@@ -9,7 +9,7 @@
 
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFinishDuplicateCellEvent, FVector2f, SpawnAxialLocation);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFinishCellDivisionEvent, FVector2f, SpawnAxialLocation);
 
 
 
@@ -23,16 +23,16 @@ class TFM_PROTOTYPE_API UCPP_SS_CellsManagerEventBus : public UGameInstanceSubsy
 public: /*Properties*/
 
 	UPROPERTY(BlueprintAssignable)
-	FFinishDuplicateCellEvent FinishDuplicateCellEventDelegate;
+	FFinishCellDivisionEvent FinishCellDivisionEventDelegate;
 
 
 
 public: /*Functions*/
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void RaiseFinishDuplicateCellEvent(FVector2f SpawnAxialLocation)
+	FORCEINLINE void RaiseFinishCellDivisionEvent(FVector2f SpawnAxialLocation)
 	{
-		FinishDuplicateCellEventDelegate.Broadcast(SpawnAxialLocation);
+		FinishCellDivisionEventDelegate.Broadcast(SpawnAxialLocation);
 	}
 
 
