@@ -29,20 +29,25 @@ class TFM_PROTOTYPE_API UCPP_SS_CellsManager : public ULocalPlayerSubsystem
 
 public:/*Properties*/
 
-
+	
 
 
 public:/*Functions*/
 
+	static const ACPP_Cell* GetCurrentClickedCell();
+
 	void StartManager(const ACPP_PlayerController* PlayerController);
 
-		
+	
 
-
+	
 
 
 
 private:/*Properties*/
+	
+	static const ACPP_Cell* CurrentClickedCell;
+
 
 	UPROPERTY()
 	const UCPP_DA_GameSettings* GameSettings { nullptr };
@@ -68,8 +73,8 @@ private:/*Properties*/
 	UPROPERTY()
 	const ACPP_PlayerController* PlayerContller { nullptr };
 
-	UPROPERTY()
-	const ACPP_Cell* ClickdCell { nullptr };
+	/*UPROPERTY()
+	const ACPP_Cell* ClickdCell { nullptr };*/
 
 
 private:/*Functions*/
@@ -79,6 +84,9 @@ private:/*Functions*/
 
 	UFUNCTION()
 	void ClickOnGridEvent(FVector2f AxialLocation);
+
+	UFUNCTION()
+	void CancelEvent();
 
 	UFUNCTION()
 	void FinishCellDifferentiationEvent(const UCPP_DA_CellType* NewCellType);
@@ -96,9 +104,9 @@ private:/*Functions*/
 	ACPP_Cell* SpawnCell(FVector CellLocation, FRotator CellRotation, TSubclassOf<ACPP_Cell> CellClass);
 	void ConfigureFirstCell(ACPP_Cell* NewCell, FVector2f AxialLocation);
 	
-	void DuplicateCell(FVector2f AxialLocation);		
+	void DivideCellEvent(FVector2f AxialLocation);		
 	void AddCellSpawned(const ACPP_Cell* NewCell);
-
+	void UnclickCell(const ACPP_Cell* Cell);
 	
 
 };

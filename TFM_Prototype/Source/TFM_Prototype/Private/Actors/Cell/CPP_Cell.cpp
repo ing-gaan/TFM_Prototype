@@ -14,6 +14,7 @@
 
 
 
+
 ACPP_Cell::ACPP_Cell()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -181,6 +182,17 @@ bool ACPP_Cell::LoadCellTypeComponents(const UCPP_DA_CellType* NewCellType)
 	return true;
 }
 
+
+
+void ACPP_Cell::Click() const
+{
+	ClickEventDelegate.Execute();
+}
+
+void ACPP_Cell::Unclick() const
+{
+	UnclickEventDelegate.Execute();
+}
 
 
 

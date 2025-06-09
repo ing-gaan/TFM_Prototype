@@ -42,9 +42,17 @@ protected:/*Functions*/
 	
 	UFUNCTION()
 	void EndCursorOver(AActor* TouchedActor);
-	
+
 	UFUNCTION()
-	void Clicked(AActor* TouchedActor, FKey ButtonPressed);
+	void ClickEvent();
+
+	UFUNCTION()
+	void UnclickEvent();
+
+	/*UFUNCTION()
+	void FinishCellDivisionEvent(FVector2f SpawnAxialLocation);*/
+
+
 
 
 	virtual void BeginPlay() override;

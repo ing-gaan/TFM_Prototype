@@ -16,6 +16,9 @@
 
 
 
+const ACPP_Cell* UCPP_SS_CellsManager::CurrentClickedCell{ nullptr };
+
+
 
 
 void UCPP_SS_CellsManager::Initialize(FSubsystemCollectionBase& Collection)
@@ -63,6 +66,8 @@ void UCPP_SS_CellsManager::RegisterEventFunctions() const
 		this, &UCPP_SS_CellsManager::ClickOnCellEvent);
 	InputEventBus->ClickOnGridEventDelegate.AddUniqueDynamic(
 		this, &UCPP_SS_CellsManager::ClickOnGridEvent);
+	InputEventBus->CancelEventDelegate.AddUniqueDynamic(
+		this, &UCPP_SS_CellsManager::CancelEvent);
 
 	UIEventBus->FinishCellDifferentiationEventDelegate.AddUniqueDynamic(
 		this, &UCPP_SS_CellsManager::FinishCellDifferentiationEvent);
@@ -75,6 +80,8 @@ void UCPP_SS_CellsManager::UnRegisterEventFunctions() const
 		this, &UCPP_SS_CellsManager::ClickOnCellEvent);
 	InputEventBus->ClickOnGridEventDelegate.RemoveDynamic(
 		this, &UCPP_SS_CellsManager::ClickOnGridEvent);
+	InputEventBus->CancelEventDelegate.RemoveDynamic(
+		this, &UCPP_SS_CellsManager::CancelEvent);
 
 
 	UIEventBus->FinishCellDifferentiationEventDelegate.RemoveDynamic(
@@ -90,31 +97,51 @@ void UCPP_SS_CellsManager::StartManager(const ACPP_PlayerController* PlayerContr
 	AddFirstCell();
 }
 
+const ACPP_Cell* UCPP_SS_CellsManager::GetCurrentClickedCell()
+{
+	return CurrentClickedCell;
+}
+
 
 
 void UCPP_SS_CellsManager::ClickOnCellEvent(const ACPP_Cell* ClickedCell)
-{
-	ClickdCell = ClickedCell;
-	//PRINT("Receive clicked cell");
+{	
+	if (CurrentClickedCell && (ClickedCell != CurrentClickedCell))
+	{
+		UnclickCell(CurrentClickedCell);
+	}
+
+	CurrentClickedCell = ClickedCell;
+	CurrentClickedCell->Click();
 }
 
 
 
 void UCPP_SS_CellsManager::ClickOnGridEvent(FVector2f AxialLocation)
 {
-	DuplicateCell(AxialLocation);
+	DivideCellEvent(AxialLocation);
 }
 
+
+void UCPP_SS_CellsManager::CancelEvent()
+{
+	if (!CurrentClickedCell)
+	{
+		return;
+	}
+	UnclickCell(CurrentClickedCell);
+}
 
 
 void UCPP_SS_CellsManager::FinishCellDifferentiationEvent(const UCPP_DA_CellType* NewCellType)
 {
-	if (!ClickdCell->HasThisAbility(UCPP_AC_Cell_Differentiation::StaticClass()))
+	if (!CurrentClickedCell->HasThisAbility(UCPP_AC_Cell_Differentiation::StaticClass()))
 	{
 		return;
 	}
 
-	ClickdCell->Differentiate(NewCellType);
+	CurrentClickedCell->Differentiate(NewCellType);
+	UnclickCell(CurrentClickedCell);
 }
 
 
@@ -125,7 +152,7 @@ void UCPP_SS_CellsManager::AddFirstCell()
 	{
 		return;
 	}
-
+	
 	AddCellSpawned(SpawnFirstCell());
 	return;
 }
@@ -135,7 +162,7 @@ void UCPP_SS_CellsManager::AddFirstCell()
 ACPP_Cell* UCPP_SS_CellsManager::SpawnFirstCell()
 {
 	FVector Location = FVector::ZeroVector;
-	Location.Z = GameSettings->DefaultHeightFromGround;
+	Location.Z = GameSettings->CellsDefaultHeightFromGround;
 	FRotator Rotation = FRotator::ZeroRotator;
 	TSubclassOf<ACPP_Cell> FirstCellClass = GameSettings->FirstCellBPClass;
 
@@ -162,17 +189,18 @@ void UCPP_SS_CellsManager::ConfigureFirstCell(ACPP_Cell* FirstCell, FVector2f Ax
 	FirstCell->SetActorLabel(StrName);
 	FirstCell->SetAxialLocation(AxialLocation);
 	FirstCell->LoadCellTypeComponents(GameSettings->FirstCellType);
+	CurrentClickedCell = FirstCell;
 }
 
 
 
-void UCPP_SS_CellsManager::DuplicateCell(FVector2f AxialLocation)
+void UCPP_SS_CellsManager::DivideCellEvent(FVector2f AxialLocation)
 {	
-	if (!ClickdCell->HasThisAbility(UCPP_AC_Cell_Division::StaticClass()))
+	if (!CurrentClickedCell->HasThisAbility(UCPP_AC_Cell_Division::StaticClass()))
 	{
 		return;
 	}
-	const ACPP_Cell* CellSpawned = ClickdCell->Divide(AxialLocation);
+	const ACPP_Cell* CellSpawned = CurrentClickedCell->Divide(AxialLocation);
 
 	if (!CellSpawned)
 	{
@@ -203,5 +231,15 @@ void UCPP_SS_CellsManager::AddCellSpawned(const ACPP_Cell* NewCell)
 	CellsBirthOrder.Add(NewCell);
 		
 	CellsManagerEventBus->RaiseFinishCellDivisionEvent(NewAxialLoc);
+
+	UnclickCell(CurrentClickedCell);
+
 	//return NewAxialLoc;
+}
+
+
+void UCPP_SS_CellsManager::UnclickCell(const ACPP_Cell* Cell)
+{
+	CurrentClickedCell->Unclick();
+	CurrentClickedCell = nullptr;
 }

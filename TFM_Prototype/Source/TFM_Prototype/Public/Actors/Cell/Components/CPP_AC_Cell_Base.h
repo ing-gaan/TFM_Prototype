@@ -11,6 +11,7 @@
 
 class ACPP_Cell;
 class UCPP_SS_InputEventBus;
+class UCPP_SS_CellsManagerEventBus;
 class UCPP_DA_GameSettings;
 class UCPP_DA_GridSettings;
 
@@ -48,6 +49,9 @@ protected:/*Properties*/
 
 	UPROPERTY()
 	UCPP_SS_InputEventBus* InputEventBus;
+
+	UPROPERTY()
+	UCPP_SS_CellsManagerEventBus* CellsManagerEventBus;
 
 	UPROPERTY()
 	const UCPP_DA_GameSettings* GameSettings{ nullptr };

@@ -68,7 +68,7 @@ void ACPP_Player::SetAxialLocation(FVector2f NewAxialLocation)
 {
 	AxialLocation = NewAxialLocation;
 
-	float Z = GameSettings->DefaultHeightFromGround;
+	float Z = GameSettings->CellsDefaultHeightFromGround;
 	FVector HeightVector = FVector(0, 0, Z);
 
 	SetActorLocation( GetActorLocation() + HeightVector );

@@ -48,7 +48,7 @@ ACPP_Cell* UCPP_AC_Cell_Division::DivideEvent(FVector2f AxialLocation)
 	FVector Location;
 	Location.X = RelativeLoc.X;
 	Location.Y = RelativeLoc.Y;
-	Location.Z = GameSettings->DefaultHeightFromGround;
+	Location.Z = GameSettings->CellsDefaultHeightFromGround;
 	FRotator Rotation = FRotator::ZeroRotator;
 	TSubclassOf<ACPP_Cell> CellClass = OwnerCell->GetClass();
 

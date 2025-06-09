@@ -17,8 +17,8 @@ class ACPP_Player;
 class UCPP_AC_Cell_Base;
 
 
-
-
+DECLARE_DYNAMIC_DELEGATE(FClickEvent);
+DECLARE_DYNAMIC_DELEGATE(FUnclickEvent);
 DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(ACPP_Cell*, FDivideEvent, FVector2f, NewAxialLocation);
 DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(bool, FDifferentiateEvent, const UCPP_DA_CellType*, Newtype);
 
@@ -31,11 +31,16 @@ class TFM_PROTOTYPE_API ACPP_Cell : public AActor
 	
 public:	
 	ACPP_Cell();
-	//friend class ACPP_PlayerController;
-
+	
 
 
 public: /*Properties*/
+
+	UPROPERTY()
+	FClickEvent ClickEventDelegate;
+
+	UPROPERTY()
+	FUnclickEvent UnclickEventDelegate;
 
 	UPROPERTY()
 	FDivideEvent DivideEventDelegate;
@@ -88,6 +93,12 @@ public: /*Functions*/
 
 	UFUNCTION()
 	bool LoadCellTypeComponents(const UCPP_DA_CellType* NewCellType);
+
+	UFUNCTION()
+	void Click() const;
+	
+	UFUNCTION()
+	void Unclick() const;
 
 
 

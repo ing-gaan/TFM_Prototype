@@ -160,7 +160,7 @@ void ACPP_Grid::SetGridVisibility(bool bIsVisible)
 	float Z = GameSettings->HiddenHeightFromGround;
 	if (bIsVisible)
 	{
-		Z = GameSettings->DefaultHeightFromGround;
+		Z = GameSettings->GridDefaultHeightFromGround;
 	}
 	
 	float X = Player->GetActorLocation().X;

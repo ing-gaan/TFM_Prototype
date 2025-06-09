@@ -10,6 +10,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FClickOnCellEvent, const ACPP_Cell*, Cell);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FClickOnGridEvent, FVector2f, AxialLocation);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCancelEvent);
 
 
 
@@ -28,10 +29,12 @@ public: /*Properties*/
 
 	UPROPERTY(BlueprintAssignable)
 	FClickOnCellEvent ClickOnCellEventDelegate;
-	
 
 	UPROPERTY(BlueprintAssignable)
 	FClickOnGridEvent ClickOnGridEventDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FCancelEvent CancelEventDelegate;
 
 
 
@@ -52,7 +55,11 @@ public: /*Functions*/
 		ClickOnGridEventDelegate.Broadcast(AxialLocation);
 	}
 
-
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void RaiseCancelEvent()
+	{
+		CancelEventDelegate.Broadcast();
+	}
 
 
 

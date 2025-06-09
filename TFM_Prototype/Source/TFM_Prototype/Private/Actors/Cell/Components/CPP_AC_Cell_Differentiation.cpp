@@ -28,6 +28,7 @@ void UCPP_AC_Cell_Differentiation::RegisterEventFunctions() const
 void UCPP_AC_Cell_Differentiation::UnRegisterEventFunctions() const
 {
 	OwnerCell->DifferentiateEventDelegate.Clear();
+	
 }
 
 

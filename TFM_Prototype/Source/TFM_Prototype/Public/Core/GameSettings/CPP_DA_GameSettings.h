@@ -33,13 +33,15 @@ public:
 
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Map|Locations")
-	float DefaultHeightFromGround{ 10 };
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Grid|Locations")
+	float GridDefaultHeightFromGround{ 10 };
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Map|Locations")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Grid|Locations")
 	float HiddenHeightFromGround{ -100 };
 
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Locations")
+	float CellsDefaultHeightFromGround{ 10 };
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Cells|Types")
 	TSubclassOf<ACPP_Cell> FirstCellBPClass{ nullptr };

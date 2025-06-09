@@ -3,6 +3,9 @@
 #include "Actors/Cell/CPP_DA_CellType.h"
 #include "Utils/Macros/Macros.h"
 #include "Core/Subsystems/EventBuses/CPP_SS_InputEventBus.h"
+#include "Core/Subsystems/EventBuses/CPP_SS_CellsManagerEventBus.h"
+#include "Core/Subsystems/Managers/CPP_SS_CellsManager.h"
+
 
 
 
@@ -29,7 +32,12 @@ void UCPP_AC_Cell_CursorInteraction::RegisterEventFunctions() const
 {
 	OwnerCell->OnBeginCursorOver.AddUniqueDynamic(this, &UCPP_AC_Cell_CursorInteraction::BeginCursorOver);
 	OwnerCell->OnEndCursorOver.AddUniqueDynamic(this, &UCPP_AC_Cell_CursorInteraction::EndCursorOver);
-	OwnerCell->OnClicked.AddUniqueDynamic(this, &UCPP_AC_Cell_CursorInteraction::Clicked);
+
+	OwnerCell->ClickEventDelegate.BindDynamic(this, &UCPP_AC_Cell_CursorInteraction::ClickEvent);
+	OwnerCell->UnclickEventDelegate.BindDynamic(this, &UCPP_AC_Cell_CursorInteraction::UnclickEvent);
+
+	/*CellsManagerEventBus->FinishCellDivisionEventDelegate.AddUniqueDynamic(
+		this, &UCPP_AC_Cell_CursorInteraction::FinishCellDivisionEvent);*/
 
 }
 
@@ -38,7 +46,12 @@ void UCPP_AC_Cell_CursorInteraction::UnRegisterEventFunctions() const
 {
 	OwnerCell->OnBeginCursorOver.RemoveDynamic(this, &UCPP_AC_Cell_CursorInteraction::BeginCursorOver);
 	OwnerCell->OnEndCursorOver.RemoveDynamic(this, &UCPP_AC_Cell_CursorInteraction::EndCursorOver);
-	OwnerCell->OnClicked.RemoveDynamic(this, &UCPP_AC_Cell_CursorInteraction::Clicked);
+
+	OwnerCell->ClickEventDelegate.Clear();
+	OwnerCell->UnclickEventDelegate.Clear();
+
+	/*CellsManagerEventBus->FinishCellDivisionEventDelegate.RemoveDynamic(
+		this, &UCPP_AC_Cell_CursorInteraction::FinishCellDivisionEvent);*/
 }
 
 
@@ -65,17 +78,31 @@ void UCPP_AC_Cell_CursorInteraction::BeginCursorOver(AActor* TouchedActor)
 
 void UCPP_AC_Cell_CursorInteraction::EndCursorOver(AActor* TouchedActor)
 {
+	if (OwnerCell == UCPP_SS_CellsManager::GetCurrentClickedCell())
+	{
+		return;
+	}
 	SetMaterialColorParameter(OwnerCell->CellType->NormalColor);
 }
 
 
-void UCPP_AC_Cell_CursorInteraction::Clicked(AActor* TouchedActor, FKey ButtonPressed)
+void UCPP_AC_Cell_CursorInteraction::ClickEvent()
 {	
 	SetMaterialColorParameter(OwnerCell->CellType->ClickedColor);
-
-	InputEventBus->RaiseClickOnCellEvent(OwnerCell);
 }
 
+
+void UCPP_AC_Cell_CursorInteraction::UnclickEvent()
+{
+	SetMaterialColorParameter(OwnerCell->CellType->NormalColor);
+}
+
+
+
+//void UCPP_AC_Cell_CursorInteraction::FinishCellDivisionEvent(FVector2f SpawnAxialLocation)
+//{
+//	SetMaterialColorParameter(OwnerCell->CellType->NormalColor);
+//}
 
 
 void UCPP_AC_Cell_CursorInteraction::SetMaterialColorParameter(const FLinearColor& MaterialColor)
