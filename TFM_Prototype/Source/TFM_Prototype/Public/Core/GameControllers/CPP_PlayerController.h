@@ -54,8 +54,7 @@ protected:/*Properties*/
 	UPROPERTY()
 	UCPP_SS_CellsManager* CellsManager { nullptr };
 
-	FTimerDelegate TimerDelegate;
-	FTimerHandle TimerHandle;
+	
 
 
 protected:/*Functions*/

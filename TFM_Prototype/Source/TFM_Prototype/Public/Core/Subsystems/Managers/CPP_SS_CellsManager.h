@@ -80,6 +80,9 @@ private:/*Properties*/
 private:/*Functions*/
 
 	UFUNCTION()
+	void MoveCellsEvent();
+
+	UFUNCTION()
 	void ClickOnCellEvent(const ACPP_Cell* ClickedCell);
 
 	UFUNCTION()

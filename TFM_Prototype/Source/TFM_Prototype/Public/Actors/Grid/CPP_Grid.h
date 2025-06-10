@@ -75,14 +75,21 @@ protected:/*Properties*/
 
 protected:/*Fucntions*/
 
+
 	UFUNCTION()
 	void ClickOnCellEvent(const ACPP_Cell* NewClickedCell);
+
+	UFUNCTION()
+	void CancelEvent();
 
 	UFUNCTION()
 	void BeginCellDivisionEvent();
 
 	UFUNCTION()
 	void FinishCellDivisionEvent(FVector2f SpawnAxialLocation);
+
+	UFUNCTION()
+	void MyFunctionToCall(FVector2f AxialLocation) const;
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;

@@ -4,6 +4,7 @@
 #include "Actors/Cell/CPP_Cell.h"
 #include "Core/Subsystems/Managers/CPP_SS_CellsManager.h"
 #include "Core/GameInstance/CPP_GameInstance.h"
+#include "Actors/Grid/CPP_Grid.h"
 
 #include "Utils/Macros/Macros.h"
 
@@ -23,10 +24,12 @@ void ACPP_PlayerController::BeginPlay()
 	CellsManager = GetLocalPlayer()->GetSubsystem<UCPP_SS_CellsManager>();
 	checkf(CellsManager, TEXT("***> No CellsManager (nullptr) <***"));
 
-	/*TimerDelegate.BindUFunction(this, FName(TEXT("StartCellsManager")));
-	GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, GameSettings->StartCellsManagerAfter, false);*/
+	FTimerDelegate TimerDelegate;
+	FTimerHandle TimerHandle;
+	TimerDelegate.BindUObject(this, &ACPP_PlayerController::StartCellsManager);
+	//GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, GameSettings->StartCellsManagerAfter, false);
+	GetWorldTimerManager().SetTimerForNextTick(TimerDelegate);
 
-	StartCellsManager();
 }
 
 
@@ -91,8 +94,13 @@ void ACPP_PlayerController::ClickOnActor()
 	const ACPP_Cell* ClickedCell = Cast<ACPP_Cell>(ClickedActor);
 	if (ClickedCell)
 	{
-		PRINT("Click on cell");
 		InputEventBus->RaiseClickOnCellEvent(ClickedCell);
+		return;
+	}
+
+	const ACPP_Grid* Grid = Cast<ACPP_Grid>(ClickedActor);
+	if (Grid)
+	{
 		return;
 	}
 

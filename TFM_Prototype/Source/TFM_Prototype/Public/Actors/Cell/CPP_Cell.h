@@ -19,8 +19,10 @@ class UCPP_AC_Cell_Base;
 
 DECLARE_DYNAMIC_DELEGATE(FClickEvent);
 DECLARE_DYNAMIC_DELEGATE(FUnclickEvent);
+DECLARE_DYNAMIC_DELEGATE(FMoveCellEvent);
 DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(ACPP_Cell*, FDivideEvent, FVector2f, NewAxialLocation);
 DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(bool, FDifferentiateEvent, const UCPP_DA_CellType*, Newtype);
+
 
 
 
@@ -43,6 +45,9 @@ public: /*Properties*/
 	FUnclickEvent UnclickEventDelegate;
 
 	UPROPERTY()
+	FMoveCellEvent MoveCellEventDelegate;
+
+	UPROPERTY()
 	FDivideEvent DivideEventDelegate;
 
 	UPROPERTY()
@@ -54,7 +59,7 @@ public: /*Properties*/
 	const ACPP_PlayerController* PlayerController{ nullptr };
 
 	UPROPERTY()
-	const ACPP_Player* Player{ nullptr };
+	const ACPP_Player* Player { nullptr };
 
 	UPROPERTY()
 	const UCPP_DA_GridSettings* GridSettings{ nullptr };
@@ -89,9 +94,6 @@ public: /*Functions*/
 	bool Differentiate(const UCPP_DA_CellType* Newtype) const;
 
 	UFUNCTION()
-	bool HasThisAbility(TSubclassOf<UCPP_AC_Cell_Base> Ability) const;
-
-	UFUNCTION()
 	bool LoadCellTypeComponents(const UCPP_DA_CellType* NewCellType);
 
 	UFUNCTION()
@@ -100,7 +102,11 @@ public: /*Functions*/
 	UFUNCTION()
 	void Unclick() const;
 
+	UFUNCTION()
+	void MoveCell() const;
 
+	UFUNCTION()
+	bool HasThisAbility(TSubclassOf<UCPP_AC_Cell_Base> Ability) const;
 
 
 protected: /*Properties*/
@@ -136,7 +142,7 @@ protected: /*Functions*/
 	
 
 
-	void MoveCell();
+	
 
 	
 	

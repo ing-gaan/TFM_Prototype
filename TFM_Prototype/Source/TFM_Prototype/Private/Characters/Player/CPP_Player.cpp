@@ -8,7 +8,7 @@
 
 ACPP_Player::ACPP_Player()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 

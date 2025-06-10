@@ -11,6 +11,7 @@
 #include "Core/GameInstance/CPP_GameInstance.h"
 #include "Actors/Cell/Components/CPP_AC_Cell_Division.h"
 #include "Actors/Cell/Components/CPP_AC_Cell_Differentiation.h"
+#include "Actors/Cell/Components/CPP_AC_Cell_Movement.h"
 #include "Actors/Cell/CPP_DA_CellType.h"
 
 
@@ -62,6 +63,9 @@ void UCPP_SS_CellsManager::InitEventBuses()
 
 void UCPP_SS_CellsManager::RegisterEventFunctions() const
 {
+	CellsManagerEventBus->MoveCellsEventDelegate.AddUniqueDynamic(
+		this, &UCPP_SS_CellsManager::MoveCellsEvent);
+
 	InputEventBus->ClickOnCellEventDelegate.AddUniqueDynamic(
 		this, &UCPP_SS_CellsManager::ClickOnCellEvent);
 	InputEventBus->ClickOnGridEventDelegate.AddUniqueDynamic(
@@ -76,6 +80,9 @@ void UCPP_SS_CellsManager::RegisterEventFunctions() const
 
 void UCPP_SS_CellsManager::UnRegisterEventFunctions() const
 {
+	CellsManagerEventBus->MoveCellsEventDelegate.RemoveDynamic(
+		this, &UCPP_SS_CellsManager::MoveCellsEvent);
+
 	InputEventBus->ClickOnCellEventDelegate.RemoveDynamic(
 		this, &UCPP_SS_CellsManager::ClickOnCellEvent);
 	InputEventBus->ClickOnGridEventDelegate.RemoveDynamic(
@@ -103,6 +110,17 @@ const ACPP_Cell* UCPP_SS_CellsManager::GetCurrentClickedCell()
 }
 
 
+void UCPP_SS_CellsManager::MoveCellsEvent()
+{
+	for (TPair<FVector2f, const ACPP_Cell*>& Elem : CellsMap)
+	{
+		if (Elem.Value->HasThisAbility(UCPP_AC_Cell_Movement::StaticClass()))
+		{
+			Elem.Value->MoveCell();
+		}		
+	}
+}
+
 
 void UCPP_SS_CellsManager::ClickOnCellEvent(const ACPP_Cell* ClickedCell)
 {	
@@ -110,9 +128,9 @@ void UCPP_SS_CellsManager::ClickOnCellEvent(const ACPP_Cell* ClickedCell)
 	{
 		UnclickCell(CurrentClickedCell);
 	}
-
+	
 	CurrentClickedCell = ClickedCell;
-	CurrentClickedCell->Click();
+	CurrentClickedCell->Click();	
 }
 
 
@@ -186,22 +204,27 @@ ACPP_Cell* UCPP_SS_CellsManager::SpawnCell(FVector CellLocation, FRotator CellRo
 void UCPP_SS_CellsManager::ConfigureFirstCell(ACPP_Cell* FirstCell, FVector2f AxialLocation)
 {
 	const FString StrName = UCPP_CellFunctionLibrary::GetCellOutlinerLabel(AxialLocation);
-	FirstCell->SetActorLabel(StrName);
-	FirstCell->SetAxialLocation(AxialLocation);
+	FirstCell->SetActorLabel(StrName);	
 	FirstCell->LoadCellTypeComponents(GameSettings->FirstCellType);
 	CurrentClickedCell = FirstCell;
+	FirstCell->SetAxialLocation(AxialLocation);
 }
 
 
 
 void UCPP_SS_CellsManager::DivideCellEvent(FVector2f AxialLocation)
-{	
+{		
+	if (!CurrentClickedCell)
+	{
+		return;
+	}
+
 	if (!CurrentClickedCell->HasThisAbility(UCPP_AC_Cell_Division::StaticClass()))
 	{
 		return;
 	}
-	const ACPP_Cell* CellSpawned = CurrentClickedCell->Divide(AxialLocation);
 
+	const ACPP_Cell* CellSpawned = CurrentClickedCell->Divide(AxialLocation);
 	if (!CellSpawned)
 	{
 		return;

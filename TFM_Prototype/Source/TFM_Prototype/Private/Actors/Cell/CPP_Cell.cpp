@@ -13,8 +13,6 @@
 
 
 
-
-
 ACPP_Cell::ACPP_Cell()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -27,6 +25,9 @@ void ACPP_Cell::BeginPlay()
 	Super::BeginPlay();
 	PlayerController = Cast<ACPP_PlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 	checkf(PlayerController, TEXT("***> No PlayerController. Cast fail (nullptr) <***"));
+
+	Player = Cast<ACPP_Player>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	checkf(Player, TEXT("***> No PlayerPawn. Cast fail (nullptr) <***"));
 
 	RegisterEventFunctions();
 	InitCell();	
@@ -46,10 +47,6 @@ void ACPP_Cell::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bIsCellMoving)
-	{
-		//MoveCell();
-	}
 }
 
 
@@ -78,20 +75,9 @@ void ACPP_Cell::InitCell()
 	GameSettings = GameInstance->GameSettings;
 	GridSettings = GameSettings->GridSettings;
 
+	bIsCellMoving = true;
+
 }
-
-
-//void ACPP_Cell::MoveCell()
-//{
-//	FVector RealLocation;
-//	FRotator RealRotation;
-//
-//	UCPP_CellFunctionLibrary::CalculateWorldLocationRotationFromCenterCell(
-//		PlayerController->GetFirstCell(), RelativeLocation, RealLocation, RealRotation);
-//
-//	SetActorLocation(RealLocation);
-//	SetActorRotation(RealRotation);
-//}
 
 
 FVector2f ACPP_Cell::GetAxialLocation() const
@@ -140,9 +126,7 @@ void ACPP_Cell::SetRelativeLocation()
 	UCPP_CellFunctionLibrary::GetRelativeLocationFromAnOrigin(GridSettings->DistanceBetweenNeighbours,
 		OriginAxLocation, AxialLocation, RelativeLocation);
 
-	//MoveCellEventDelegate.Broadcast(true);
-	//MoveCell();
-
+	MoveCell();
 }
 
 
@@ -186,15 +170,28 @@ bool ACPP_Cell::LoadCellTypeComponents(const UCPP_DA_CellType* NewCellType)
 
 void ACPP_Cell::Click() const
 {
-	ClickEventDelegate.Execute();
+	ClickEventDelegate.ExecuteIfBound();
 }
 
 void ACPP_Cell::Unclick() const
 {
-	UnclickEventDelegate.Execute();
+	UnclickEventDelegate.ExecuteIfBound();
 }
 
 
+void ACPP_Cell::MoveCell() const
+{
+	/*FVector RealLocation;
+	FRotator RealRotation;
+
+	UCPP_CellFunctionLibrary::CalculateWorldLocationRotationBasedOnPlayer(
+		Player, RelativeLocation, RealLocation, RealRotation);
+
+	SetActorLocation(RealLocation);
+	SetActorRotation(RealRotation);	*/
+
+	MoveCellEventDelegate.ExecuteIfBound();
+}
 
 
 bool ACPP_Cell::HasThisAbility(TSubclassOf<UCPP_AC_Cell_Base> Ability) const

@@ -79,6 +79,8 @@ void ACPP_Grid::RegisterEventFunctions()
 {
 	InputEventBus->ClickOnCellEventDelegate.AddUniqueDynamic(
 		this, &ACPP_Grid::ClickOnCellEvent);
+	InputEventBus->CancelEventDelegate.AddUniqueDynamic(
+		this, &ACPP_Grid::CancelEvent);
 
 	UIEventBus->BeginCellDivisionEventDelegate.AddUniqueDynamic(
 		this, &ACPP_Grid::BeginCellDivisionEvent);
@@ -92,6 +94,8 @@ void ACPP_Grid::UnRegisterEventFunctions()
 {
 	InputEventBus->ClickOnCellEventDelegate.RemoveDynamic(
 		this, &ACPP_Grid::ClickOnCellEvent);
+	InputEventBus->CancelEventDelegate.RemoveDynamic(
+		this, &ACPP_Grid::CancelEvent);
 
 	UIEventBus->BeginCellDivisionEventDelegate.RemoveDynamic(
 		this, &ACPP_Grid::BeginCellDivisionEvent);
@@ -116,8 +120,12 @@ void ACPP_Grid::GetStaticMeshInstancesComponent()
 void ACPP_Grid::ClickOnCellEvent(const ACPP_Cell* NewClickedCell)
 {
 	checkf(NewClickedCell, TEXT("***> No NewClickedCell (nullptr) <***"));
+}
 
-	
+
+void ACPP_Grid::CancelEvent()
+{
+	SetGridVisibility(false);
 }
 
 
@@ -171,7 +179,16 @@ void ACPP_Grid::SetGridVisibility(bool bIsVisible)
 
 void ACPP_Grid::ClickOnStaticMeshInstance(FVector2f AxialLocation) const
 {
-	InputEventBus->RaiseClickOnGridEvent(AxialLocation);
-	PRINT("Axial location clicked = (%f, %f)", AxialLocation.X, AxialLocation.Y);
+	//InputEventBus->RaiseClickOnGridEvent(AxialLocation);	
+	FTimerDelegate TimerDelegate;
+	FTimerHandle TimerHandle;
+	TimerDelegate.BindUObject(this, &ACPP_Grid::MyFunctionToCall, AxialLocation);
+	//GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, 3.0, false);
+	GetWorldTimerManager().SetTimerForNextTick(TimerDelegate);
+}
 
+
+void ACPP_Grid::MyFunctionToCall(FVector2f AxialLocation) const
+{
+	InputEventBus->RaiseClickOnGridEvent(AxialLocation);	
 }

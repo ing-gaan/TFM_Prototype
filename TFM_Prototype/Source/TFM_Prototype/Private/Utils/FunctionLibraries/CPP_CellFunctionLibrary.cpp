@@ -25,8 +25,9 @@ void UCPP_CellFunctionLibrary::CalculateWorldLocationRotationBasedOnPlayer(const
 		return;
 	}*/
 
-	OutRealLocation = Player->AActor::GetActorLocation();
-	OutRealRotation = Player->AActor::GetActorRotation();
+	OutRealLocation = Player->GetActorLocation();
+	OutRealRotation = Player->GetActorRotation();
+
 
 	if (RelativeLocation == Player->GetRelativeLocation())
 	{
