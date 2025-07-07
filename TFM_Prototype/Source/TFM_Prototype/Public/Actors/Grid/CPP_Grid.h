@@ -40,22 +40,22 @@ public:/*Fucntions*/
 	UFUNCTION()
 	void ClickOnStaticMeshInstance(FVector2f AxialLocation) const;
 
-
+	const TSet<FVector2f>* GetAllFreeNeighbours() const;
 
 
 protected:/*Properties*/
 
 	UPROPERTY()
-	const ACPP_Player* Player;
+	const ACPP_Player* Player{ nullptr };
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY()
 	const UCPP_DA_GridSettings* GridSettings { nullptr };
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY()
 	const UCPP_DA_GameSettings* GameSettings { nullptr };
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UCPP_AC_Grid_StaticMeshInstances* StaticMeshInstancesComponent;
+	UCPP_AC_Grid_StaticMeshInstances* StaticMeshInstancesComponent{ nullptr };
 
 	UPROPERTY()
 	UCPP_SS_UIEventBus* UIEventBus{ nullptr };
@@ -64,7 +64,7 @@ protected:/*Properties*/
 	UCPP_SS_InputEventBus* InputEventBus{ nullptr };
 
 	UPROPERTY()
-	UCPP_SS_CellsManagerEventBus* CellsManagerEventBus;
+	UCPP_SS_CellsManagerEventBus* CellsManagerEventBus{ nullptr };
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TSet<FVector2f> UsedAxialLocations;
@@ -89,7 +89,8 @@ protected:/*Fucntions*/
 	void FinishCellDivisionEvent(FVector2f SpawnAxialLocation);
 
 	UFUNCTION()
-	void MyFunctionToCall(FVector2f AxialLocation) const;
+	void ClickOnGrid(FVector2f AxialLocation) const;
+
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;

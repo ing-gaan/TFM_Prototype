@@ -1,6 +1,7 @@
 #include "Actors/Cell/Components/CPP_AC_Cell_Movement.h"
-#include "Utils/FunctionLibraries/CPP_CellFunctionLibrary.h"
+#include "Utils/FunctionLibraries/CPP_FuncLib_CellUtils.h"
 #include "Actors/Cell/CPP_Cell.h"
+#include "Utils/Macros/Macros.h"
 
 
 
@@ -21,8 +22,6 @@ void UCPP_AC_Cell_Movement::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void UCPP_AC_Cell_Movement::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-
 }
 
 
@@ -53,10 +52,11 @@ void UCPP_AC_Cell_Movement::MoveCellEvent()
 	FVector RealLocation;
 	FRotator RealRotation;
 
-	UCPP_CellFunctionLibrary::CalculateWorldLocationRotationBasedOnPlayer(
+	UCPP_FuncLib_CellUtils::CalculateWorldLocationRotationBasedOnPlayer(
 		OwnerCell->Player, OwnerCell->GetRelativeLocation(), RealLocation, RealRotation);
 
 	OwnerCell->SetActorLocation(RealLocation);
 	OwnerCell->SetActorRotation(RealRotation);
+	
 }
 

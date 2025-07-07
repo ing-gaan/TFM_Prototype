@@ -16,6 +16,7 @@ class UCPP_SS_InputEventBus;
 class UCPP_SS_CellsManagerEventBus;
 class UCPP_SS_UIEventBus;
 class UCPP_DA_CellType;
+class UCPP_SS_LocalGameManager;
 
 
 
@@ -29,26 +30,22 @@ class TFM_PROTOTYPE_API UCPP_SS_CellsManager : public ULocalPlayerSubsystem
 
 public:/*Properties*/
 
-	
+
 
 
 public:/*Functions*/
-
-	static const ACPP_Cell* GetCurrentClickedCell();
-
-	void StartManager(const ACPP_PlayerController* PlayerController);
-
+	
+	void StartManager();
+	const ACPP_Cell* GetCellInMap(FVector2f CellAxialLocation) const;
+	const TMap<FVector2f, const ACPP_Cell*>* GetCellsMap() const;
 	
 
 	
 
 
 
-private:/*Properties*/
+protected:/*Properties*/
 	
-	static const ACPP_Cell* CurrentClickedCell;
-
-
 	UPROPERTY()
 	const UCPP_DA_GameSettings* GameSettings { nullptr };
 
@@ -62,22 +59,22 @@ private:/*Properties*/
 	TArray<const ACPP_Cell*> CellsBirthOrder;
 
 	UPROPERTY()
-	UCPP_SS_InputEventBus* InputEventBus;
+	UCPP_SS_InputEventBus* InputEventBus{ nullptr };
 
 	UPROPERTY()
-	UCPP_SS_CellsManagerEventBus* CellsManagerEventBus;
+	UCPP_SS_CellsManagerEventBus* CellsManagerEventBus{ nullptr };
 
 	UPROPERTY()
-	UCPP_SS_UIEventBus* UIEventBus;
-
-	UPROPERTY()
-	const ACPP_PlayerController* PlayerContller { nullptr };
+	UCPP_SS_UIEventBus* UIEventBus{ nullptr };
 
 	/*UPROPERTY()
-	const ACPP_Cell* ClickdCell { nullptr };*/
+	const ACPP_PlayerController* PlayerContller { nullptr };*/
+
+	UPROPERTY()
+	const ACPP_Cell* CurrentClickedCell{ nullptr };
 
 
-private:/*Functions*/
+protected:/*Functions*/
 
 	UFUNCTION()
 	void MoveCellsEvent();
@@ -109,7 +106,16 @@ private:/*Functions*/
 	
 	void DivideCellEvent(FVector2f AxialLocation);		
 	void AddCellSpawned(const ACPP_Cell* NewCell);
-	void UnclickCell(const ACPP_Cell* Cell);
+	void UnclickCurrentCell();
 	
+	
+	void StartShiftingCellsLocations(const ACPP_Cell* FirstCellToShift) const;
+	void ReturnCellsToOriginLocation(const ACPP_Cell* ClickedCell) const;
 
+
+
+
+
+
+	friend class ACPP_Cell;
 };

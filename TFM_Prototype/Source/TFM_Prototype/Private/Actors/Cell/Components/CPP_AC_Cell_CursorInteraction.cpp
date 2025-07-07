@@ -2,17 +2,27 @@
 #include "Actors/Cell/CPP_Cell.h"
 #include "Actors/Cell/CPP_DA_CellType.h"
 #include "Utils/Macros/Macros.h"
+#include "Actors/Cell/StateMachines/CursorSM/CPP_SM_Cell_Cursor_Context.h"
+#include "Actors/Cell/StateMachines/CursorSM/CPP_SM_Cell_CursorSt_Init.h"
 #include "Core/Subsystems/EventBuses/CPP_SS_InputEventBus.h"
-#include "Core/Subsystems/EventBuses/CPP_SS_CellsManagerEventBus.h"
-#include "Core/Subsystems/Managers/CPP_SS_CellsManager.h"
 
+
+
+
+
+
+
+UCPP_AC_Cell_CursorInteraction::UCPP_AC_Cell_CursorInteraction()
+{	
+	SMContext = CreateDefaultSubobject<UCPP_SM_Cell_Cursor_Context>(TEXT("CursorSMContext"));
+}
 
 
 
 void UCPP_AC_Cell_CursorInteraction::BeginPlay()
 {
 	Super::BeginPlay();
-	RegisterEventFunctions();
+	RegisterEventFunctions();	
 }
 
 void UCPP_AC_Cell_CursorInteraction::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -32,13 +42,12 @@ void UCPP_AC_Cell_CursorInteraction::RegisterEventFunctions() const
 {
 	OwnerCell->OnBeginCursorOver.AddUniqueDynamic(this, &UCPP_AC_Cell_CursorInteraction::BeginCursorOver);
 	OwnerCell->OnEndCursorOver.AddUniqueDynamic(this, &UCPP_AC_Cell_CursorInteraction::EndCursorOver);
+	OwnerCell->OnClicked.AddUniqueDynamic(this, &UCPP_AC_Cell_CursorInteraction::Clicked);
+	
 
-	OwnerCell->ClickEventDelegate.BindDynamic(this, &UCPP_AC_Cell_CursorInteraction::ClickEvent);
+	//OwnerCell->ClickEventDelegate.BindDynamic(this, &UCPP_AC_Cell_CursorInteraction::ClickEvent);
 	OwnerCell->UnclickEventDelegate.BindDynamic(this, &UCPP_AC_Cell_CursorInteraction::UnclickEvent);
-
-	/*CellsManagerEventBus->FinishCellDivisionEventDelegate.AddUniqueDynamic(
-		this, &UCPP_AC_Cell_CursorInteraction::FinishCellDivisionEvent);*/
-
+	OwnerCell->ShiftEventDelegate.BindDynamic(this, &UCPP_AC_Cell_CursorInteraction::ShiftEvent);
 }
 
 
@@ -46,12 +55,11 @@ void UCPP_AC_Cell_CursorInteraction::UnRegisterEventFunctions() const
 {
 	OwnerCell->OnBeginCursorOver.RemoveDynamic(this, &UCPP_AC_Cell_CursorInteraction::BeginCursorOver);
 	OwnerCell->OnEndCursorOver.RemoveDynamic(this, &UCPP_AC_Cell_CursorInteraction::EndCursorOver);
+	OwnerCell->OnClicked.RemoveDynamic(this, &UCPP_AC_Cell_CursorInteraction::Clicked);
 
-	OwnerCell->ClickEventDelegate.Clear();
+	//OwnerCell->ClickEventDelegate.Clear();
 	OwnerCell->UnclickEventDelegate.Clear();
-
-	/*CellsManagerEventBus->FinishCellDivisionEventDelegate.RemoveDynamic(
-		this, &UCPP_AC_Cell_CursorInteraction::FinishCellDivisionEvent);*/
+	OwnerCell->ShiftEventDelegate.Clear();
 }
 
 
@@ -65,48 +73,44 @@ void UCPP_AC_Cell_CursorInteraction::InitComponent()
 	checkf(MaterialInstance, TEXT("*****> No MaterialInstance (nullptr) <*****"));
 
 	OwnerCell->CellStaticMeshComponent->SetMaterial(0, MaterialInstance);
-	SetMaterialColorParameter(OwnerCell->CellType->NormalColor);
+	SMContext->InitStateMachine(OwnerCell, MaterialInstance);	
 }
 
 
 
 void UCPP_AC_Cell_CursorInteraction::BeginCursorOver(AActor* TouchedActor)
 {
-	SetMaterialColorParameter(OwnerCell->CellType->CursorOverColor);
+	SMContext->GetCurrentState()->BeginCursorOver();
 }
 
 
 void UCPP_AC_Cell_CursorInteraction::EndCursorOver(AActor* TouchedActor)
 {
-	if (OwnerCell == UCPP_SS_CellsManager::GetCurrentClickedCell())
-	{
-		return;
-	}
-	SetMaterialColorParameter(OwnerCell->CellType->NormalColor);
+	SMContext->GetCurrentState()->EndCursorOver();
 }
 
 
-void UCPP_AC_Cell_CursorInteraction::ClickEvent()
-{	
-	SetMaterialColorParameter(OwnerCell->CellType->ClickedColor);
+void UCPP_AC_Cell_CursorInteraction::Clicked(AActor* TouchedComponent, FKey ButtonPressed)
+{			
+	SMContext->GetCurrentState()->Clicked();
+	InputEventBus->RaiseClickOnCellEvent(OwnerCell);
 }
 
 
 void UCPP_AC_Cell_CursorInteraction::UnclickEvent()
 {
-	SetMaterialColorParameter(OwnerCell->CellType->NormalColor);
+	SMContext->GetCurrentState()->ToNormal();
+	OwnerCell->NotifyShiftingCanceled();		
 }
 
 
-
-//void UCPP_AC_Cell_CursorInteraction::FinishCellDivisionEvent(FVector2f SpawnAxialLocation)
-//{
-//	SetMaterialColorParameter(OwnerCell->CellType->NormalColor);
-//}
-
-
-void UCPP_AC_Cell_CursorInteraction::SetMaterialColorParameter(const FLinearColor& MaterialColor)
+void UCPP_AC_Cell_CursorInteraction::ShiftEvent(bool ShouldShift)
 {
-	FName MaterialColorParameterName = OwnerCell->CellType->MaterialColorParameterName;
-	MaterialInstance->SetVectorParameterValue(MaterialColorParameterName, MaterialColor);	
+	if (ShouldShift)
+	{
+		SMContext->GetCurrentState()->Shift();
+		return;
+	}
+	SMContext->GetCurrentState()->ToNormal();	
 }
+

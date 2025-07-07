@@ -9,7 +9,7 @@
 
 
 
-
+class UCPP_SM_Cell_Cursor_Context;
 
 
 UCLASS()
@@ -18,18 +18,34 @@ class TFM_PROTOTYPE_API UCPP_AC_Cell_CursorInteraction : public UCPP_AC_Cell_Bas
 	GENERATED_BODY()
 
 
+public:
+	UCPP_AC_Cell_CursorInteraction();
+
+
+
 public:/*Properties*/
 
 
 
 public:/*Functions*/
 
+	//--Transition functions
+	//virtual void ToNormal() override;
+	//virtual void NoInteract() override;
+	//virtual void BeginCursorOver() override;
+	//virtual void Clicked() override;
+	//virtual void Shift() override;
+	//virtual void Transformed() override;
+
 
 
 protected:/*Properties*/
 
 	UPROPERTY()
-	UMaterialInstanceDynamic* MaterialInstance;
+	UCPP_SM_Cell_Cursor_Context* SMContext{ nullptr };
+
+	UPROPERTY()
+	UMaterialInstanceDynamic* MaterialInstance{ nullptr };
 
 
 
@@ -44,10 +60,13 @@ protected:/*Functions*/
 	void EndCursorOver(AActor* TouchedActor);
 
 	UFUNCTION()
-	void ClickEvent();
+	void Clicked(AActor* TouchedComponent, FKey ButtonPressed);
 
 	UFUNCTION()
 	void UnclickEvent();
+
+	UFUNCTION()
+	void ShiftEvent(bool ShouldShift);
 
 	/*UFUNCTION()
 	void FinishCellDivisionEvent(FVector2f SpawnAxialLocation);*/
@@ -64,6 +83,6 @@ protected:/*Functions*/
 
 	virtual void InitComponent() override;
 
-	void SetMaterialColorParameter(const FLinearColor& MaterialColor);
+	//void SetMaterialColorParameter(const FLinearColor& MaterialColor);
 
 };

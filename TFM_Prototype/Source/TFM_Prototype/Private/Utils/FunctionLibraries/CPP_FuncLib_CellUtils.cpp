@@ -1,11 +1,11 @@
-#include "Utils/FunctionLibraries/CPP_CellFunctionLibrary.h"
+#include "Utils/FunctionLibraries/CPP_FuncLib_CellUtils.h"
 #include "GameFramework/Character.h"
-#include "TFM_Prototype/Public/Utils/Enums/CPP_Neighbours.h"
-#include "TFM_Prototype/Public/Characters/Player/CPP_Player.h"
+#include "Utils/Enums/CPP_NeighbourShortName.h"
+#include "Characters/Player/CPP_Player.h"
 
 
 
-const FVector2f UCPP_CellFunctionLibrary::BadAxialLocation{ FVector2f(static_cast<float>(INT_MAX), static_cast<float>(INT_MAX)) };
+const FVector2f UCPP_FuncLib_CellUtils::BadAxialLocation{ FVector2f(static_cast<float>(INT_MAX), static_cast<float>(INT_MAX)) };
 
 
 /**
@@ -16,7 +16,7 @@ const FVector2f UCPP_CellFunctionLibrary::BadAxialLocation{ FVector2f(static_cas
  * @param OutRealLocation The world location.
  * @param OutRealRotation The world rotation.
 */
-void UCPP_CellFunctionLibrary::CalculateWorldLocationRotationBasedOnPlayer(const ACPP_Player* Player,
+void UCPP_FuncLib_CellUtils::CalculateWorldLocationRotationBasedOnPlayer(const ACPP_Player* Player,
 	const FVector2D RelativeLocation, FVector& OutRealLocation, FRotator& OutRealRotation)
 {
 	/*if (!CenterCell)
@@ -57,7 +57,7 @@ void UCPP_CellFunctionLibrary::CalculateWorldLocationRotationBasedOnPlayer(const
  * @param DestinationAxialLocation An specific axial location.
  * @param OutRelativeLocation Destination relative location from origin.
 */
-void UCPP_CellFunctionLibrary::GetRelativeLocationFromAnOrigin(float DistanceBetweenNeighbours,
+void UCPP_FuncLib_CellUtils::GetRelativeLocationFromAnOrigin(float DistanceBetweenNeighbours,
 	FVector2f OriginAxialLocation, FVector2f DestinationAxialLocation, FVector2D& OutRelativeLocation)
 {
 	if (DestinationAxialLocation == OriginAxialLocation)
@@ -82,14 +82,14 @@ void UCPP_CellFunctionLibrary::GetRelativeLocationFromAnOrigin(float DistanceBet
 
 
 /// Checks if two axial locations are next to each other
-bool UCPP_CellFunctionLibrary::AreNeighbours(FVector2f FirstAxialLocation, FVector2f SecondAxialLocation)
+bool UCPP_FuncLib_CellUtils::AreNeighbours(FVector2f FirstAxialLocation, FVector2f SecondAxialLocation)
 {
 	return GetDistanceBetweenAxialLocations(FirstAxialLocation, SecondAxialLocation) == 1;
 }
 
 
 
-int UCPP_CellFunctionLibrary::GetDistanceBetweenAxialLocations(FVector2f StartAxialLocation, FVector2f EndAxialLocation)
+int UCPP_FuncLib_CellUtils::GetDistanceBetweenAxialLocations(FVector2f StartAxialLocation, FVector2f EndAxialLocation)
 {
 	int Dx = EndAxialLocation.X - StartAxialLocation.X;
 	int Dy = EndAxialLocation.Y - StartAxialLocation.Y;
@@ -107,68 +107,68 @@ int UCPP_CellFunctionLibrary::GetDistanceBetweenAxialLocations(FVector2f StartAx
 
 
 
-FString UCPP_CellFunctionLibrary::GetCellOutlinerLabel(FVector2f AxialLocation)
+FString UCPP_FuncLib_CellUtils::GetCellOutlinerLabel(FVector2f AxialLocation)
 {
 	return FString::Printf(TEXT("Cell(%.0f, %.0f)"), AxialLocation.X, AxialLocation.Y);	
 }
 
 
 
-ECPP_Neighbours UCPP_CellFunctionLibrary::GetShortNeighbourName(FVector2f AxialLocation)
+ECPP_NeighbourShortName UCPP_FuncLib_CellUtils::GetNeighbourShortName(FVector2f AxialLocation)
 {
 	if (AxialLocation == FVector2f(1, 0))
 	{
-		return ECPP_Neighbours::N;
+		return ECPP_NeighbourShortName::N;
 	}
 	if (AxialLocation == FVector2f(0, 1))
 	{
-		return ECPP_Neighbours::NE;
+		return ECPP_NeighbourShortName::NE;
 	}
 	if (AxialLocation == FVector2f(-1, 1))
 	{
-		return ECPP_Neighbours::SE;
+		return ECPP_NeighbourShortName::SE;
 	}
 	if (AxialLocation == FVector2f(-1, 0))
 	{
-		return ECPP_Neighbours::S;
+		return ECPP_NeighbourShortName::S;
 	}
 	if (AxialLocation == FVector2f(0, -1))
 	{
-		return ECPP_Neighbours::SW;
+		return ECPP_NeighbourShortName::SW;
 	}
 	if (AxialLocation == FVector2f(1, -1))
 	{
-		return ECPP_Neighbours::NW;
+		return ECPP_NeighbourShortName::NW;
 	}
 
-	return ECPP_Neighbours::None;
+	return ECPP_NeighbourShortName::None;
 }
 
 
 
-FVector2f UCPP_CellFunctionLibrary::GetAxialLocationByShortName(ECPP_Neighbours ShortName)
+FVector2f UCPP_FuncLib_CellUtils::GetAxialLocationByShortName(ECPP_NeighbourShortName ShortName)
 {
-	if (ShortName == ECPP_Neighbours::N)
+	if (ShortName == ECPP_NeighbourShortName::N)
 	{
 		return FVector2f(1, 0);
 	}
-	if (ShortName == ECPP_Neighbours::NE)
+	if (ShortName == ECPP_NeighbourShortName::NE)
 	{
 		return FVector2f(0, 1);
 	}
-	if (ShortName == ECPP_Neighbours::SE)
+	if (ShortName == ECPP_NeighbourShortName::SE)
 	{
 		return FVector2f(-1, 1);
 	}
-	if (ShortName == ECPP_Neighbours::S)
+	if (ShortName == ECPP_NeighbourShortName::S)
 	{
 		return FVector2f(-1, 0);
 	}
-	if (ShortName == ECPP_Neighbours::SW)
+	if (ShortName == ECPP_NeighbourShortName::SW)
 	{
 		return FVector2f(0, -1);
 	}
-	if (ShortName == ECPP_Neighbours::NW)
+	if (ShortName == ECPP_NeighbourShortName::NW)
 	{
 		return FVector2f(1, -1);
 	}

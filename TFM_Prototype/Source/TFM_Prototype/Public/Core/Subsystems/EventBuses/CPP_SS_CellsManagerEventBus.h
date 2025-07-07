@@ -11,6 +11,8 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFinishCellDivisionEvent, FVector2f, SpawnAxialLocation);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMoveCellsEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCellsShiftingEvent, bool, ShouldCellsShiftLocation);
+
 
 
 
@@ -29,6 +31,9 @@ public: /*Properties*/
 	UPROPERTY(BlueprintAssignable)
 	FMoveCellsEvent MoveCellsEventDelegate;
 
+	UPROPERTY(BlueprintAssignable)
+	FCellsShiftingEvent CellsShiftingEventDelegate;
+
 
 
 public: /*Functions*/
@@ -43,6 +48,12 @@ public: /*Functions*/
 	FORCEINLINE void RaiseMoveCellsEvent()
 	{
 		MoveCellsEventDelegate.Broadcast();
+	}
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void RaiseCellsShiftingEvent(bool ShouldCellsShiftLocation)
+	{
+		CellsShiftingEventDelegate.Broadcast(ShouldCellsShiftLocation);
 	}
 
 };

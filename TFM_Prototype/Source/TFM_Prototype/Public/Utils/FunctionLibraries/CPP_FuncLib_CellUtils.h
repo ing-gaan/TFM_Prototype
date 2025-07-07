@@ -4,16 +4,16 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 
 
+#include "CPP_FuncLib_CellUtils.generated.h"
 
-#include "CPP_CellFunctionLibrary.generated.h"
 
 
 class ACPP_Player;
-enum class ECPP_Neighbours : uint8;
+enum class ECPP_NeighbourShortName : uint8;
 
 
 UCLASS()
-class TFM_PROTOTYPE_API UCPP_CellFunctionLibrary : public UBlueprintFunctionLibrary
+class TFM_PROTOTYPE_API UCPP_FuncLib_CellUtils : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 	
@@ -60,8 +60,8 @@ public:
 	static int GetDistanceBetweenAxialLocations(FVector2f StartAxialLocation, FVector2f EndAxialLocation);
 
 	static FString GetCellOutlinerLabel(FVector2f AxialLocation);
-	static ECPP_Neighbours GetShortNeighbourName(FVector2f AxialLocation);
-	static FVector2f GetAxialLocationByShortName(ECPP_Neighbours ShortName);
+	static ECPP_NeighbourShortName GetNeighbourShortName(FVector2f AxialLocation);
+	static FVector2f GetAxialLocationByShortName(ECPP_NeighbourShortName ShortName);
 
 
 	template <typename T>

@@ -1,5 +1,6 @@
 #include "Actors/Grid/CPP_Grid.h"
 #include <Kismet/GameplayStatics.h>
+#include "Core/GameInstance/CPP_GameInstance.h"
 #include "Core/GameSettings/CPP_DA_GridSettings.h"
 #include "Core/GameSettings/CPP_DA_GameSettings.h"
 #include "Actors/Grid/Components/CPP_AC_Grid_StaticMeshInstances.h"
@@ -59,8 +60,11 @@ void ACPP_Grid::InitEventBuses()
 	UWorld* World = GetWorld();
 	checkf(World, TEXT("***> No World (nullptr) <***"));
 
-	UGameInstance* GameInstance = World->GetGameInstance();
+	UCPP_GameInstance* GameInstance = Cast<UCPP_GameInstance>(World->GetGameInstance());
 	checkf(GameInstance, TEXT("***> No GameInstance (nullptr) <***"));
+
+	GameSettings = GameInstance->GameSettings;
+	GridSettings = GameSettings->GridSettings;
 
 	InputEventBus = GameInstance->GetSubsystem<UCPP_SS_InputEventBus>();
 	checkf(InputEventBus, TEXT("***> No InputEventBus (nullptr) <***"));
@@ -182,13 +186,19 @@ void ACPP_Grid::ClickOnStaticMeshInstance(FVector2f AxialLocation) const
 	//InputEventBus->RaiseClickOnGridEvent(AxialLocation);	
 	FTimerDelegate TimerDelegate;
 	FTimerHandle TimerHandle;
-	TimerDelegate.BindUObject(this, &ACPP_Grid::MyFunctionToCall, AxialLocation);
+	TimerDelegate.BindUObject(this, &ACPP_Grid::ClickOnGrid, AxialLocation);
 	//GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, 3.0, false);
 	GetWorldTimerManager().SetTimerForNextTick(TimerDelegate);
 }
 
 
-void ACPP_Grid::MyFunctionToCall(FVector2f AxialLocation) const
+void ACPP_Grid::ClickOnGrid(FVector2f AxialLocation) const
 {
 	InputEventBus->RaiseClickOnGridEvent(AxialLocation);	
+}
+
+
+const TSet<FVector2f>* ACPP_Grid::GetAllFreeNeighbours() const
+{
+	return &FreeNeighbours;
 }

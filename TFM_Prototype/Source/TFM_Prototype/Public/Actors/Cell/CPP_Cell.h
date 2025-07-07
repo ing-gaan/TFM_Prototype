@@ -15,14 +15,24 @@ class ACPP_PlayerController;
 class UCPP_DA_CellType;
 class ACPP_Player;
 class UCPP_AC_Cell_Base;
+class UCPP_SS_CellsManager;
+enum class ECPP_CellShiftState : uint8;
+class UCPP_SM_Cell_Life_Base;
 
 
-DECLARE_DYNAMIC_DELEGATE(FClickEvent);
+
+
+
+
+//DECLARE_DYNAMIC_DELEGATE(FClickEvent);
 DECLARE_DYNAMIC_DELEGATE(FUnclickEvent);
 DECLARE_DYNAMIC_DELEGATE(FMoveCellEvent);
 DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(ACPP_Cell*, FDivideEvent, FVector2f, NewAxialLocation);
 DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(bool, FDifferentiateEvent, const UCPP_DA_CellType*, Newtype);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FShiftEvent, bool, ShouldShift);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAnimShiftLocationEvent, FVector2f, NewAxialLocation);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAnimReturnToOriginEvent);
 
 
 
@@ -36,10 +46,15 @@ public:
 	
 
 
-public: /*Properties*/
+public: /*Properties*/	
 
-	UPROPERTY()
-	FClickEvent ClickEventDelegate;
+	/*UPROPERTY()
+	FClickEvent ClickEventDelegate;*/
+	UPROPERTY(BlueprintAssignable)
+	FAnimShiftLocationEvent AnimShiftLocationEventDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FAnimReturnToOriginEvent AnimReturnToOriginEventDelegate;
 
 	UPROPERTY()
 	FUnclickEvent UnclickEventDelegate;
@@ -52,6 +67,9 @@ public: /*Properties*/
 
 	UPROPERTY()
 	FDifferentiateEvent DifferentiateEventDelegate;
+
+	UPROPERTY()
+	FShiftEvent ShiftEventDelegate;
 
 
 
@@ -68,15 +86,15 @@ public: /*Properties*/
 	const UCPP_DA_GameSettings* GameSettings{ nullptr };
 	
 	UPROPERTY()
-	const UCPP_DA_CellType* CellType;
+	const UCPP_DA_CellType* CellType{ nullptr };
 	
-
 	UPROPERTY()
 	UStaticMeshComponent* CellStaticMeshComponent{ nullptr };
 
 
 
 public: /*Functions*/
+
 
 	UFUNCTION(BlueprintCallable)
 	FVector2f GetAxialLocation() const;
@@ -96,23 +114,38 @@ public: /*Functions*/
 	UFUNCTION()
 	bool LoadCellTypeComponents(const UCPP_DA_CellType* NewCellType);
 
-	UFUNCTION()
-	void Click() const;
+	/*UFUNCTION()
+	void Click() const;*/
 	
 	UFUNCTION()
 	void Unclick() const;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void MoveCell() const;
 
 	UFUNCTION()
 	bool HasThisAbility(TSubclassOf<UCPP_AC_Cell_Base> Ability) const;
 
 
-protected: /*Properties*/
-	
+	void NotifyShiftingActivated() const;
+	void NotifyShiftingCanceled() const;
+	void ShiftAxialLocation(FVector2f NewTempAxialLocation) const;
+	void ReturnToOriginAxialLocation() const;
+	ECPP_CellShiftState GetCellShiftState() const;
+
+	bool CellLifeStateIsEqualOrOlderThan(TSubclassOf<UCPP_SM_Cell_Life_Base> LifeStage) const;
+
+
+protected: /*Properties*/	
+
+	static const UCPP_SS_CellsManager* CellsManager;
+
+		
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FVector2f AxialLocation{ FVector2f(0, 0) };
+
+	UPROPERTY(BlueprintReadWrite)
+	FVector2f TempAxialLocation{ FVector2f(0, 0) };
 
 	UPROPERTY()
 	FVector2D RelativeLocation{ FVector2D(0, 0) };
@@ -120,13 +153,18 @@ protected: /*Properties*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool bIsCellMoving{false};
 
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ECPP_CellShiftState CellShiftState;
+
+	UPROPERTY()
+	const UCPP_SM_Cell_Life_Base* CellLifeState;
 
 
 protected: /*Functions*/
-
+	
+	
 	UFUNCTION(BlueprintCallable)
-	void SetRelativeLocation();
+	void SetRelativeLocation(FVector2f AxLocation);
 
 	
 
@@ -138,13 +176,12 @@ protected: /*Functions*/
 	void UnRegisterEventFunctions() const;
 
 	void InitCell();
-	//void LoadStaticMeshComponent();
-	
-
-
-	
 
 	
 	
 	
+
+
+
+	friend class UCPP_SS_CellsManager;
 };

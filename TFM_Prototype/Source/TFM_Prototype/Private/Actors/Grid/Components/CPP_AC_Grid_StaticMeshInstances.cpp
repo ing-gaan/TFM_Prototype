@@ -1,7 +1,7 @@
 #include "Actors/Grid/Components/CPP_AC_Grid_StaticMeshInstances.h"
 #include "Actors/Grid/CPP_Grid.h"
 #include <Kismet/GameplayStatics.h>
-#include "Utils/FunctionLibraries/CPP_CellFunctionLibrary.h"
+#include "Utils/FunctionLibraries/CPP_FuncLib_CellUtils.h"
 #include "Core/GameSettings/CPP_DA_GridSettings.h"
 #include "Core/GameSettings/CPP_DA_GameSettings.h"
 #include "Utils/Macros/Macros.h"
@@ -149,7 +149,7 @@ void UCPP_AC_Grid_StaticMeshInstances::SetInstancesTransforms(const TSet<FVector
 		
 	for (const FVector2f& AxialLocation : AxialLocations)
 	{		
-		UCPP_CellFunctionLibrary::GetRelativeLocationFromAnOrigin(Distance, OriginAxLoc, AxialLocation, RelativeLoc);		
+		UCPP_FuncLib_CellUtils::GetRelativeLocationFromAnOrigin(Distance, OriginAxLoc, AxialLocation, RelativeLoc);		
 		NewTransform.SetLocation(FVector(RelativeLoc.X, RelativeLoc.Y, Z) );
 		TransformsOfVisibleInstances.Add(NewTransform);
 	}

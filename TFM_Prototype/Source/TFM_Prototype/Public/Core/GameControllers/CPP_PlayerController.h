@@ -13,6 +13,8 @@ class UCPP_DA_GameSettings;
 class UCPP_DA_GridSettings;
 class ACPP_Cell;
 class UCPP_SS_CellsManager;
+class UCPP_SS_LocalGameManager;
+class ACPP_Grid;
 class ACPP_Player;
 
 
@@ -40,7 +42,7 @@ public: /*Functions*/
 protected:/*Properties*/
 
 	UPROPERTY()
-	UCPP_SS_InputEventBus* InputEventBus;
+	UCPP_SS_InputEventBus* InputEventBus{ nullptr };
 
 	UPROPERTY()
 	const UCPP_DA_GameSettings* GameSettings { nullptr };
@@ -54,6 +56,12 @@ protected:/*Properties*/
 	UPROPERTY()
 	UCPP_SS_CellsManager* CellsManager { nullptr };
 
+	UPROPERTY()
+	UCPP_SS_LocalGameManager* LocalGameManager { nullptr };
+
+	/*UPROPERTY()
+	const ACPP_Grid* GetGrid() const;*/
+
 	
 
 
@@ -63,7 +71,7 @@ protected:/*Functions*/
 	void ClickOnActor();
 
 	UFUNCTION()
-	void StartCellsManager();
+	void StartManagers();
 
 
 

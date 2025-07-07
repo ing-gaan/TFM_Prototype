@@ -1,5 +1,5 @@
 #include "Actors/Cell/Components/CPP_AC_Cell_Division.h"
-#include "Utils/FunctionLibraries/CPP_CellFunctionLibrary.h"
+#include "Utils/FunctionLibraries/CPP_FuncLib_CellUtils.h"
 #include "Core/GameSettings/CPP_DA_GameSettings.h"
 #include "Core/GameSettings/CPP_DA_GridSettings.h"
 #include "Actors/Cell/CPP_Cell.h"
@@ -43,7 +43,7 @@ ACPP_Cell* UCPP_AC_Cell_Division::DivideEvent(FVector2f AxialLocation)
 	float Distance = GridSettings->DistanceBetweenNeighbours;
 	FVector2f OriginAxLoc = FVector2f::Zero();
 	FVector2D RelativeLoc;
-	UCPP_CellFunctionLibrary::GetRelativeLocationFromAnOrigin(Distance, OriginAxLoc, AxialLocation, RelativeLoc);
+	UCPP_FuncLib_CellUtils::GetRelativeLocationFromAnOrigin(Distance, OriginAxLoc, AxialLocation, RelativeLoc);
 
 	FVector Location;
 	Location.X = RelativeLoc.X;
@@ -72,7 +72,7 @@ ACPP_Cell* UCPP_AC_Cell_Division::SpawnCell(FVector CellLocation, FRotator CellR
 
 void UCPP_AC_Cell_Division::ConfigureNewCell(ACPP_Cell* NewCell, FVector2f AxialLocation)
 {
-	const FString StrName = UCPP_CellFunctionLibrary::GetCellOutlinerLabel(AxialLocation);
+	const FString StrName = UCPP_FuncLib_CellUtils::GetCellOutlinerLabel(AxialLocation);
 	NewCell->SetActorLabel(StrName);	
 	NewCell->LoadCellTypeComponents(OwnerCell->CellType);
 	NewCell->CellType = OwnerCell->CellType;

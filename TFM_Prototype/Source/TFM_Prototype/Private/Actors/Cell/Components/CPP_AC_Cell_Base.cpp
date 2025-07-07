@@ -49,10 +49,10 @@ void UCPP_AC_Cell_Base::InitComponent()
 	GameSettings = GameInstance->GameSettings;
 	GridSettings = GameSettings->GridSettings;
 
-	/*InputEventBus = GameInstance->GetSubsystem<UCPP_SS_InputEventBus>();
+	InputEventBus = GameInstance->GetSubsystem<UCPP_SS_InputEventBus>();
 	checkf(InputEventBus, TEXT("***> No InputEventBus (nullptr) <***"));
 
-	CellsManagerEventBus = GameInstance->GetSubsystem<UCPP_SS_CellsManagerEventBus>();
+	/*CellsManagerEventBus = GameInstance->GetSubsystem<UCPP_SS_CellsManagerEventBus>();
 	checkf(CellsManagerEventBus, TEXT("***> No CellsManagerEventBus (nullptr) <***"));*/
 
 }

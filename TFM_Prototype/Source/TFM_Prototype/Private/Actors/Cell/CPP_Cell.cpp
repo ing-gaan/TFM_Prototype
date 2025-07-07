@@ -1,6 +1,6 @@
 #include "Actors/Cell/CPP_Cell.h"
 #include "Actors/Cell/CPP_DA_CellType.h"
-#include "Utils/FunctionLibraries/CPP_CellFunctionLibrary.h"
+#include "Utils/FunctionLibraries/CPP_FuncLib_CellUtils.h"
 #include <Kismet/GameplayStatics.h>
 #include "Core/GameControllers/CPP_PlayerController.h"
 #include "Characters/Player/CPP_Player.h"
@@ -9,13 +9,22 @@
 #include "Utils/Macros/Macros.h"
 #include "Actors/Cell/Components/CPP_AC_Cell_Base.h"
 #include "Core/GameInstance/CPP_GameInstance.h"
+#include "Core/Subsystems/Managers/CPP_SS_CellsManager.h"
+#include "Utils/Enums/CPP_CellShiftState.h"
+#include "Actors/Cell/StateMachines/LifeSM/CPP_SM_Cell_Life_Base.h"
 
 
+
+
+
+
+const UCPP_SS_CellsManager* ACPP_Cell::CellsManager{ nullptr };
 
 
 ACPP_Cell::ACPP_Cell()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	CellShiftState = ECPP_CellShiftState::AtOriginLocation;
 }
 
 
@@ -80,6 +89,7 @@ void ACPP_Cell::InitCell()
 }
 
 
+
 FVector2f ACPP_Cell::GetAxialLocation() const
 {
 	return AxialLocation;
@@ -109,12 +119,11 @@ bool ACPP_Cell::Differentiate(const UCPP_DA_CellType* Newtype) const
 void ACPP_Cell::SetAxialLocation(FVector2f NewAxialLocation)
 {
 	AxialLocation = NewAxialLocation;
-	SetRelativeLocation();
+	SetRelativeLocation(NewAxialLocation);
 }
 
 
-
-void ACPP_Cell::SetRelativeLocation()
+void ACPP_Cell::SetRelativeLocation(FVector2f AxLocation)
 {
 	FVector2f OriginAxLocation { FVector2f(0, 0) };
 	
@@ -123,8 +132,8 @@ void ACPP_Cell::SetRelativeLocation()
 		OriginAxLocation = Player->GetAxialLocation();
 	}
 
-	UCPP_CellFunctionLibrary::GetRelativeLocationFromAnOrigin(GridSettings->DistanceBetweenNeighbours,
-		OriginAxLocation, AxialLocation, RelativeLocation);
+	UCPP_FuncLib_CellUtils::GetRelativeLocationFromAnOrigin(GridSettings->DistanceBetweenNeighbours,
+		OriginAxLocation, AxLocation, RelativeLocation);
 
 	MoveCell();
 }
@@ -168,10 +177,10 @@ bool ACPP_Cell::LoadCellTypeComponents(const UCPP_DA_CellType* NewCellType)
 
 
 
-void ACPP_Cell::Click() const
-{
-	ClickEventDelegate.ExecuteIfBound();
-}
+//void ACPP_Cell::Click() const
+//{
+//	ClickEventDelegate.ExecuteIfBound();
+//}
 
 void ACPP_Cell::Unclick() const
 {
@@ -180,24 +189,73 @@ void ACPP_Cell::Unclick() const
 
 
 void ACPP_Cell::MoveCell() const
-{
-	/*FVector RealLocation;
-	FRotator RealRotation;
-
-	UCPP_CellFunctionLibrary::CalculateWorldLocationRotationBasedOnPlayer(
-		Player, RelativeLocation, RealLocation, RealRotation);
-
-	SetActorLocation(RealLocation);
-	SetActorRotation(RealRotation);	*/
-
+{	
 	MoveCellEventDelegate.ExecuteIfBound();
 }
 
 
 bool ACPP_Cell::HasThisAbility(TSubclassOf<UCPP_AC_Cell_Base> Ability) const
 {
-	return CellType->NecessaryCellComponents.Contains(Ability);
+	return CellType->NecessaryCellComponents.Contains(Ability);	
 }
+
+
+void ACPP_Cell::NotifyShiftingActivated() const
+{
+	CellsManager->StartShiftingCellsLocations(this);
+}
+
+
+void ACPP_Cell::NotifyShiftingCanceled() const
+{
+	CellsManager->ReturnCellsToOriginLocation(this);
+}
+
+
+void ACPP_Cell::ShiftAxialLocation(FVector2f NewTempAxialLocation) const
+{
+	//PRINT("AxialLocation desde CPP");
+
+	bool bIsOnTempLocation = CellShiftState == ECPP_CellShiftState::AtTempLocation;
+
+	if (bIsOnTempLocation)
+	{
+		return;
+	}
+
+	ShiftEventDelegate.ExecuteIfBound(true);
+
+
+	//----- CODIGO DEBUG ----- 
+	AnimShiftLocationEventDelegate.Broadcast(NewTempAxialLocation);
+}
+
+
+void ACPP_Cell::ReturnToOriginAxialLocation() const
+{
+	ShiftEventDelegate.ExecuteIfBound(false);
+
+
+	//----- CODIGO DEBUG ----- 
+	AnimReturnToOriginEventDelegate.Broadcast();
+}
+
+
+ECPP_CellShiftState ACPP_Cell::GetCellShiftState() const
+{
+	return CellShiftState;
+}
+
+
+bool ACPP_Cell::CellLifeStateIsEqualOrOlderThan(TSubclassOf<UCPP_SM_Cell_Life_Base> LifeStage) const
+{
+	if (!CellLifeState)
+	{
+		return false;
+	}
+	return CellLifeState->IsThisEqualOrOlderThan(LifeStage);
+};
+
 
 
 

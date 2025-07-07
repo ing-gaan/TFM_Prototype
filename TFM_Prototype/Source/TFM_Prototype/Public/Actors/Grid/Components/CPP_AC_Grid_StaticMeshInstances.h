@@ -44,10 +44,10 @@ public:/*Fucntions*/
 protected:/*Properties*/
 
 	UPROPERTY()
-	const ACPP_Grid* GridOwner;
+	const ACPP_Grid* GridOwner{ nullptr };
 	
 	UPROPERTY()
-	const UCPP_DA_GridSettings* GridSettings;
+	const UCPP_DA_GridSettings* GridSettings{ nullptr };
 
 	UPROPERTY()
 	const UCPP_DA_GameSettings* GameSettings { nullptr };

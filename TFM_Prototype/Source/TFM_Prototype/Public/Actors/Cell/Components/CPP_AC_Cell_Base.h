@@ -47,11 +47,11 @@ protected:/*Properties*/
 	UPROPERTY()
 	ACPP_Cell* OwnerCell{ nullptr };
 
-	/*UPROPERTY()
-	UCPP_SS_InputEventBus* InputEventBus;
-
 	UPROPERTY()
-	UCPP_SS_CellsManagerEventBus* CellsManagerEventBus;*/
+	UCPP_SS_InputEventBus* InputEventBus{ nullptr };
+
+	/*UPROPERTY()
+	UCPP_SS_CellsManagerEventBus* CellsManagerEventBus{ nullptr };*/
 
 	UPROPERTY()
 	const UCPP_DA_GameSettings* GameSettings{ nullptr };
