@@ -3,15 +3,19 @@
 #include "Core/Subsystems/EventBuses/CPP_SS_InputEventBus.h"
 #include "Core/Subsystems/EventBuses/CPP_SS_UIEventBus.h"
 #include "Core/Subsystems/EventBuses/CPP_SS_CellsManagerEventBus.h"
+#include "Core/Subsystems/EventBuses/CPP_SS_GameEventBus.h"
+#include "Utils/Enums/CPP_CellShiftState.h"
 #include "Actors/Grid/CPP_Grid.h"
 
 
 
 
 const ACPP_Cell* UCPP_SS_LocalGameManager::CurrentClickedCell{ nullptr };
+const ACPP_Cell* UCPP_SS_LocalGameManager::BeforeClickedCell{ nullptr };
 bool UCPP_SS_LocalGameManager::bIsGridActive{ false };
 bool UCPP_SS_LocalGameManager::bAreCellsShifting{ false };
 bool UCPP_SS_LocalGameManager::bIsACellDividing{ false };
+ECPP_CellShiftState UCPP_SS_LocalGameManager::AuxGridElemShiftState{ ECPP_CellShiftState::AtOriginLocation };
 
 
 
@@ -33,12 +37,6 @@ void UCPP_SS_LocalGameManager::Deinitialize()
 }
 
 
-void UCPP_SS_LocalGameManager::StartManager(const UCPP_SS_CellsManager* TheCellsManager, const ACPP_Grid* TheGrid)
-{
-	CellsManager = TheCellsManager;
-	Grid = TheGrid;
-}
-
 
 void UCPP_SS_LocalGameManager::InitEventBuses()
 {
@@ -55,38 +53,51 @@ void UCPP_SS_LocalGameManager::InitEventBuses()
 	checkf(UIEventBus, TEXT("***> No UIEventBus (nullptr) <***"));
 
 	CellsManagerEventBus = GameInstance->GetSubsystem<UCPP_SS_CellsManagerEventBus>();
-	checkf(UIEventBus, TEXT("***> No UIEventBus (nullptr) <***"));
+	checkf(CellsManagerEventBus, TEXT("***> No UIEventBus (nullptr) <***"));
+
+	GameEventBus = GameInstance->GetSubsystem<UCPP_SS_GameEventBus>();
+	checkf(GameEventBus, TEXT("***> No UIEventBus (nullptr) <***"));
 
 }
 
 
 void UCPP_SS_LocalGameManager::RegisterEventFunctions() const
 {
+	GameEventBus->Phase2StartedEventDelegate.AddUniqueDynamic(
+		this, &UCPP_SS_LocalGameManager::Phase2StartedEvent);
+
 	InputEventBus->ClickOnCellEventDelegate.AddUniqueDynamic(
 		this, &UCPP_SS_LocalGameManager::ClickOnCellEvent);
 	InputEventBus->CancelEventDelegate.AddUniqueDynamic(
 		this, &UCPP_SS_LocalGameManager::CancelEvent);
 
-	CellsManagerEventBus->CellsShiftingEventDelegate.AddUniqueDynamic(
+	CellsManagerEventBus->BeginCellsShiftingEventDelegate.AddUniqueDynamic(
 		this, &UCPP_SS_LocalGameManager::CellsShiftingEvent);
+	CellsManagerEventBus->FinishCellsShiftingEventDelegate.AddUniqueDynamic(
+		this, &UCPP_SS_LocalGameManager::FinishCellsShiftingEvent);
 	CellsManagerEventBus->FinishCellDivisionEventDelegate.AddUniqueDynamic(
 		this, &UCPP_SS_LocalGameManager::FinishCellDivisionEvent);
 
 	UIEventBus->BeginCellDivisionEventDelegate.AddUniqueDynamic(
 		this, &UCPP_SS_LocalGameManager::BeginCellDivisionEvent);
-
 }
 
 
 void UCPP_SS_LocalGameManager::UnRegisterEventFunctions() const
 {
+
+	GameEventBus->Phase2StartedEventDelegate.RemoveDynamic(
+		this, &UCPP_SS_LocalGameManager::Phase2StartedEvent);
+
 	InputEventBus->ClickOnCellEventDelegate.RemoveDynamic(
 		this, &UCPP_SS_LocalGameManager::ClickOnCellEvent);
 	InputEventBus->CancelEventDelegate.RemoveDynamic(
 		this, &UCPP_SS_LocalGameManager::CancelEvent);
 
-	CellsManagerEventBus->CellsShiftingEventDelegate.RemoveDynamic(
+	CellsManagerEventBus->BeginCellsShiftingEventDelegate.RemoveDynamic(
 		this, &UCPP_SS_LocalGameManager::CellsShiftingEvent);
+	CellsManagerEventBus->FinishCellsShiftingEventDelegate.RemoveDynamic(
+		this, &UCPP_SS_LocalGameManager::FinishCellsShiftingEvent);
 	CellsManagerEventBus->FinishCellDivisionEventDelegate.RemoveDynamic(
 		this, &UCPP_SS_LocalGameManager::FinishCellDivisionEvent);
 
@@ -95,9 +106,27 @@ void UCPP_SS_LocalGameManager::UnRegisterEventFunctions() const
 }
 
 
+void UCPP_SS_LocalGameManager::Phase2StartedEvent(UCPP_SS_CellsManager* TheCellsManager, ACPP_Grid* TheGrid)
+{
+	StartManager(TheCellsManager, TheGrid);
+}
+
+
+void UCPP_SS_LocalGameManager::StartManager(const UCPP_SS_CellsManager* TheCellsManager, const ACPP_Grid* TheGrid)
+{
+	CellsManager = TheCellsManager;
+	Grid = TheGrid;
+}
+
+
 
 void UCPP_SS_LocalGameManager::ClickOnCellEvent(const ACPP_Cell* ClickedCell)
 {	
+	BeforeClickedCell = CurrentClickedCell;
+	if (!BeforeClickedCell)
+	{
+		BeforeClickedCell = ClickedCell;
+	}
 	CurrentClickedCell = ClickedCell;
 }
 
@@ -111,18 +140,24 @@ void UCPP_SS_LocalGameManager::CancelEvent()
 }
 
 
-void UCPP_SS_LocalGameManager::CellsShiftingEvent(bool ShouldCellsShiftLocation)
+void UCPP_SS_LocalGameManager::CellsShiftingEvent(const ACPP_Cell* FirstCellToShift)
 {
-	bAreCellsShifting = ShouldCellsShiftLocation;
+	bAreCellsShifting = true;
+}
+
+
+void UCPP_SS_LocalGameManager::FinishCellsShiftingEvent()
+{
+	bAreCellsShifting = false;
 }
 
 
 void UCPP_SS_LocalGameManager::FinishCellDivisionEvent(FVector2f SpawnAxialLocation)
 {
-	CurrentClickedCell = nullptr;
-	bIsGridActive = false;
+	//CurrentClickedCell = nullptr;
+	//bIsGridActive = false;
 	bAreCellsShifting = false;
-	bIsACellDividing = false;
+	//bIsACellDividing = false;
 }
 
 
@@ -136,6 +171,12 @@ void UCPP_SS_LocalGameManager::BeginCellDivisionEvent()
 const ACPP_Cell* UCPP_SS_LocalGameManager::GetCurrentClickedCell()
 {
 	return CurrentClickedCell;
+}
+
+
+const ACPP_Cell* UCPP_SS_LocalGameManager::GetBeforeClickedCell()
+{
+	return BeforeClickedCell;
 }
 
 

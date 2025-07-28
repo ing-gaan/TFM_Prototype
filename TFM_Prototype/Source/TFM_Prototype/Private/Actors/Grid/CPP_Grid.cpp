@@ -30,6 +30,7 @@ void ACPP_Grid::BeginPlay()
 	InitEventBuses();
 	RegisterEventFunctions();
 	GetStaticMeshInstancesComponent();	
+	AddUsedAxialLocation(GameSettings->GridSettings->FirstAxialLocation);
 }
 
 
@@ -121,9 +122,10 @@ void ACPP_Grid::GetStaticMeshInstancesComponent()
 }
 
 
-void ACPP_Grid::ClickOnCellEvent(const ACPP_Cell* NewClickedCell)
+void ACPP_Grid::ClickOnCellEvent(const ACPP_Cell* ClickedCell)
 {
-	checkf(NewClickedCell, TEXT("***> No NewClickedCell (nullptr) <***"));
+	CurrentClickedCell = ClickedCell;
+	StaticMeshInstancesComponent->SetInstancesTransforms(FreeNeighbours);
 }
 
 
@@ -135,19 +137,13 @@ void ACPP_Grid::CancelEvent()
 
 void ACPP_Grid::BeginCellDivisionEvent()
 {
-	StaticMeshInstancesComponent->SetInstancesTransforms(FreeNeighbours);
 	SetGridVisibility(true);
 }
 
 
 void ACPP_Grid::FinishCellDivisionEvent(FVector2f SpawnAxialLocation)
 {
-	//PRINT("Cell spawned");
-	FreeNeighbours.Remove(SpawnAxialLocation);
-	UsedAxialLocations.Emplace(SpawnAxialLocation);
-	AddNewFreeNeighbours(SpawnAxialLocation);
-
-	SetGridVisibility(false);
+	//AddUsedAxialLocation(SpawnAxialLocation);
 }
 
 
@@ -159,11 +155,31 @@ void ACPP_Grid::AddNewFreeNeighbours(FVector2f SpawnAxialLocation)
 		NeighbourAxialLoc = Elem + SpawnAxialLocation;
 		if (!UsedAxialLocations.Contains(NeighbourAxialLoc))
 		{
-			FreeNeighbours.Add(NeighbourAxialLoc);
+			FreeNeighbours.Emplace(NeighbourAxialLoc);
 		}
 	}	
-	//StaticMeshInstancesComponent->SetInstancesTransforms(FreeNeighbours);
-	//SetGridVisibility(true);
+}
+
+
+
+void ACPP_Grid::RemoveFreeNeighbours(FVector2f AxialLocation)
+{
+	FVector2f TempAxLoc;
+	
+	for (const FVector2f& Elem : GridSettings->InitAxialLocations)
+	{
+		TempAxLoc = AxialLocation + Elem;
+		FreeNeighbours.Remove(TempAxLoc);
+	}
+
+	for (const FVector2f& Elem : GridSettings->InitAxialLocations)
+	{
+		TempAxLoc = AxialLocation + Elem;
+		if (UsedAxialLocations.Contains(TempAxLoc))
+		{
+			AddNewFreeNeighbours(TempAxLoc);
+		}
+	}
 }
 
 
@@ -181,24 +197,56 @@ void ACPP_Grid::SetGridVisibility(bool bIsVisible)
 }
 
 
-void ACPP_Grid::ClickOnStaticMeshInstance(FVector2f AxialLocation) const
-{
-	//InputEventBus->RaiseClickOnGridEvent(AxialLocation);	
+void ACPP_Grid::ClickOnStaticMeshInstance(FVector2f AxialLocation)
+{	
 	FTimerDelegate TimerDelegate;
 	FTimerHandle TimerHandle;
 	TimerDelegate.BindUObject(this, &ACPP_Grid::ClickOnGrid, AxialLocation);
-	//GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, 3.0, false);
-	GetWorldTimerManager().SetTimerForNextTick(TimerDelegate);
+	GetWorldTimerManager().SetTimerForNextTick(TimerDelegate);	
 }
 
 
-void ACPP_Grid::ClickOnGrid(FVector2f AxialLocation) const
-{
+void ACPP_Grid::ClickOnGrid(FVector2f AxialLocation)
+{		
+	AddUsedAxialLocation(AxialLocation);
 	InputEventBus->RaiseClickOnGridEvent(AxialLocation);	
+}
+
+
+void ACPP_Grid::ClickOnAuxGridElement(FVector2f AxialLocation)
+{	
+	InputEventBus->RaiseClickOnAuxGridElemEvent();
+	AddUsedAxialLocation(AxialLocation);
 }
 
 
 const TSet<FVector2f>* ACPP_Grid::GetAllFreeNeighbours() const
 {
 	return &FreeNeighbours;
+}
+
+
+void ACPP_Grid::UpdateToTempLocations(FVector2f FirstAxialLocation, FVector2f LastAxialLocation)
+{	
+	AddFreeAxialLocation(FirstAxialLocation);
+	AddUsedAxialLocation(LastAxialLocation);	
+}
+
+
+
+
+void ACPP_Grid::AddFreeAxialLocation(FVector2f FreeAxialLocation)
+{
+	FreeNeighbours.Emplace(FreeAxialLocation);
+	UsedAxialLocations.Remove(FreeAxialLocation);
+	StaticMeshInstancesComponent->SetInstancesTransforms(FreeNeighbours);
+}
+
+
+void ACPP_Grid::AddUsedAxialLocation(FVector2f UsedAxialLocation)
+{
+	FreeNeighbours.Remove(UsedAxialLocation);
+	UsedAxialLocations.Emplace(UsedAxialLocation);
+	AddNewFreeNeighbours(UsedAxialLocation);
+	StaticMeshInstancesComponent->SetInstancesTransforms(FreeNeighbours);
 }

@@ -12,9 +12,7 @@
 
 void UCPP_SM_Cell_CursorSt_Init::SetState()
 {
-	Super::SetState();
-
-	//PRINT("Entra a estado Init");
+	Super::SetState();	
 }
 
 
@@ -24,23 +22,19 @@ const FLinearColor& UCPP_SM_Cell_CursorSt_Init::GetMaterialColor()
 }
 
 
-void UCPP_SM_Cell_CursorSt_Init::ToNormal()
-{
-	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_Normal::StaticClass());
-}
+//bool UCPP_SM_Cell_CursorSt_Init::ToNormal()
+//{
+//	PRINT("NOMAL DESDE INIT");
+//	//SMContext->ChangeState(UCPP_SM_Cell_CursorSt_Normal::StaticClass());
+//
+//	return true;
+//}
 
 
-void UCPP_SM_Cell_CursorSt_Init::BeginCursorOver()
+bool UCPP_SM_Cell_CursorSt_Init::BeginCursorOver()
 {
 	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_Over::StaticClass());
+	return true;
 }
 
-void UCPP_SM_Cell_CursorSt_Init::EndCursorOver()
-{
-	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_Normal::StaticClass());
-}
 
-void UCPP_SM_Cell_CursorSt_Init::Clicked()
-{
-	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_Normal::StaticClass());
-}

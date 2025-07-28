@@ -17,10 +17,7 @@ void ACPP_Player::BeginPlay()
 	Super::BeginPlay();
 
 	InitPlayer();
-
-
 	SetAxialLocation(GridSettings->FirstAxialLocation);
-	
 }
 
 
@@ -67,10 +64,9 @@ FVector2D ACPP_Player::GetRelativeLocation() const
 void ACPP_Player::SetAxialLocation(FVector2f NewAxialLocation)
 {
 	AxialLocation = NewAxialLocation;
-
-	float Z = GameSettings->CellsDefaultHeightFromGround;
-	FVector HeightVector = FVector(0, 0, Z);
-
-	SetActorLocation( GetActorLocation() + HeightVector );
+	
+	FVector PlayerLocation = GetActorLocation();
+	PlayerLocation.Z = GameSettings->CellsDefaultHeightFromGround;
+	SetActorLocation(PlayerLocation);
 }
 

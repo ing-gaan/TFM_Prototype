@@ -28,44 +28,50 @@ void UCPP_SM_Cell_Cursor_Base::SetMaterialColorParameter(const FLinearColor& Mat
 
 const FLinearColor& UCPP_SM_Cell_Cursor_Base::GetMaterialColor()
 {
-	checkf(false, TEXT("***> Function not implemented. Override without call parent (Not use Super typedef) <***"));
+	//checkf(false, TEXT("***> Function not implemented. Override without call parent (Not use Super typedef) <***"));
 	return FLinearColor::Black;
 }
 
 
-void UCPP_SM_Cell_Cursor_Base::ToNormal()
+bool UCPP_SM_Cell_Cursor_Base::ToNormal()
 {
-	checkf(false, TEXT("***> Function not implemented or transition not needed. <***"));
+	//checkf(false, TEXT("***> Function not implemented or transition not needed. <***"));
+	return false;
 }
 
 
-void UCPP_SM_Cell_Cursor_Base::NoInteract()
+bool UCPP_SM_Cell_Cursor_Base::NoInteract()
 {
-	checkf(false, TEXT("***> Function not implemented or transition not needed. <***"));
+	//checkf(false, TEXT("***> Function not implemented or transition not needed. <***"));
+	return false;
 }
 
 
-void UCPP_SM_Cell_Cursor_Base::BeginCursorOver()
+bool UCPP_SM_Cell_Cursor_Base::BeginCursorOver()
 {
-	checkf(false, TEXT("***> Function not implemented or transition not needed. <***"));
+	//checkf(false, TEXT("***> Function not implemented or transition not needed. <***"));
+	return false;
 }
 
 
-void UCPP_SM_Cell_Cursor_Base::EndCursorOver()
+bool UCPP_SM_Cell_Cursor_Base::EndCursorOver()
 {
-	checkf(false, TEXT("***> Function not implemented or transition not needed. <***"));
+	//checkf(false, TEXT("***> Function not implemented or transition not needed. <***"));
+	return false;
 }
 
 
-void UCPP_SM_Cell_Cursor_Base::Clicked()
+bool UCPP_SM_Cell_Cursor_Base::Clicked()
 {
-	checkf(false, TEXT("***> Function not implemented or transition not needed. <***"));
+	//checkf(false, TEXT("***> Function not implemented or transition not needed. <***"));
+	return false;
 }
 
 
-void UCPP_SM_Cell_Cursor_Base::Shift()
+bool UCPP_SM_Cell_Cursor_Base::Shift()
 {
-	checkf(false, TEXT("***> Function not implemented or transition not needed. <***"));
+	//checkf(false, TEXT("***> Function not implemented or transition not needed. <***"));
+	return false;
 }
 
 

@@ -4,8 +4,9 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 
 
-
 #include "CPP_SS_UIEventBus.generated.h"
+
+
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginCellDivisionEvent);

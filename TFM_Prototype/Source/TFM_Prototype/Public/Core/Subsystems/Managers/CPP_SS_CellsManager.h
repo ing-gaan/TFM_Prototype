@@ -9,12 +9,14 @@
 
 
 class ACPP_Cell;
+class ACPP_Grid;
 class UCPP_DA_GameSettings;
 class UCPP_DA_GridSettings;
 class ACPP_PlayerController;
 class UCPP_SS_InputEventBus;
 class UCPP_SS_CellsManagerEventBus;
 class UCPP_SS_UIEventBus;
+class UCPP_SS_GameEventBus;
 class UCPP_DA_CellType;
 class UCPP_SS_LocalGameManager;
 
@@ -37,8 +39,9 @@ public:/*Functions*/
 	
 	void StartManager();
 	const ACPP_Cell* GetCellInMap(FVector2f CellAxialLocation) const;
-	const TMap<FVector2f, const ACPP_Cell*>* GetCellsMap() const;
-	
+	const TMap<FVector2f, ACPP_Cell*>* GetCellsMap() const;
+	void UpdateToTempLocations(TArray<FVector2f>& AxialLocations);
+	int CellsInMapNumber() const;
 
 	
 
@@ -53,7 +56,7 @@ protected:/*Properties*/
 	const UCPP_DA_GridSettings* GridSettings { nullptr };
 
 	UPROPERTY()
-	TMap<FVector2f, const ACPP_Cell*> CellsMap;
+	TMap<FVector2f, ACPP_Cell*> CellsMap;
 
 	UPROPERTY()
 	TArray<const ACPP_Cell*> CellsBirthOrder;
@@ -67,11 +70,15 @@ protected:/*Properties*/
 	UPROPERTY()
 	UCPP_SS_UIEventBus* UIEventBus{ nullptr };
 
+	UPROPERTY()
+	UCPP_SS_GameEventBus* GameEventBus{ nullptr };
+
 	/*UPROPERTY()
 	const ACPP_PlayerController* PlayerContller { nullptr };*/
 
 	UPROPERTY()
 	const ACPP_Cell* CurrentClickedCell{ nullptr };
+
 
 
 protected:/*Functions*/
@@ -91,6 +98,9 @@ protected:/*Functions*/
 	UFUNCTION()
 	void FinishCellDifferentiationEvent(const UCPP_DA_CellType* NewCellType);
 
+	UFUNCTION()
+	void Phase1StartedEvent();
+
 	
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
@@ -105,16 +115,12 @@ protected:/*Functions*/
 	void ConfigureFirstCell(ACPP_Cell* NewCell, FVector2f AxialLocation);
 	
 	void DivideCellEvent(FVector2f AxialLocation);		
-	void AddCellSpawned(const ACPP_Cell* NewCell);
+	void AddCellSpawned(ACPP_Cell* NewCell);
 	void UnclickCurrentCell();
 	
-	
 	void StartShiftingCellsLocations(const ACPP_Cell* FirstCellToShift) const;
-	void ReturnCellsToOriginLocation(const ACPP_Cell* ClickedCell) const;
-
-
-
-
+	void ReturnCellsToOriginLocation() const;
+	void UpdateCellToTempLocation(ACPP_Cell* Cellptr);
 
 
 	friend class ACPP_Cell;

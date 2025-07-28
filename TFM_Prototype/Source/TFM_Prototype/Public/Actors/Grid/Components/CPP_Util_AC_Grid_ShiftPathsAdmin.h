@@ -77,14 +77,14 @@ public:/*Properties*/
 
 public:/*Fucntions*/
 	
-	void Initialize(const UCPP_DA_GameSettings* const GameSettings);
-	void Update(const ACPP_Cell* ClickedCell);
-	int ChangeCellsLocations(const ACPP_Cell* StartCell);
+	void Initialize(const UCPP_DA_GameSettings* GameSettings, const UCPP_SS_CellsManager* TheCellsManager, const ACPP_Grid* TheGrid);
+	void Update(const ACPP_Cell* CellToDivide);
+	int ChangeCellsLocations(const ACPP_Cell* FirstCellToShift);
 	void ReturnAllCellsToLocations();
 
-	void Activate();
+	void Enable();
 	void Disable();
-	bool IsActive() const;
+	bool IsEnable() const;
 
 	/*
 	* The first location is the neighbour´s axial location of the ClickedCell.
@@ -97,8 +97,8 @@ public:/*Fucntions*/
 
 private:/*Properties*/
 
-	UPROPERTY()
-	const UCPP_SS_LocalGameManager* GameManager{ nullptr };
+	/*UPROPERTY()
+	const UCPP_SS_LocalGameManager* GameManager{ nullptr };*/
 
 	UPROPERTY()
 	const UCPP_SS_CellsManager* CellsManager{ nullptr };
@@ -116,14 +116,14 @@ private:/*Properties*/
 	const UCPP_DA_GridSettings* GridSettings { nullptr };
 
 
-	bool bIsActive{ false };
+	bool bIsEnable{ false };
 	bool bIsInitialized{ false };
 
 
 
 private:/*Fucntions*/
 
-	void UpdateNeighbours();
+	void UpdateBaseCellNeighbours();
 	void GetOrdererPathsCosts(const ACPP_Cell* StartCell, TArray<FPathAndCost>& OutPathsCosts);
 	void CalculatePath(const ACPP_Cell* StartCell, FVector2f EndLocation, TArray<FPathAndCost>& OutPathsCosts);
 	void TurnVectorsPathInShortNamesPath(TArray<FVector2f>& VectorsPath, TArray<ECPP_NeighbourShortName>& OutShortNamesPath);

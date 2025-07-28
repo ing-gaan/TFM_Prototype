@@ -28,13 +28,13 @@ public:/*Functions*/
 	virtual void SetState() override;
 
 	//--Transition functions
-	virtual void ToNormal() override;
-	virtual void NoInteract() override;
-	virtual void BeginCursorOver() override;
-	virtual void EndCursorOver() override;
-	virtual void Clicked() override;
-	virtual void Shift() override;
-	//virtual void Transformed() override;
+	virtual bool ToNormal() override;
+	//virtual bool NoInteract() override;
+	//virtual bool BeginCursorOver() override;
+	//virtual bool EndCursorOver() override;
+	//virtual bool Clicked() override;
+	//virtual bool Shift() override;
+	//virtual bool Transformed() override;
 
 
 protected:/*Properties*/

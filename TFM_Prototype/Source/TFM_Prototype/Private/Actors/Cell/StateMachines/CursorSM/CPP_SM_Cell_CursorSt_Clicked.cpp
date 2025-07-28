@@ -23,39 +23,34 @@ const FLinearColor& UCPP_SM_Cell_CursorSt_Clicked::GetMaterialColor()
 void UCPP_SM_Cell_CursorSt_Clicked::SetState()
 {
 	Super::SetState();
-
-	PRINT("Entra a estado Clicked");
+	SMContext->OwnerCell->Clicked(true);
 }
 
-void UCPP_SM_Cell_CursorSt_Clicked::ToNormal()
+bool UCPP_SM_Cell_CursorSt_Clicked::ToNormal()
 {
 	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_Normal::StaticClass());
+
+	return true;
 }
 
 
-void UCPP_SM_Cell_CursorSt_Clicked::NoInteract()
+bool UCPP_SM_Cell_CursorSt_Clicked::NoInteract()
 {
 	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_NotInteract::StaticClass());
+
+	return true;
 }
 
 
-void UCPP_SM_Cell_CursorSt_Clicked::BeginCursorOver()
+bool UCPP_SM_Cell_CursorSt_Clicked::BeginCursorOver()
 {
 	if (UCPP_SS_LocalGameManager::AreCellsShifting())
 	{
 		SMContext->OwnerCell->NotifyShiftingCanceled();
+		return false;
 	}
-	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_Clicked::StaticClass());
+
+	return false;
 }
 
 
-void UCPP_SM_Cell_CursorSt_Clicked::EndCursorOver()
-{
-	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_Clicked::StaticClass());
-}
-
-
-void UCPP_SM_Cell_CursorSt_Clicked::Clicked()
-{
-	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_Clicked::StaticClass());
-}

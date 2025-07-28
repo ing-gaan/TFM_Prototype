@@ -31,13 +31,13 @@ public:/*Functions*/
 	
 
 	//--Transition functions
-	virtual void ToNormal();
-	virtual void NoInteract();
-	virtual void BeginCursorOver();
-	virtual void EndCursorOver();
-	virtual void Clicked();
-	virtual void Shift();
-	//virtual void Transformed();
+	virtual bool ToNormal();
+	virtual bool NoInteract();
+	virtual bool BeginCursorOver();
+	virtual bool EndCursorOver();
+	virtual bool Clicked();
+	virtual bool Shift();
+	//virtual bool Transformed();
 	
 
 

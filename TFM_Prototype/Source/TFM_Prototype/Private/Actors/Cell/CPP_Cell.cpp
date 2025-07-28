@@ -171,16 +171,18 @@ bool ACPP_Cell::LoadCellTypeComponents(const UCPP_DA_CellType* NewCellType)
 			UActorComponent* Component = AddComponentByClass(ComponentClass, false, GetTransform(), false);
 		}
 	}
-
+	
 	return true;
 }
 
 
 
-//void ACPP_Cell::Click() const
-//{
-//	ClickEventDelegate.ExecuteIfBound();
-//}
+void ACPP_Cell::Clicked(bool Clicked)
+{
+	bIsClicked = Clicked;
+}
+
+
 
 void ACPP_Cell::Unclick() const
 {
@@ -208,14 +210,12 @@ void ACPP_Cell::NotifyShiftingActivated() const
 
 void ACPP_Cell::NotifyShiftingCanceled() const
 {
-	CellsManager->ReturnCellsToOriginLocation(this);
+	CellsManager->ReturnCellsToOriginLocation();
 }
 
 
 void ACPP_Cell::ShiftAxialLocation(FVector2f NewTempAxialLocation) const
-{
-	//PRINT("AxialLocation desde CPP");
-
+{	
 	bool bIsOnTempLocation = CellShiftState == ECPP_CellShiftState::AtTempLocation;
 
 	if (bIsOnTempLocation)
@@ -225,8 +225,7 @@ void ACPP_Cell::ShiftAxialLocation(FVector2f NewTempAxialLocation) const
 
 	ShiftEventDelegate.ExecuteIfBound(true);
 
-
-	//----- CODIGO DEBUG ----- 
+	// Listen by BP_Cell
 	AnimShiftLocationEventDelegate.Broadcast(NewTempAxialLocation);
 }
 
@@ -235,9 +234,8 @@ void ACPP_Cell::ReturnToOriginAxialLocation() const
 {
 	ShiftEventDelegate.ExecuteIfBound(false);
 
-
-	//----- CODIGO DEBUG ----- 
-	AnimReturnToOriginEventDelegate.Broadcast();
+	// Listen by BP_Cell
+	AnimReturnToOriginEventDelegate.Broadcast();	
 }
 
 
@@ -257,5 +255,24 @@ bool ACPP_Cell::CellLifeStateIsEqualOrOlderThan(TSubclassOf<UCPP_SM_Cell_Life_Ba
 };
 
 
+bool ACPP_Cell::IsClicked() const
+{
+	return bIsClicked;
+}
+
+
+
+FVector2f ACPP_Cell::GetTempAxialLocation() const
+{
+	return TempAxialLocation;
+}
+
+
+
+void ACPP_Cell::UpdateToTemporalLocation()
+{
+	AxialLocation = TempAxialLocation;
+	CellShiftState = ECPP_CellShiftState::AtOriginLocation;
+}
 
 

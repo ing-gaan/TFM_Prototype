@@ -13,8 +13,6 @@
 void UCPP_SM_Cell_CursorSt_Shifting::SetState()
 {
 	Super::SetState();
-
-	PRINT("Entra a estado Shift");
 }
 
 
@@ -24,30 +22,11 @@ const FLinearColor& UCPP_SM_Cell_CursorSt_Shifting::GetMaterialColor()
 }
 
 
-
-void UCPP_SM_Cell_CursorSt_Shifting::ToNormal()
+bool UCPP_SM_Cell_CursorSt_Shifting::ToNormal()
 {
 	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_Normal::StaticClass());
-}
 
-void UCPP_SM_Cell_CursorSt_Shifting::BeginCursorOver()
-{
-	
-}
-
-void UCPP_SM_Cell_CursorSt_Shifting::EndCursorOver()
-{
-
+	return true;
 }
 
 
-void UCPP_SM_Cell_CursorSt_Shifting::Clicked()
-{
-	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_Clicked::StaticClass());
-}
-
-
-void UCPP_SM_Cell_CursorSt_Shifting::Shift()
-{
-	
-}

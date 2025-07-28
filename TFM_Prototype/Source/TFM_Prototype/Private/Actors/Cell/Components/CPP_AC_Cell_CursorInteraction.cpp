@@ -12,6 +12,7 @@
 
 
 
+
 UCPP_AC_Cell_CursorInteraction::UCPP_AC_Cell_CursorInteraction()
 {	
 	SMContext = CreateDefaultSubobject<UCPP_SM_Cell_Cursor_Context>(TEXT("CursorSMContext"));
@@ -91,16 +92,21 @@ void UCPP_AC_Cell_CursorInteraction::EndCursorOver(AActor* TouchedActor)
 
 
 void UCPP_AC_Cell_CursorInteraction::Clicked(AActor* TouchedComponent, FKey ButtonPressed)
-{			
-	SMContext->GetCurrentState()->Clicked();
-	InputEventBus->RaiseClickOnCellEvent(OwnerCell);
+{		
+	if (SMContext->GetCurrentState()->Clicked())
+	{
+		InputEventBus->RaiseClickOnCellEvent(OwnerCell);
+	}
+	
 }
 
 
 void UCPP_AC_Cell_CursorInteraction::UnclickEvent()
-{
-	SMContext->GetCurrentState()->ToNormal();
-	OwnerCell->NotifyShiftingCanceled();		
+{	
+	if (SMContext->GetCurrentState()->ToNormal())
+	{
+		OwnerCell->NotifyShiftingCanceled();
+	}			
 }
 
 
@@ -111,6 +117,7 @@ void UCPP_AC_Cell_CursorInteraction::ShiftEvent(bool ShouldShift)
 		SMContext->GetCurrentState()->Shift();
 		return;
 	}
+
 	SMContext->GetCurrentState()->ToNormal();	
 }
 

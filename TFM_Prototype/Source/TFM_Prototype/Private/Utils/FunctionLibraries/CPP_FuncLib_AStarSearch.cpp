@@ -25,7 +25,7 @@ FASearchNode::FASearchNode(int G, int H, FVector2f ParentLocation, FVector2f Axi
 
 
 
-bool UCPP_FuncLib_AStarSearch::CalculatePath(const TMap<FVector2f, const ACPP_Cell*>* CellsMap, const TArray<FVector2f>* InitAxialLocations,
+bool UCPP_FuncLib_AStarSearch::CalculatePath(const TMap<FVector2f, ACPP_Cell*>* CellsMap, const TArray<FVector2f>* InitAxialLocations,
 	FVector2f StartAxialLocation, FVector2f EndAxialLocation, TArray<FVector2f>& OutPath, int& OutPathCost)
 {
 	Init(StartAxialLocation, EndAxialLocation, OutPath);
@@ -74,7 +74,7 @@ void UCPP_FuncLib_AStarSearch::Init(FVector2f StartAxialLocation, FVector2f EndA
 }
 
 
-bool UCPP_FuncLib_AStarSearch::WouldThereBeValidPath(const TMap<FVector2f, const ACPP_Cell*>* CellsMap, const TArray<FVector2f>* InitAxialLocations)
+bool UCPP_FuncLib_AStarSearch::WouldThereBeValidPath(const TMap<FVector2f, ACPP_Cell*>* CellsMap, const TArray<FVector2f>* InitAxialLocations)
 {
 	bool bStartCellCanShiftLocation{ false };
 	bool bEndCellCanShiftLocation{ false };
@@ -124,7 +124,7 @@ bool UCPP_FuncLib_AStarSearch::WouldThereBeValidPath(const TMap<FVector2f, const
 /*
 * Return true when a neighbour from parent node is the end of the path
 */
-bool UCPP_FuncLib_AStarSearch::AddLikelyNodes(const TMap<FVector2f, const ACPP_Cell*>* CellsMap,
+bool UCPP_FuncLib_AStarSearch::AddLikelyNodes(const TMap<FVector2f, ACPP_Cell*>* CellsMap,
 	const TArray<FVector2f>* InitAxialLocations, FASearchNode ParentNode)
 {
 	FVector2f NeighbourLocation;
@@ -159,7 +159,7 @@ bool UCPP_FuncLib_AStarSearch::CanBeIncluded(const ACPP_Cell* const* Cell, FVect
 		return false;
 	}
 
-	if ((*Cell)->IsSelected())
+	if ((*Cell)->IsClicked())
 	{
 		return false;
 	}

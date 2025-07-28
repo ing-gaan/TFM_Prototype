@@ -9,6 +9,7 @@
 
 
 class UCPP_SS_InputEventBus;
+class UCPP_SS_GameEventBus;
 class UCPP_DA_GameSettings;
 class UCPP_DA_GridSettings;
 class ACPP_Cell;
@@ -45,6 +46,9 @@ protected:/*Properties*/
 	UCPP_SS_InputEventBus* InputEventBus{ nullptr };
 
 	UPROPERTY()
+	UCPP_SS_GameEventBus* GameEventBus{ nullptr };
+
+	UPROPERTY()
 	const UCPP_DA_GameSettings* GameSettings { nullptr };
 
 	UPROPERTY()
@@ -71,7 +75,7 @@ protected:/*Functions*/
 	void ClickOnActor();
 
 	UFUNCTION()
-	void StartManagers();
+	void ExecInitializationPhases();
 
 
 

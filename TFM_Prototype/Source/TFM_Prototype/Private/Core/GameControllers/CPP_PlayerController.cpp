@@ -1,10 +1,12 @@
 #include "Core/GameControllers/CPP_PlayerController.h"
 #include "Core/Subsystems/EventBuses/CPP_SS_InputEventBus.h"
+#include "Core/Subsystems/EventBuses/CPP_SS_GameEventBus.h"
 #include "Actors/Cell/CPP_Cell.h"
 #include "Core/Subsystems/Managers/CPP_SS_LocalGameManager.h"
 #include "Core/Subsystems/Managers/CPP_SS_CellsManager.h"
 #include "Core/GameInstance/CPP_GameInstance.h"
 #include "Actors/Grid/CPP_Grid.h"
+#include "Actors/Grid/CPP_AuxiliaryGridElement.h"
 #include "Kismet/GameplayStatics.h"
 #include "Utils/Macros/Macros.h"
 
@@ -33,32 +35,8 @@ void ACPP_PlayerController::BeginPlay()
 	////GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, GameSettings->StartCellsManagerAfter, false);
 	//GetWorldTimerManager().SetTimerForNextTick(TimerDelegate);
 
-	StartManagers();
+	ExecInitializationPhases();
 }
-
-
-
-void ACPP_PlayerController::StartManagers()
-{
-	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACPP_Grid::StaticClass(), FoundActors);
-
-	if (FoundActors.Num() == 0)
-	{
-		checkf(true, TEXT("***> No Grid in game. Spawn a Grid from editor <***"));
-	}
-	else if (FoundActors.Num() > 1)
-	{
-		checkf(true, TEXT("***> Multiple grid in game. Delete from editor and leave only one. <***"));
-	}
-
-	const ACPP_Grid* Grid = Cast<ACPP_Grid>(FoundActors[0]);
-
-	CellsManager->StartManager();
-	LocalGameManager->StartManager(CellsManager, Grid);
-	
-}
-
 
 
 void ACPP_PlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -87,6 +65,9 @@ void ACPP_PlayerController::InitEventBuses()
 	InputEventBus = GameInstance->GetSubsystem<UCPP_SS_InputEventBus>();
 	checkf(InputEventBus, TEXT("***> No InputEventBus (nullptr) <***"));
 
+	GameEventBus = GameInstance->GetSubsystem<UCPP_SS_GameEventBus>();
+	checkf(GameEventBus, TEXT("***> No InputEventBus (nullptr) <***"));
+
 }
 
 
@@ -99,6 +80,31 @@ void ACPP_PlayerController::RegisterEventFunctions() const
 void ACPP_PlayerController::UnRegisterEventFunctions() const
 {
 	
+}
+
+
+void ACPP_PlayerController::ExecInitializationPhases()
+{
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACPP_Grid::StaticClass(), FoundActors);
+
+	if (FoundActors.Num() == 0)
+	{
+		checkf(true, TEXT("***> No Grid in game. Spawn a Grid from editor <***"));
+	}
+	else if (FoundActors.Num() > 1)
+	{
+		checkf(true, TEXT("***> Multiple grid in game. Delete from editor and leave only one. <***"));
+	}
+
+	ACPP_Grid* Grid = Cast<ACPP_Grid>(FoundActors[0]);
+
+	//CellsManager->StartManager();
+	GameEventBus->RaisePhase1StartedEvent();
+
+	//LocalGameManager->StartManager(CellsManager, Grid);
+	GameEventBus->RaisePhase2StartedEvent(CellsManager, Grid);
+
 }
 
 
@@ -120,6 +126,12 @@ void ACPP_PlayerController::ClickOnActor()
 
 	const ACPP_Grid* Grid = Cast<ACPP_Grid>(ClickedActor);
 	if (Grid)
+	{
+		return;
+	}
+
+	const ACPP_AuxiliaryGridElement* AuxiliaryGridElement = Cast<ACPP_AuxiliaryGridElement>(ClickedActor);
+	if (AuxiliaryGridElement)
 	{
 		return;
 	}

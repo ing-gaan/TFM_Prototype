@@ -8,12 +8,14 @@
 #include "Core/Subsystems/EventBuses/CPP_SS_InputEventBus.h"
 #include "Core/Subsystems/EventBuses/CPP_SS_CellsManagerEventBus.h"
 #include "Core/Subsystems/EventBuses/CPP_SS_UIEventBus.h"
+#include "Core/Subsystems/EventBuses/CPP_SS_GameEventBus.h"
 #include "Core/GameInstance/CPP_GameInstance.h"
 #include "Actors/Cell/Components/CPP_AC_Cell_Division.h"
 #include "Actors/Cell/Components/CPP_AC_Cell_Differentiation.h"
 #include "Actors/Cell/Components/CPP_AC_Cell_Movement.h"
 #include "Actors/Cell/CPP_DA_CellType.h"
 #include "Core/Subsystems/Managers/CPP_SS_LocalGameManager.h"
+#include "Actors/Grid/CPP_Grid.h"
 
 
 
@@ -58,11 +60,17 @@ void UCPP_SS_CellsManager::InitEventBuses()
 	UIEventBus = GameInstance->GetSubsystem<UCPP_SS_UIEventBus>();
 	checkf(UIEventBus, TEXT("***> No UIEventBus (nullptr) <***"));
 
+	GameEventBus = GameInstance->GetSubsystem<UCPP_SS_GameEventBus>();
+	checkf(GameEventBus, TEXT("***> No UIEventBus (nullptr) <***"));
+
 }
 
 
 void UCPP_SS_CellsManager::RegisterEventFunctions() const
 {
+	GameEventBus->Phase1StartedEventDelegate.AddUniqueDynamic(
+		this, &UCPP_SS_CellsManager::Phase1StartedEvent);
+
 	CellsManagerEventBus->MoveCellsEventDelegate.AddUniqueDynamic(
 		this, &UCPP_SS_CellsManager::MoveCellsEvent);
 
@@ -80,6 +88,9 @@ void UCPP_SS_CellsManager::RegisterEventFunctions() const
 
 void UCPP_SS_CellsManager::UnRegisterEventFunctions() const
 {
+	GameEventBus->Phase1StartedEventDelegate.RemoveDynamic(
+		this, &UCPP_SS_CellsManager::Phase1StartedEvent);
+
 	CellsManagerEventBus->MoveCellsEventDelegate.RemoveDynamic(
 		this, &UCPP_SS_CellsManager::MoveCellsEvent);
 
@@ -97,9 +108,14 @@ void UCPP_SS_CellsManager::UnRegisterEventFunctions() const
 
 
 
+void UCPP_SS_CellsManager::Phase1StartedEvent()
+{
+	StartManager();
+}
+
+
 void UCPP_SS_CellsManager::StartManager()
 {	
-	//PlayerContller = PlayerController;
 	CellsMap.Empty();	
 	AddFirstCell();	
 	ACPP_Cell::CellsManager = this;
@@ -109,7 +125,7 @@ void UCPP_SS_CellsManager::StartManager()
 
 void UCPP_SS_CellsManager::MoveCellsEvent()
 {
-	for (TPair<FVector2f, const ACPP_Cell*>& Elem : CellsMap)
+	for (TPair<FVector2f, ACPP_Cell*>& Elem : CellsMap)
 	{
 		if (Elem.Value->HasThisAbility(UCPP_AC_Cell_Movement::StaticClass()))
 		{
@@ -125,7 +141,7 @@ void UCPP_SS_CellsManager::ClickOnCellEvent(const ACPP_Cell* ClickedCell)
 	{
 		UnclickCurrentCell();		
 	}	
-	CurrentClickedCell = ClickedCell;
+	CurrentClickedCell = ClickedCell;	
 }
 
 
@@ -138,7 +154,10 @@ void UCPP_SS_CellsManager::ClickOnGridEvent(FVector2f AxialLocation)
 
 void UCPP_SS_CellsManager::CancelEvent()
 {
-	if (!CurrentClickedCell){ return; }
+	if (!CurrentClickedCell)
+	{ 
+		return; 
+	}
 
 	UnclickCurrentCell();
 }
@@ -146,7 +165,10 @@ void UCPP_SS_CellsManager::CancelEvent()
 
 void UCPP_SS_CellsManager::FinishCellDifferentiationEvent(const UCPP_DA_CellType* NewCellType)
 {
-	if (!CurrentClickedCell->HasThisAbility(UCPP_AC_Cell_Differentiation::StaticClass())) { return; }
+	if (!CurrentClickedCell->HasThisAbility(UCPP_AC_Cell_Differentiation::StaticClass())) 
+	{ 
+		return; 
+	}
 
 	CurrentClickedCell->Differentiate(NewCellType);
 	UnclickCurrentCell();
@@ -156,7 +178,10 @@ void UCPP_SS_CellsManager::FinishCellDifferentiationEvent(const UCPP_DA_CellType
 
 void UCPP_SS_CellsManager::AddFirstCell()
 {
-	if (!CellsMap.IsEmpty()) { return; }
+	if (!CellsMap.IsEmpty()) 
+	{ 
+		return; 
+	}
 	
 	AddCellSpawned(SpawnFirstCell());
 	return;
@@ -193,7 +218,6 @@ void UCPP_SS_CellsManager::ConfigureFirstCell(ACPP_Cell* FirstCell, FVector2f Ax
 	const FString StrName = UCPP_FuncLib_CellUtils::GetCellOutlinerLabel(AxialLocation);
 	FirstCell->SetActorLabel(StrName);	
 	FirstCell->LoadCellTypeComponents(GameSettings->FirstCellType);
-	//CurrentClickedCell = FirstCell;
 	FirstCell->SetAxialLocation(AxialLocation);
 }
 
@@ -201,21 +225,30 @@ void UCPP_SS_CellsManager::ConfigureFirstCell(ACPP_Cell* FirstCell, FVector2f Ax
 
 void UCPP_SS_CellsManager::DivideCellEvent(FVector2f AxialLocation)
 {		
-	if (!CurrentClickedCell) { return; }
-	if (!CurrentClickedCell->HasThisAbility(UCPP_AC_Cell_Division::StaticClass())) { return; }
+	if (!CurrentClickedCell)
+	{ 
+		return; 
+	}
+	if (!CurrentClickedCell->HasThisAbility(UCPP_AC_Cell_Division::StaticClass())) 
+	{ 
+		return; 
+	}
 	
-	const ACPP_Cell* CellSpawned = CurrentClickedCell->Divide(AxialLocation);
-	if (!CellSpawned) {	return;	}
+	ACPP_Cell* CellSpawned = CurrentClickedCell->Divide(AxialLocation);
+	if (!CellSpawned) 
+	{	
+		return;	
+	}
 
 	AddCellSpawned(CellSpawned);
 }
 
 
 
-void UCPP_SS_CellsManager::AddCellSpawned(const ACPP_Cell* NewCell)
+void UCPP_SS_CellsManager::AddCellSpawned(ACPP_Cell* NewCell)
 {
 	FVector2f NewAxialLoc = NewCell->GetAxialLocation();
-	const ACPP_Cell** Cellptr = CellsMap.Find(NewAxialLoc);
+	ACPP_Cell** Cellptr = CellsMap.Find(NewAxialLoc);
 
 	if (Cellptr)
 	{
@@ -224,20 +257,24 @@ void UCPP_SS_CellsManager::AddCellSpawned(const ACPP_Cell* NewCell)
 			PRINT("ERROR: EXIST A CELL IN AXIAL LOCATION");
 			return;// UCPP_FuncLib_CellUtils::BadAxialLocation;
 		}
-		CellsMap[NewAxialLoc] = NewCell;
-		return;// UCPP_FuncLib_CellUtils::BadAxialLocation;
+		//CellsMap[NewAxialLoc] = NewCell;
+		//return;// UCPP_FuncLib_CellUtils::BadAxialLocation;
 	}
+
 	CellsMap.Emplace(NewAxialLoc, NewCell);
-	CellsBirthOrder.Add(NewCell);
-	
+	CellsBirthOrder.Emplace(NewCell);
+
 	CellsManagerEventBus->RaiseFinishCellDivisionEvent(NewAxialLoc);
-	UnclickCurrentCell();
+	//UnclickCurrentCell();
 }
 
 
 void UCPP_SS_CellsManager::UnclickCurrentCell()
 {
-	if (!CurrentClickedCell) { return; }
+	if (!CurrentClickedCell)
+	{ 
+		return; 
+	}
 
 	CurrentClickedCell->Unclick();
 	CurrentClickedCell = nullptr;
@@ -245,52 +282,28 @@ void UCPP_SS_CellsManager::UnclickCurrentCell()
 
 
 void UCPP_SS_CellsManager::StartShiftingCellsLocations(const ACPP_Cell* FirstCellToShift) const
-{	
-	if (UCPP_SS_LocalGameManager::AreCellsShifting()) { return; }
-
-
-	CellsManagerEventBus->RaiseCellsShiftingEvent(true);
-
-
-
-	//----- CODIGO DEBUG ----- 
-	FVector2f NewTempAxialLoc = FirstCellToShift->GetAxialLocation() * 2;
-	FirstCellToShift->ShiftAxialLocation(NewTempAxialLoc);
+{		
+	if (UCPP_SS_LocalGameManager::AreCellsShifting())
+	{ 
+		
+		return; 
+	}
+	CellsManagerEventBus->RaiseBeginCellsShiftingEvent(FirstCellToShift);
 }
 
 
-//----- CODIGO DEBUG  Quitar clicked cell ----- 
-void UCPP_SS_CellsManager::ReturnCellsToOriginLocation(const ACPP_Cell* ClickedCell) const
+
+void UCPP_SS_CellsManager::ReturnCellsToOriginLocation() const
 {
-	if (!UCPP_SS_LocalGameManager::AreCellsShifting()) { return; }
-	
-
-	PRINT("Cancel Shifting");
-	CellsManagerEventBus->RaiseCellsShiftingEvent(false);
-	
-
-
-
-	//----- CODIGO DEBUG ----- 
-
-
-	
-
-	if (!ClickedCell)
-	{
-		return;
+	if (!UCPP_SS_LocalGameManager::AreCellsShifting()) 
+	{ 
+		return; 
 	}
-	
-	for (FVector2f AxLoc : GameSettings->GridSettings->InitAxialLocations)
-	{
-		FVector2f NeighbourAxLoc = ClickedCell->GetAxialLocation() + AxLoc;
 
-		if (CellsMap.Contains(NeighbourAxLoc))
-		{
-			CellsMap[NeighbourAxLoc]->ReturnToOriginAxialLocation();
-		}
-	}
+	CellsManagerEventBus->RaiseCellsShiftingReturnEvent();
 }
+
+
 
 
 const ACPP_Cell* UCPP_SS_CellsManager::GetCellInMap(FVector2f CellAxialLocation) const
@@ -305,7 +318,49 @@ const ACPP_Cell* UCPP_SS_CellsManager::GetCellInMap(FVector2f CellAxialLocation)
 }
 
 
-const TMap<FVector2f, const ACPP_Cell*>* UCPP_SS_CellsManager::GetCellsMap() const
+const TMap<FVector2f, ACPP_Cell*>* UCPP_SS_CellsManager::GetCellsMap() const
 {
 	return &CellsMap;
+}
+
+
+
+void UCPP_SS_CellsManager::UpdateToTempLocations(TArray<FVector2f>& AxialLocations)
+{
+	ACPP_Cell** Cellptr;
+	FVector2f CurrentAxLoc;
+
+	for (int i = AxialLocations.Num() - 1; i >= 0; i--)
+	{
+		CurrentAxLoc = AxialLocations[i];
+		Cellptr = CellsMap.Find(CurrentAxLoc);
+		if (!Cellptr)
+		{
+			PRINT("ERROR AXIALLOC NOT IN MAP");
+			return;
+		}
+		UpdateCellToTempLocation(*Cellptr);
+	}
+}
+
+
+void UCPP_SS_CellsManager::UpdateCellToTempLocation(ACPP_Cell* Cell)
+{	
+	FVector2f AxialLocation = Cell->GetAxialLocation();
+	FVector2f TempLocation = Cell->GetTempAxialLocation();
+
+	CellsMap[AxialLocation] = nullptr;
+	CellsMap.Emplace(TempLocation, Cell);
+
+	Cell->UpdateToTemporalLocation();
+	const FString StrName = UCPP_FuncLib_CellUtils::GetCellOutlinerLabel(TempLocation);
+	Cell->SetActorLabel(StrName);
+	Cell->ReturnToOriginAxialLocation();
+}
+
+
+
+int UCPP_SS_CellsManager::CellsInMapNumber() const
+{
+	return CellsMap.Num();
 }

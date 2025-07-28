@@ -24,35 +24,11 @@ const FLinearColor& UCPP_SM_Cell_CursorSt_NotInteract::GetMaterialColor()
 }
 
 
-void UCPP_SM_Cell_CursorSt_NotInteract::ToNormal()
+bool UCPP_SM_Cell_CursorSt_NotInteract::ToNormal()
 {
 	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_Normal::StaticClass());
-}
 
-void UCPP_SM_Cell_CursorSt_NotInteract::NoInteract()
-{
-	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_NotInteract::StaticClass());
+	return true;
 }
 
 
-void UCPP_SM_Cell_CursorSt_NotInteract::BeginCursorOver()
-{
-	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_NotInteract::StaticClass());
-}
-
-
-void UCPP_SM_Cell_CursorSt_NotInteract::EndCursorOver()
-{
-	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_NotInteract::StaticClass());
-}
-
-
-void UCPP_SM_Cell_CursorSt_NotInteract::Clicked()
-{
-	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_NotInteract::StaticClass());
-}
-
-void UCPP_SM_Cell_CursorSt_NotInteract::Shift()
-{
-	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_NotInteract::StaticClass());
-}

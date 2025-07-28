@@ -22,8 +22,15 @@ class TFM_PROTOTYPE_API UCPP_DA_GameSettings : public UPrimaryDataAsset
 
 public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Other Settings")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Grid|Settings")
 	const UCPP_DA_GridSettings* GridSettings{ nullptr };
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Grid|Locations")
+	float GridDefaultHeightFromGround{ 10 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Grid|Locations")
+	float HiddenHeightFromGround{ -100 };
+
 
 
 
@@ -31,13 +38,6 @@ public:
 		meta = (ToolTip = "", ClampMin = 0, ForceUnits = "Seconds"))
 	float StartCellsManagerAfter{ 1 };
 
-
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Grid|Locations")
-	float GridDefaultHeightFromGround{ 10 };
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Grid|Locations")
-	float HiddenHeightFromGround{ -100 };
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Locations")

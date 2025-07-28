@@ -23,7 +23,7 @@ class TFM_PROTOTYPE_API UCPP_SM_Cell_Cursor_Context : public UObject
 public:/*Properties*/
 
 	UPROPERTY()
-	const ACPP_Cell* OwnerCell{ nullptr };
+	ACPP_Cell* OwnerCell{ nullptr };
 
 	UPROPERTY()
 	UMaterialInstanceDynamic* CellMaterialInstance{ nullptr };

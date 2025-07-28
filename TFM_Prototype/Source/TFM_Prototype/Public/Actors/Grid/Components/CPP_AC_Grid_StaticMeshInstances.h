@@ -44,7 +44,7 @@ public:/*Fucntions*/
 protected:/*Properties*/
 
 	UPROPERTY()
-	const ACPP_Grid* GridOwner{ nullptr };
+	ACPP_Grid* GridOwner{ nullptr };
 	
 	UPROPERTY()
 	const UCPP_DA_GridSettings* GridSettings{ nullptr };
@@ -60,6 +60,9 @@ protected:/*Properties*/
 
 	UPROPERTY()
 	TArray<FVector2f> AxialLocationsOfVisibleInstances;
+
+	UPROPERTY()
+	TArray<bool> InstancesInteractivity;
 
 
 	int32 IndexHitByCursor { 0 };
@@ -87,10 +90,10 @@ protected:/*Fucntions*/
 	void RegisterEventFunctions();
 	void UnRegisterEventFunctions();
 
-	void SetValuesToOneInstance(int32 Index, TArray<double> Values);
-	void SetValuesToAllInstances(TArray<double> Values);
-
+	void SetValuesToAllInstances(FLinearColor StateColor);
+	void SetValuesToOneInstance(int32 Index, FLinearColor StateColor);
+	
 	void AddNewInstances(int InstancesNum);
 
-
+	void SetInstancesInteractivity(FVector2f AxialLocation, int index);
 };

@@ -37,7 +37,7 @@ public:
 
 
 	//FUNCTIONS
-	static bool CalculatePath(const TMap<FVector2f, const ACPP_Cell*>* CellsMap, const TArray<FVector2f>* InitAxialLocations,
+	static bool CalculatePath(const TMap<FVector2f, ACPP_Cell*>* CellsMap, const TArray<FVector2f>* InitAxialLocations,
 		FVector2f StartAxialLocation, FVector2f EndAxialLocation, TArray<FVector2f>& OutPath, int& OutPathCost);
 
 
@@ -52,8 +52,8 @@ private:
 
 	//FUNCTIONS
 	static void Init(FVector2f StartAxialLocation, FVector2f EndAxialLocation, TArray<FVector2f>& OutPath);
-	static bool WouldThereBeValidPath(const TMap<FVector2f, const ACPP_Cell*>* CellsMap, const TArray<FVector2f>* InitAxialLocations);
-	static bool AddLikelyNodes(const TMap<FVector2f, const ACPP_Cell*>* CellsMap,
+	static bool WouldThereBeValidPath(const TMap<FVector2f, ACPP_Cell*>* CellsMap, const TArray<FVector2f>* InitAxialLocations);
+	static bool AddLikelyNodes(const TMap<FVector2f, ACPP_Cell*>* CellsMap,
 		const TArray<FVector2f>* InitAxialLocations, FASearchNode ParentNode);
 	static bool CanBeIncluded(const ACPP_Cell* const* Cell, FVector2f NeighbourLocation);
 	static void AddOrModifyLikelyNode(const ACPP_Cell* Cell, FVector2f NeighbourLocation, FASearchNode ParentNode);

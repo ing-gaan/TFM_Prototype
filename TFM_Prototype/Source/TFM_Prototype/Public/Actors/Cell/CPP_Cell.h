@@ -114,8 +114,8 @@ public: /*Functions*/
 	UFUNCTION()
 	bool LoadCellTypeComponents(const UCPP_DA_CellType* NewCellType);
 
-	/*UFUNCTION()
-	void Click() const;*/
+	UFUNCTION()
+	void Clicked(bool Clicked);
 	
 	UFUNCTION()
 	void Unclick() const;
@@ -129,11 +129,14 @@ public: /*Functions*/
 
 	void NotifyShiftingActivated() const;
 	void NotifyShiftingCanceled() const;
+
 	void ShiftAxialLocation(FVector2f NewTempAxialLocation) const;
 	void ReturnToOriginAxialLocation() const;
 	ECPP_CellShiftState GetCellShiftState() const;
-
 	bool CellLifeStateIsEqualOrOlderThan(TSubclassOf<UCPP_SM_Cell_Life_Base> LifeStage) const;
+	bool IsClicked() const;
+	FVector2f GetTempAxialLocation() const;
+	void UpdateToTemporalLocation();
 
 
 protected: /*Properties*/	
@@ -158,6 +161,9 @@ protected: /*Properties*/
 
 	UPROPERTY()
 	const UCPP_SM_Cell_Life_Base* CellLifeState;
+
+
+	bool bIsClicked{ false };
 
 
 protected: /*Functions*/

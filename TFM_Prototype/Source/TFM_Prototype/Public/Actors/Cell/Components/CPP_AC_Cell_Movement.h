@@ -29,7 +29,7 @@ public:/*Functions*/
 
 protected:/*Properties*/
 
-
+	float CurrentZLocation{ 0.0 };
 
 
 protected:/*Functions*/

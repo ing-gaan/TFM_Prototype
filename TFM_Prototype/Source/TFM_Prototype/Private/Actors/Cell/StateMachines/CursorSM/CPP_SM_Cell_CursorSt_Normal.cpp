@@ -17,9 +17,7 @@
 void UCPP_SM_Cell_CursorSt_Normal::SetState()
 {
 	Super::SetState();
-
-	PRINT("Entra a estado Normal");
-	
+	SMContext->OwnerCell->Clicked(false);
 }
 
 
@@ -29,51 +27,45 @@ const FLinearColor& UCPP_SM_Cell_CursorSt_Normal::GetMaterialColor()
 }
 
 
-void UCPP_SM_Cell_CursorSt_Normal::NoInteract()
+bool UCPP_SM_Cell_CursorSt_Normal::NoInteract()
 {
 	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_NotInteract::StaticClass());
+
+	return true;
 }
 
 
-void UCPP_SM_Cell_CursorSt_Normal::BeginCursorOver()
-{	
-	//bool bIsGridActive = UCPP_SS_LocalGameManager::IsGridActive();
-	bool bIsACellDividing = UCPP_SS_LocalGameManager::IsACellDividing();
+bool UCPP_SM_Cell_CursorSt_Normal::BeginCursorOver()
+{			
 
-	if (bIsACellDividing)
+	if (UCPP_SS_LocalGameManager::IsACellDividing())
 	{		
 		FVector2f ClickedCellAxLoc = UCPP_SS_LocalGameManager::GetCurrentClickedCell()->GetAxialLocation();
 		FVector2f OwnerCellAxLoc = SMContext->OwnerCell->GetAxialLocation();
 		bool ClickedAndOwnerCellsAreNeighbours = UCPP_FuncLib_CellUtils::AreNeighbours(OwnerCellAxLoc, ClickedCellAxLoc);
 
 		if (ClickedAndOwnerCellsAreNeighbours)
-		{
-			//----- CODIGO DEBUG ----- 
-			SMContext->ChangeState(UCPP_SM_Cell_CursorSt_Shifting::StaticClass());
-
-
+		{			
 			SMContext->OwnerCell->NotifyShiftingActivated();
-			return;
+			return false;
 		}		
 	}
 
+	if (UCPP_SS_LocalGameManager::AreCellsShifting())
+	{
+		return false;
+	}
+
 	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_Over::StaticClass());
+	return true;
 }
 
 
-void UCPP_SM_Cell_CursorSt_Normal::EndCursorOver()
-{
-	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_Normal::StaticClass());
-}
 
-
-void UCPP_SM_Cell_CursorSt_Normal::Clicked()
+bool UCPP_SM_Cell_CursorSt_Normal::Shift()
 {
-	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_Normal::StaticClass());
-}
-
-void UCPP_SM_Cell_CursorSt_Normal::Shift()
-{
-	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_Normal::StaticClass());
+	SMContext->ChangeState(UCPP_SM_Cell_CursorSt_Shifting::StaticClass());
+	
+	return true;
 }
 

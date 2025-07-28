@@ -11,10 +11,13 @@
 
 class ACPP_Cell;
 class UCPP_SS_InputEventBus;
-class UCPP_SS_UIEventBus;
 class UCPP_SS_CellsManagerEventBus;
+class UCPP_SS_UIEventBus;
 class UCPP_SS_CellsManager;
+class UCPP_SS_GameEventBus;
 class ACPP_Grid;
+enum class ECPP_CellShiftState : uint8;
+
 
 
 
@@ -28,13 +31,14 @@ class TFM_PROTOTYPE_API UCPP_SS_LocalGameManager : public ULocalPlayerSubsystem
 
 public:/*Properties*/
 
-
+	static ECPP_CellShiftState AuxGridElemShiftState;
 
 
 
 public:/*Functions*/
 	
 	static const ACPP_Cell* GetCurrentClickedCell();
+	static const ACPP_Cell* GetBeforeClickedCell();
 	static bool IsGridActive();
 	static bool AreCellsShifting();
 	static bool IsACellDividing();
@@ -48,6 +52,7 @@ public:/*Functions*/
 private:/*Properties*/
 
 	static const ACPP_Cell* CurrentClickedCell;
+	static const ACPP_Cell* BeforeClickedCell;
 	static bool bIsGridActive;
 	static bool bAreCellsShifting;
 	static bool bIsACellDividing;
@@ -64,13 +69,15 @@ private:/*Properties*/
 	UCPP_SS_UIEventBus* UIEventBus{ nullptr };
 
 	UPROPERTY()
+	UCPP_SS_GameEventBus* GameEventBus{ nullptr };
+
+	UPROPERTY()
 	const UCPP_SS_CellsManager* CellsManager{ nullptr };
 
 	UPROPERTY()
 	const ACPP_Grid* Grid;
 	
-
-
+	
 
 
 private:/*Functions*/
@@ -82,13 +89,19 @@ private:/*Functions*/
 	void CancelEvent();	
 	
 	UFUNCTION()
-	void CellsShiftingEvent(bool ShouldCellsShiftLocation);
+	void CellsShiftingEvent(const ACPP_Cell* FirstCellToShift);
+
+	UFUNCTION()
+	void FinishCellsShiftingEvent();
 
 	UFUNCTION()
 	void FinishCellDivisionEvent(FVector2f SpawnAxialLocation);
 
 	UFUNCTION()
 	void BeginCellDivisionEvent();
+
+	UFUNCTION()
+	void Phase2StartedEvent(UCPP_SS_CellsManager* TheCellsManager, ACPP_Grid* TheGrid);
 
 
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;

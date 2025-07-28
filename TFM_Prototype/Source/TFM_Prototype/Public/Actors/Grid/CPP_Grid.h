@@ -38,9 +38,13 @@ public:/*Properties*/
 public:/*Fucntions*/
 
 	UFUNCTION()
-	void ClickOnStaticMeshInstance(FVector2f AxialLocation) const;
+	void ClickOnStaticMeshInstance(FVector2f AxialLocation);
 
-	const TSet<FVector2f>* GetAllFreeNeighbours() const;
+	const TSet<FVector2f>* GetAllFreeNeighbours() const;	
+	void UpdateToTempLocations(FVector2f FirstAxialLocation, FVector2f LastAxialLocation);
+	void ClickOnAuxGridElement(FVector2f AxialLocation);
+
+
 
 
 protected:/*Properties*/
@@ -72,12 +76,15 @@ protected:/*Properties*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TSet<FVector2f> FreeNeighbours;
 
+	UPROPERTY()
+	const ACPP_Cell* CurrentClickedCell;
+
 
 protected:/*Fucntions*/
 
 
 	UFUNCTION()
-	void ClickOnCellEvent(const ACPP_Cell* NewClickedCell);
+	void ClickOnCellEvent(const ACPP_Cell* ClickedCell);
 
 	UFUNCTION()
 	void CancelEvent();
@@ -89,7 +96,7 @@ protected:/*Fucntions*/
 	void FinishCellDivisionEvent(FVector2f SpawnAxialLocation);
 
 	UFUNCTION()
-	void ClickOnGrid(FVector2f AxialLocation) const;
+	void ClickOnGrid(FVector2f AxialLocation);
 
 
 	virtual void BeginPlay() override;
@@ -103,9 +110,12 @@ protected:/*Fucntions*/
 	void SetGridLocation();
 
 	void GetStaticMeshInstancesComponent();
-	void AddNewFreeNeighbours(FVector2f SpawnAxialLocation);
-
 	void SetGridVisibility(bool bIsVisible);
+
+	void AddNewFreeNeighbours(FVector2f SpawnAxialLocation);
+	void RemoveFreeNeighbours(FVector2f AxialLocation);
 	
+	void AddFreeAxialLocation(FVector2f FreeAxialLocation);
+	void AddUsedAxialLocation(FVector2f UsedAxialLocation);
 
 };

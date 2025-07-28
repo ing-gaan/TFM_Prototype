@@ -3,13 +3,12 @@
 #include "Utils/FunctionLibraries/CPP_FuncLib_CellUtils.h"
 #include "Core/GameSettings/CPP_DA_GridSettings.h"
 #include "Core/GameSettings/CPP_DA_GameSettings.h"
-#include "Kismet/GameplayStatics.h"
 #include "Actors/Cell/CPP_Cell.h"
 #include "Actors/Cell/CPP_DA_CellType.h"
 #include "Utils/Enums/CPP_NeighbourShortName.h"
 #include "Core/Subsystems/Managers/CPP_SS_CellsManager.h"
-#include "Core/Subsystems/Managers/CPP_SS_LocalGameManager.h"
 #include "Actors/Grid/CPP_Grid.h"
+#include "Utils/Macros/Macros.h"
 
 
 
@@ -42,20 +41,21 @@ int FShiftPathsState::NextPathCostIndex()
 
 
 
-void UCPP_Util_AC_Grid_ShiftPathsAdmin::Initialize(const UCPP_DA_GameSettings* GameSettings)
+void UCPP_Util_AC_Grid_ShiftPathsAdmin::Initialize(const UCPP_DA_GameSettings* GameSettings, const UCPP_SS_CellsManager* TheCellsManager, const ACPP_Grid* TheGrid)
 {
 	GridSettings = GameSettings->GridSettings;
 	
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	checkf(PlayerController, TEXT("***> No PlayerController (nullptr) <***"));
+	/*APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	checkf(PlayerController, TEXT("***> No PlayerController (nullptr) <***"));*/
 
-	GameManager = PlayerController->GetLocalPlayer()->GetSubsystem<UCPP_SS_LocalGameManager>();
-	checkf(GameManager, TEXT("***> No CellsManager (nullptr) <***"));
+	/*GameManager = PlayerController->GetLocalPlayer()->GetSubsystem<UCPP_SS_LocalGameManager>();
+	checkf(GameManager, TEXT("***> No CellsManager (nullptr) <***"));*/
 
-	CellsManager = GameManager->GetCellsManager();
-	Grid = GameManager->GetGrid();
+	CellsManager = TheCellsManager;
+	Grid = TheGrid;
 
 	bIsInitialized = true;
+	NeighboursShiftPathsStates.Empty();
 }
 
 
@@ -64,21 +64,21 @@ void UCPP_Util_AC_Grid_ShiftPathsAdmin::Initialize(const UCPP_DA_GameSettings* G
 * Save all paths from a neighbour of the ClickedCell to an empty location (a grid location).
 * Therefore, the last location doesn´t exists in the Playercontroller CellsMap
 */
-void UCPP_Util_AC_Grid_ShiftPathsAdmin::Update(const ACPP_Cell* ClickedCell)
+void UCPP_Util_AC_Grid_ShiftPathsAdmin::Update(const ACPP_Cell* CellToDivide)
 {
 	checkf(bIsInitialized, TEXT("***> The ShiftPathsAdmin has not been initialized. Call UCPP_Util_AC_Grid_ShiftPathsAdmin::Initialize() first <***"));
 
-	if (BaseCell != ClickedCell)
+	if (BaseCell != CellToDivide)
 	{
 		ClearShiftingStates();
-		BaseCell = ClickedCell;
+		BaseCell = CellToDivide;
 		if (!BaseCell)
 		{
 			return;
 		}
 	}
 
-	UpdateNeighbours();
+	UpdateBaseCellNeighbours();
 
 	for (auto& Elem : NeighboursShiftPathsStates)
 	{
@@ -88,7 +88,7 @@ void UCPP_Util_AC_Grid_ShiftPathsAdmin::Update(const ACPP_Cell* ClickedCell)
 
 
 
-void UCPP_Util_AC_Grid_ShiftPathsAdmin::UpdateNeighbours()
+void UCPP_Util_AC_Grid_ShiftPathsAdmin::UpdateBaseCellNeighbours()
 {
 	FVector2f NeighbourLocation;
 
@@ -99,10 +99,10 @@ void UCPP_Util_AC_Grid_ShiftPathsAdmin::UpdateNeighbours()
 		bool bIsAlreadyIncluded = NeighboursShiftPathsStates.Contains(NeighbourCell);
 
 		if (!NeighbourCell || bIsAlreadyIncluded)
-		{
+		{			
 			continue;
 		}
-
+		
 		FShiftPathsState ShiftPathsState;
 		NeighboursShiftPathsStates.Emplace(NeighbourCell, ShiftPathsState);
 	}
@@ -161,10 +161,11 @@ bool UCPP_Util_AC_Grid_ShiftPathsAdmin::GetAStarPath(FVector2f StartLocation, FV
 /*
 * @Return The number of cells shiftings
 */
-int UCPP_Util_AC_Grid_ShiftPathsAdmin::ChangeCellsLocations(const ACPP_Cell* StartCell)
+int UCPP_Util_AC_Grid_ShiftPathsAdmin::ChangeCellsLocations(const ACPP_Cell* FirstCellToShift)
 {
-	CurrentStartCell = StartCell;
-	FShiftPathsState* CellShiftingState = NeighboursShiftPathsStates.Find(StartCell);
+	CurrentStartCell = FirstCellToShift;
+	FShiftPathsState* CellShiftingState = NeighboursShiftPathsStates.Find(FirstCellToShift);
+
 	if (!CellShiftingState)
 	{
 		return 0;
@@ -176,7 +177,7 @@ int UCPP_Util_AC_Grid_ShiftPathsAdmin::ChangeCellsLocations(const ACPP_Cell* Sta
 		return 0;
 	}
 
-	if (!ChangeCurrentPath(StartCell))
+	if (!ChangeCurrentPath(FirstCellToShift))
 	{
 		return 0;
 	}
@@ -190,11 +191,9 @@ int UCPP_Util_AC_Grid_ShiftPathsAdmin::ChangeCellsLocations(const ACPP_Cell* Sta
 	for (int i = CurrentPath.Num() - 1; i > 0; i--)
 	{
 		CellInPath = CellsManager->GetCellInMap(CurrentPath[i - 1]);
-		CellInPath->ShiftAxialLocation(CurrentPath[i]);
+		CellInPath->ShiftAxialLocation(CurrentPath[i]);		
 	}
 	CellShiftingState->ShiftingTo = ECPP_CellShiftState::ShiftingToTemp;
-
-	//PRINT("PATH NUM = %d (UCPP_CellShiftingStates)", CurrentPath.Num());
 
 	return CurrentPath.Num();
 }
@@ -297,7 +296,10 @@ void UCPP_Util_AC_Grid_ShiftPathsAdmin::ReturnCellsToLocation(const ACPP_Cell* S
 	{
 		const ACPP_Cell* CellInPath;
 		CellInPath = CellsManager->GetCellInMap(CurrentPath[i]);
-		CellInPath->ReturnToOriginAxialLocation();
+		if (CellInPath)
+		{
+			CellInPath->ReturnToOriginAxialLocation();
+		}		
 	}
 
 	/*CellShiftingState.bAreInOriginalLocation = true;
@@ -307,30 +309,30 @@ void UCPP_Util_AC_Grid_ShiftPathsAdmin::ReturnCellsToLocation(const ACPP_Cell* S
 
 
 
-void UCPP_Util_AC_Grid_ShiftPathsAdmin::Activate()
+void UCPP_Util_AC_Grid_ShiftPathsAdmin::Enable()
 {
-	bIsActive = true;
+	bIsEnable = true;
 }
 
 
 void UCPP_Util_AC_Grid_ShiftPathsAdmin::Disable()
 {
-	bIsActive = false;
+	bIsEnable = false;
 	ReturnAllCellsToLocations();
 	ClearShiftingStates();
 }
 
 
-bool UCPP_Util_AC_Grid_ShiftPathsAdmin::IsActive() const
+bool UCPP_Util_AC_Grid_ShiftPathsAdmin::IsEnable() const
 {
-	return bIsActive;
+	return bIsEnable;
 }
 
 
 
 /*
 * The first location is the neighbour's axial location of the ClickedCell.
-* The last location is a free location,so doesn't exists in the Playercontroller CellsMap
+* The last location is a free location (free Neighbour),so doesn't exists in the Playercontroller CellsMap
 * @Return The last location.
 */
 FVector2f UCPP_Util_AC_Grid_ShiftPathsAdmin::GetAxialLocOfCellsInCurrentPath(TArray<FVector2f>& OutCurrentAxialLocationsPath)
@@ -360,7 +362,7 @@ void UCPP_Util_AC_Grid_ShiftPathsAdmin::ClearShiftingStates()
 
 	NeighboursShiftPathsStates.Empty();
 	BaseCell = nullptr;
-	CellsManager = nullptr;
-	Grid = nullptr;
+	//CellsManager = nullptr;
+	//Grid = nullptr;
 }
 

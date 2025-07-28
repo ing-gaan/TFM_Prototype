@@ -1,6 +1,7 @@
 #include "Actors/Cell/Components/CPP_AC_Cell_Movement.h"
 #include "Utils/FunctionLibraries/CPP_FuncLib_CellUtils.h"
 #include "Actors/Cell/CPP_Cell.h"
+#include "Core/GameSettings/CPP_DA_GameSettings.h"
 #include "Utils/Macros/Macros.h"
 
 
@@ -11,6 +12,7 @@ void UCPP_AC_Cell_Movement::BeginPlay()
 {
 	Super::BeginPlay();
 	RegisterEventFunctions();
+	CurrentZLocation = GameSettings->CellsDefaultHeightFromGround;
 }
 
 void UCPP_AC_Cell_Movement::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -55,8 +57,10 @@ void UCPP_AC_Cell_Movement::MoveCellEvent()
 	UCPP_FuncLib_CellUtils::CalculateWorldLocationRotationBasedOnPlayer(
 		OwnerCell->Player, OwnerCell->GetRelativeLocation(), RealLocation, RealRotation);
 
+	RealLocation.Z = CurrentZLocation;
+
 	OwnerCell->SetActorLocation(RealLocation);
-	OwnerCell->SetActorRotation(RealRotation);
+	OwnerCell->SetActorRotation(RealRotation);	
 	
 }
 
