@@ -215,8 +215,9 @@ void ACPP_Grid::ClickOnGrid(FVector2f AxialLocation)
 
 void ACPP_Grid::ClickOnAuxGridElement(FVector2f AxialLocation)
 {	
-	InputEventBus->RaiseClickOnAuxGridElemEvent();
 	AddUsedAxialLocation(AxialLocation);
+	InputEventBus->RaiseClickOnAuxGridElemEvent();
+	//AddUsedAxialLocation(AxialLocation);
 }
 
 
@@ -226,9 +227,8 @@ const TSet<FVector2f>* ACPP_Grid::GetAllFreeNeighbours() const
 }
 
 
-void ACPP_Grid::UpdateToTempLocations(FVector2f FirstAxialLocation, FVector2f LastAxialLocation)
+void ACPP_Grid::UpdateToTempLocations(FVector2f LastAxialLocation)
 {	
-	AddFreeAxialLocation(FirstAxialLocation);
 	AddUsedAxialLocation(LastAxialLocation);	
 }
 

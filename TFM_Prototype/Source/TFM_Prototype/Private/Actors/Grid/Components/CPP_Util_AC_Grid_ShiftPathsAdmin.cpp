@@ -78,6 +78,13 @@ void UCPP_Util_AC_Grid_ShiftPathsAdmin::Update(const ACPP_Cell* CellToDivide)
 		}
 	}
 
+	/*ClearShiftingStates();
+	BaseCell = CellToDivide;*/
+	if (!BaseCell)
+	{
+		return;
+	}
+
 	UpdateBaseCellNeighbours();
 
 	for (auto& Elem : NeighboursShiftPathsStates)
@@ -191,7 +198,7 @@ int UCPP_Util_AC_Grid_ShiftPathsAdmin::ChangeCellsLocations(const ACPP_Cell* Fir
 	for (int i = CurrentPath.Num() - 1; i > 0; i--)
 	{
 		CellInPath = CellsManager->GetCellInMap(CurrentPath[i - 1]);
-		CellInPath->ShiftAxialLocation(CurrentPath[i]);		
+		CellInPath->ShiftAxialLocation(CurrentPath[i]);	
 	}
 	CellShiftingState->ShiftingTo = ECPP_CellShiftState::ShiftingToTemp;
 

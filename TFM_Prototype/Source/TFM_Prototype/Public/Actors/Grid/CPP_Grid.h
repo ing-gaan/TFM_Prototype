@@ -41,7 +41,7 @@ public:/*Fucntions*/
 	void ClickOnStaticMeshInstance(FVector2f AxialLocation);
 
 	const TSet<FVector2f>* GetAllFreeNeighbours() const;	
-	void UpdateToTempLocations(FVector2f FirstAxialLocation, FVector2f LastAxialLocation);
+	void UpdateToTempLocations(FVector2f LastAxialLocation);
 	void ClickOnAuxGridElement(FVector2f AxialLocation);
 
 

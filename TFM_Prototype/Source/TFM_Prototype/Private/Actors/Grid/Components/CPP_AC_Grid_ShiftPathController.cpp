@@ -148,7 +148,7 @@ void UCPP_AC_Grid_ShiftPathController::FinishCellDivisionEvent(FVector2f SpawnAx
 {
 	if (CellsManager)
 	{		
-		ShiftPathsUpdate(CurrentClickedCell);
+		ShiftPathsUpdate(CurrentClickedCell);	
 	}	
 }
 
@@ -169,7 +169,7 @@ void UCPP_AC_Grid_ShiftPathController::ShiftPathsUpdate(const ACPP_Cell* CellToD
 void UCPP_AC_Grid_ShiftPathController::ClickOnCellEvent(const ACPP_Cell* ClickedCell)
 {
 	CurrentClickedCell = ClickedCell;
-	if (UCPP_SS_LocalGameManager::IsACellDividing())
+	if (UCPP_SS_LocalGameManager::IsGridActive())
 	{
 		ShiftPathsUpdate(CurrentClickedCell);
 	}
@@ -178,11 +178,12 @@ void UCPP_AC_Grid_ShiftPathController::ClickOnCellEvent(const ACPP_Cell* Clicked
 
 void UCPP_AC_Grid_ShiftPathController::ClickOnAuxGridElemEvent()
 {
-	if (UpdateLocationsOfCellsInPath())
+	UpdateLocationsOfCellsInPath();
+	/*if (UpdateLocationsOfCellsInPath())
 	{		
 		ShiftPathsAdmin->ReturnAllCellsToLocations();
 		ShiftPathsUpdate(GameManager->GetBeforeClickedCell());		
-	}
+	}*/
 }
 
 
@@ -207,9 +208,19 @@ bool UCPP_AC_Grid_ShiftPathController::UpdateLocationsOfCellsInPath()
 	FVector2f FirstAxLocInPath = CellsInPath[0];
 
 	CellsManager->UpdateToTempLocations(CellsInPath);
-	OwnerGrid->UpdateToTempLocations(FirstAxLocInPath, TheFreeNeighbourInPath);
+	OwnerGrid->UpdateToTempLocations(TheFreeNeighbourInPath);
+
+	
 
 	InputEventBus->RaiseClickOnGridEvent(FirstAxLocInPath);
+
+	ShiftPathsUpdate(CurrentClickedCell);
+
+	//ShiftPathsAdmin->ReturnAllCellsToLocations();
+	//ShiftPathsUpdate(GameManager->GetBeforeClickedCell());	
+
+	
+
 
 	return true;
 }

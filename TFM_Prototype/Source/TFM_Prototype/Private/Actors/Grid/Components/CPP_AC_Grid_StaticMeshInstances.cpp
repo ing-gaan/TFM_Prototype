@@ -138,7 +138,12 @@ void UCPP_AC_Grid_StaticMeshInstances::Clicked(UPrimitiveComponent* TouchedCompo
 		return;
 	}
 
-	GridOwner->ClickOnStaticMeshInstance(AxialLocationsOfVisibleInstances[IndexHitByCursor]);
+	bool bIsInstanceInteractive = InstancesInteractivity[IndexHitByCursor];
+	if (bIsInstanceInteractive)
+	{
+		GridOwner->ClickOnStaticMeshInstance(AxialLocationsOfVisibleInstances[IndexHitByCursor]);
+	}
+
 }
 
 

@@ -273,6 +273,7 @@ void ACPP_Cell::UpdateToTemporalLocation()
 {
 	AxialLocation = TempAxialLocation;
 	CellShiftState = ECPP_CellShiftState::AtOriginLocation;
+	ShiftEventDelegate.ExecuteIfBound(false);
 }
 
 

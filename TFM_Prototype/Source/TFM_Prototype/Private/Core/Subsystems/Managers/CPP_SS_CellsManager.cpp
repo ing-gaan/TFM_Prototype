@@ -262,7 +262,7 @@ void UCPP_SS_CellsManager::AddCellSpawned(ACPP_Cell* NewCell)
 	}
 
 	CellsMap.Emplace(NewAxialLoc, NewCell);
-	CellsBirthOrder.Emplace(NewCell);
+	//CellsBirthOrder.Emplace(NewCell);
 
 	CellsManagerEventBus->RaiseFinishCellDivisionEvent(NewAxialLoc);
 	//UnclickCurrentCell();
@@ -349,13 +349,14 @@ void UCPP_SS_CellsManager::UpdateCellToTempLocation(ACPP_Cell* Cell)
 	FVector2f AxialLocation = Cell->GetAxialLocation();
 	FVector2f TempLocation = Cell->GetTempAxialLocation();
 
-	CellsMap[AxialLocation] = nullptr;
+	//CellsMap[AxialLocation] = nullptr;
+	CellsMap.Remove(AxialLocation);
 	CellsMap.Emplace(TempLocation, Cell);
 
 	Cell->UpdateToTemporalLocation();
 	const FString StrName = UCPP_FuncLib_CellUtils::GetCellOutlinerLabel(TempLocation);
 	Cell->SetActorLabel(StrName);
-	Cell->ReturnToOriginAxialLocation();
+	//Cell->ReturnToOriginAxialLocation();
 }
 
 
