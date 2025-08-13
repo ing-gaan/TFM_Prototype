@@ -21,21 +21,28 @@ void UCPP_AC_Cell_Differentiation::InitComponent()
 
 void UCPP_AC_Cell_Differentiation::RegisterEventFunctions() const
 {
-	OwnerCell->DifferentiateEventDelegate.BindDynamic(this, &UCPP_AC_Cell_Differentiation::DifferentiateEvent);
+	OwnerCell->BeginDifferentiateEventDelegate.BindDynamic(this, &UCPP_AC_Cell_Differentiation::BeginDifferentiateEvent);
 }
 
 
 void UCPP_AC_Cell_Differentiation::UnRegisterEventFunctions() const
 {
-	OwnerCell->DifferentiateEventDelegate.Clear();
+	OwnerCell->BeginDifferentiateEventDelegate.Clear();
 	
 }
 
 
-bool UCPP_AC_Cell_Differentiation::DifferentiateEvent(const UCPP_DA_CellType* NewType)
+bool UCPP_AC_Cell_Differentiation::BeginDifferentiateEvent(const UCPP_DA_CellType* NewType)
 {
 	OwnerCell->CellType = NewType;
-	return OwnerCell->LoadCellTypeComponents(NewType);
+
+	if (OwnerCell->LoadCellTypeComponents(NewType))
+	{
+		OwnerCell->FinishDifferentiate();
+		return true;
+	}
+
+	return false;
 }
 
 

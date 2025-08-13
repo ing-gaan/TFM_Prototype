@@ -24,6 +24,7 @@
 
 
 
+
 void UCPP_SS_CellsManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
@@ -83,6 +84,9 @@ void UCPP_SS_CellsManager::RegisterEventFunctions() const
 
 	UIEventBus->FinishCellDifferentiationEventDelegate.AddUniqueDynamic(
 		this, &UCPP_SS_CellsManager::FinishCellDifferentiationEvent);
+
+	UIEventBus->BeginEliminateCellEventDelegate.AddUniqueDynamic(
+		this, &UCPP_SS_CellsManager::BeginEliminateCellEvent);
 }
 
 
@@ -101,9 +105,11 @@ void UCPP_SS_CellsManager::UnRegisterEventFunctions() const
 	InputEventBus->CancelEventDelegate.RemoveDynamic(
 		this, &UCPP_SS_CellsManager::CancelEvent);
 
-
 	UIEventBus->FinishCellDifferentiationEventDelegate.RemoveDynamic(
 		this, &UCPP_SS_CellsManager::FinishCellDifferentiationEvent);
+
+	UIEventBus->BeginEliminateCellEventDelegate.RemoveDynamic(
+		this, &UCPP_SS_CellsManager::BeginEliminateCellEvent);
 }
 
 
@@ -170,10 +176,15 @@ void UCPP_SS_CellsManager::FinishCellDifferentiationEvent(const UCPP_DA_CellType
 		return; 
 	}
 
-	CurrentClickedCell->Differentiate(NewCellType);
+	CurrentClickedCell->BeginDifferentiate(NewCellType);
 	UnclickCurrentCell();
 }
 
+
+void UCPP_SS_CellsManager::BeginEliminateCellEvent()
+{
+	CurrentClickedCell->BeginCellApoptosis();
+}
 
 
 void UCPP_SS_CellsManager::AddFirstCell()
@@ -233,7 +244,7 @@ void UCPP_SS_CellsManager::DivideCellEvent(FVector2f AxialLocation)
 	{ 
 		return; 
 	}
-	
+		
 	ACPP_Cell* CellSpawned = CurrentClickedCell->Divide(AxialLocation);
 	if (!CellSpawned) 
 	{	
@@ -357,6 +368,12 @@ void UCPP_SS_CellsManager::UpdateCellToTempLocation(ACPP_Cell* Cell)
 	const FString StrName = UCPP_FuncLib_CellUtils::GetCellOutlinerLabel(TempLocation);
 	Cell->SetActorLabel(StrName);
 	//Cell->ReturnToOriginAxialLocation();
+}
+
+void UCPP_SS_CellsManager::DestroyCell(ACPP_Cell* Cell)
+{
+	CellsManagerEventBus->RaiseBeginDestroyCellEvent(Cell->GetAxialLocation());
+	CellsMap.Remove(Cell->GetAxialLocation());
 }
 
 

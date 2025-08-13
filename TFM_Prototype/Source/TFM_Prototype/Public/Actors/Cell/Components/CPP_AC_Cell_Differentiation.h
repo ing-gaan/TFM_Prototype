@@ -30,7 +30,7 @@ public:/*Functions*/
 private:/*Properties*/
 
 	UFUNCTION()
-	bool DifferentiateEvent(const UCPP_DA_CellType* NewType);
+	bool BeginDifferentiateEvent(const UCPP_DA_CellType* NewType);
 
 
 

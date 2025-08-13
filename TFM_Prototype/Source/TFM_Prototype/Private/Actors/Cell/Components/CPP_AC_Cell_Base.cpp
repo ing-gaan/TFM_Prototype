@@ -1,7 +1,8 @@
 #include "Actors/Cell/Components/CPP_AC_Cell_Base.h"
 #include "Actors/Cell/CPP_Cell.h"
 #include "Core/Subsystems/EventBuses/CPP_SS_InputEventBus.h"
-#include "Core/Subsystems/EventBuses/CPP_SS_CellsManagerEventBus.h"
+#include "Core/Subsystems/EventBuses/CPP_SS_UIEventBus.h"
+#include "Core/Subsystems/EventBuses/CPP_SS_TimeEventBus.h"
 #include "Core/GameInstance/CPP_GameInstance.h"
 #include "Core/GameSettings/CPP_DA_GameSettings.h"
 
@@ -51,6 +52,12 @@ void UCPP_AC_Cell_Base::InitComponent()
 
 	InputEventBus = GameInstance->GetSubsystem<UCPP_SS_InputEventBus>();
 	checkf(InputEventBus, TEXT("***> No InputEventBus (nullptr) <***"));
+
+	UIEventBus = GameInstance->GetSubsystem<UCPP_SS_UIEventBus>();
+	checkf(UIEventBus, TEXT("***> No UIEventBus (nullptr) <***"));
+
+	TimeEventBus = GameInstance->GetSubsystem<UCPP_SS_TimeEventBus>();
+	checkf(TimeEventBus, TEXT("***> No TimeEventBus (nullptr) <***"));
 
 	/*CellsManagerEventBus = GameInstance->GetSubsystem<UCPP_SS_CellsManagerEventBus>();
 	checkf(CellsManagerEventBus, TEXT("***> No CellsManagerEventBus (nullptr) <***"));*/

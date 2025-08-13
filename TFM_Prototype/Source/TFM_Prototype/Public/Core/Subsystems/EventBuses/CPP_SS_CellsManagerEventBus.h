@@ -15,6 +15,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FStartCellsShiftingEvent, const ACPP
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCellsShiftingReturnEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFinishCellsShiftingEvent);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBeginDestroyCellEvent, FVector2f, SpawnAxialLocation);
+
 
 
 
@@ -41,6 +43,9 @@ public: /*Properties*/
 
 	UPROPERTY(BlueprintAssignable)
 	FFinishCellsShiftingEvent FinishCellsShiftingEventDelegate;
+
+	UPROPERTY()
+	FBeginDestroyCellEvent BeginDestroyCellEventDelegate;
 
 
 
@@ -76,6 +81,14 @@ public: /*Functions*/
 	FORCEINLINE void RaiseFinishCellsShiftingEvent()
 	{
 		FinishCellsShiftingEventDelegate.Broadcast();
+
+	}
+
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void RaiseBeginDestroyCellEvent(FVector2f AxialLocation)
+	{
+		BeginDestroyCellEventDelegate.Broadcast(AxialLocation);
 
 	}
 

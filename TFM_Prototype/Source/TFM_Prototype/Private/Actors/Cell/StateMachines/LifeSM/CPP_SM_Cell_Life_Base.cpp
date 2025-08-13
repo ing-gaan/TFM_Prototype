@@ -2,37 +2,41 @@
 #include "Actors/Cell/StateMachines/LifeSM/CPP_SM_Cell_Life_Context.h"
 #include "Actors/Cell/CPP_Cell.h"
 #include "Actors/Cell/CPP_DA_CellType.h"
+#include "Core/GameInstance/CPP_GameInstance.h"
 
 
 
 
-
-
-void UCPP_SM_Cell_Life_Base::InitState(UCPP_SM_Cell_Life_Context* Context, int StateSortPosition)
+void UCPP_SM_Cell_Life_Base::InitState(UCPP_SM_Cell_Context* Context, int StateSortPosition)
 {
-	SMContext = Context;
-	bStateInitiated = true;
 	SortPosition = StateSortPosition;
-	LifeStateTimeDecreaseRate = SMContext->OwnerCell->CellType->LifeStateTimeDecreaseRate;
+	InitializeState(Context);
 }
+
+
+
+void UCPP_SM_Cell_Life_Base::InitializeState(UCPP_SM_Cell_Context* Context)
+{
+	Super::InitializeState(Context);
+
+	SMContext = Cast<UCPP_SM_Cell_Life_Context>(Context);
+	bStateInitiated = true;
+	LifeStateTimeDecreaseRate = SMContext->OwnerCell->CellType->LifeStateTimeDecreaseRate;
+
+	UCPP_GameInstance* GameInstance = Cast<UCPP_GameInstance>(Context->World->GetGameInstance());
+	checkf(GameInstance, TEXT("***> No GameInstance (nullptr) <***"));
+
+	GameSettings = GameInstance->GameSettings;
+}
+
 
 
 void UCPP_SM_Cell_Life_Base::ImplementState()
 {
 	RemainingStateTime = MaxStateTime;
-	/*SetStateMaterial();
-
-	if (SMContext->OwnerCell->CellMeshComponent)
-	{
-		SMContext->OwnerCell->CellMeshComponent->SetMaterial(0, StateMaterial);
-	}*/
+	SetState();
 }
 
-
-void UCPP_SM_Cell_Life_Base::SetStateMaterial()
-{
-	checkf(false, TEXT("***> Method not implemented <***"));
-}
 
 
 void UCPP_SM_Cell_Life_Base::DecreaseStateTime()
@@ -92,4 +96,11 @@ void UCPP_SM_Cell_Life_Base::ChangeToNewCellTypeState()
 void UCPP_SM_Cell_Life_Base::UpdateMaxStateTime()
 {
 	checkf(false, TEXT("***> Method not implemented <***"));
+}
+
+
+const FLinearColor& UCPP_SM_Cell_Life_Base::GetMaterialColor()
+{
+	checkf(false, TEXT("***> Function not implemented. Override without call parent (Not use Super typedef) <***"));
+	return FLinearColor::Black;
 }

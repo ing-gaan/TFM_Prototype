@@ -6,31 +6,13 @@
 
 
 
-void UCPP_SM_Cell_Cursor_Base::InitializeState(UCPP_SM_Cell_Cursor_Context* Context)
+void UCPP_SM_Cell_Cursor_Base::InitializeState(UCPP_SM_Cell_Context* Context)
 {
-	SMContext = Context;
+	Super::InitializeState(Context);
+
+	SMContext = Cast<UCPP_SM_Cell_Cursor_Context>(Context);
 }
 
-
-void UCPP_SM_Cell_Cursor_Base::SetState()
-{	
-	SetMaterialColorParameter( GetMaterialColor() );
-}
-
-
-void UCPP_SM_Cell_Cursor_Base::SetMaterialColorParameter(const FLinearColor& MaterialColor)
-{
-	FName MaterialColorParameterName = SMContext->OwnerCell->CellType->MaterialColorParameterName;
-	SMContext->CellMaterialInstance->SetVectorParameterValue(MaterialColorParameterName, MaterialColor);
-}
-
-
-
-const FLinearColor& UCPP_SM_Cell_Cursor_Base::GetMaterialColor()
-{
-	//checkf(false, TEXT("***> Function not implemented. Override without call parent (Not use Super typedef) <***"));
-	return FLinearColor::Black;
-}
 
 
 bool UCPP_SM_Cell_Cursor_Base::ToNormal()

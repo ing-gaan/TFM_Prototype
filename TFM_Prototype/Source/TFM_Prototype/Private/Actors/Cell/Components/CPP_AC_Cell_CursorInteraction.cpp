@@ -73,8 +73,11 @@ void UCPP_AC_Cell_CursorInteraction::InitComponent()
 	MaterialInstance = UMaterialInstanceDynamic::Create(Material, nullptr);
 	checkf(MaterialInstance, TEXT("*****> No MaterialInstance (nullptr) <*****"));
 
+	UWorld* World = GetWorld();
+	checkf(World, TEXT("***> No World (nullptr) <***"));
+
 	OwnerCell->CellStaticMeshComponent->SetMaterial(0, MaterialInstance);
-	SMContext->InitStateMachine(OwnerCell, MaterialInstance);	
+	SMContext->InitStateMachine(OwnerCell, MaterialInstance, World);	
 }
 
 

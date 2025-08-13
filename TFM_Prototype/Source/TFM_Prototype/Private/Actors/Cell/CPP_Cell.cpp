@@ -18,7 +18,7 @@
 
 
 
-const UCPP_SS_CellsManager* ACPP_Cell::CellsManager{ nullptr };
+UCPP_SS_CellsManager* ACPP_Cell::CellsManager{ nullptr };
 
 
 ACPP_Cell::ACPP_Cell()
@@ -110,9 +110,15 @@ ACPP_Cell* ACPP_Cell::Divide(FVector2f NewAxialLocation) const
 
 
 
-bool ACPP_Cell::Differentiate(const UCPP_DA_CellType* Newtype) const
+bool ACPP_Cell::BeginDifferentiate(const UCPP_DA_CellType* Newtype) const
 {
-	return DifferentiateEventDelegate.Execute(Newtype);
+	return BeginDifferentiateEventDelegate.Execute(Newtype);
+}
+
+
+void ACPP_Cell::FinishDifferentiate() const
+{
+	FinishDifferentiateEventDelegate.Broadcast();
 }
 
 
@@ -202,6 +208,7 @@ bool ACPP_Cell::HasThisAbility(TSubclassOf<UCPP_AC_Cell_Base> Ability) const
 }
 
 
+
 void ACPP_Cell::NotifyShiftingActivated() const
 {
 	CellsManager->StartShiftingCellsLocations(this);
@@ -276,4 +283,54 @@ void ACPP_Cell::UpdateToTemporalLocation()
 	ShiftEventDelegate.ExecuteIfBound(false);
 }
 
+
+
+void ACPP_Cell::In_De_creaseCellEnergy(std::optional<int> EnergyVariation)
+{
+	if (EnergyVariation.has_value())
+	{
+		CellEnergy += EnergyVariation.value();
+		return;
+	}
+	CellEnergy -= CellType->EnergyDecreaseRate;
+}
+
+
+
+void ACPP_Cell::BeginCellApoptosis() const
+{
+	BeginCellApoptosisEventDelegate.Broadcast();
+}
+
+
+
+const UCPP_SM_Cell_Life_Base* ACPP_Cell::GetCellLifeState() const
+{
+	return CellLifeState;
+}
+
+
+void ACPP_Cell::SetCellLifeState(const UCPP_SM_Cell_Life_Base* Newstate)
+{
+	CellLifeState = Newstate;
+}
+
+
+void ACPP_Cell::DestroyYourself()
+{
+	CellsManager->DestroyCell(this);
+}
+
+
+bool ACPP_Cell::IsConnectedToOldestCell()
+{
+	return bIsConnectedToOldestCell;
+}
+
+
+
+int ACPP_Cell::GetCellEnergy()
+{
+	return CellEnergy;
+}
 

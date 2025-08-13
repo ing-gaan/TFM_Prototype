@@ -50,7 +50,30 @@ public:
 	const UCPP_DA_CellType* FirstCellType{ nullptr };
 
 
-	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers")
+	float MaxCellsBornTimeMultiplier{ 1 };
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers")
+	float MaxCellsYouthTimeMultiplier{ 1 };
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers")
+	float MaxCellsOldAgeTimeMultiplier{ 1 };
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers")
+	float MaxCellsDyingTimeMultiplier{ 1 };
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers")
+	float MaxCellsDeadTimeMultiplier{ 1 };
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers")
+	float MaxCellsEnergyMultiplier{ 1 };
+
+
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Cells|Properties|Life",
+		meta = (ToolTip = "", ClampMin = 0, ForceUnits = "Seconds"))
+	int LifeStateTimeStep{ 1 };
+
+
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Cells|Properties|Life",
+		meta = (ToolTip = "", ClampMin = 0, ForceUnits = "Seconds"))
+	int EnergyTimeStep{ 1 };
 
 
 

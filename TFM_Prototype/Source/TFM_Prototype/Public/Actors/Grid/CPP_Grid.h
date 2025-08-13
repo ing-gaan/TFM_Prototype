@@ -96,6 +96,9 @@ protected:/*Fucntions*/
 	void FinishCellDivisionEvent(FVector2f SpawnAxialLocation);
 
 	UFUNCTION()
+	void BeginDestroyCellEvent(FVector2f AxialLocation);
+
+	UFUNCTION()
 	void ClickOnGrid(FVector2f AxialLocation);
 
 

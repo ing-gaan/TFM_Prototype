@@ -12,9 +12,9 @@
 
 
 
-void UCPP_SM_Cell_Life_Context::InitContext(ACPP_Cell* Cell)
-{
-	OwnerCell = Cell;
+void UCPP_SM_Cell_Life_Context::InitStateMachine(ACPP_Cell* Cell, UMaterialInstanceDynamic* MaterialInstance, const UWorld* GameWorld)
+{	
+	Super::InitStateMachine(Cell, MaterialInstance, GameWorld);
 
 	int StateSortPosition = 0;
 	UCPP_SM_Cell_Life_Base* NewState = NewObject<UCPP_SM_Cell_LifeSt_Init>(this);
@@ -52,6 +52,7 @@ void UCPP_SM_Cell_Life_Context::InitContext(ACPP_Cell* Cell)
 	NewState->InitState(this, StateSortPosition);
 	States.Insert(NewState, StateSortPosition);
 
+	CurrentStateId = 0;
 	CurrentState = States[CurrentStateId];
 	CurrentState->ImplementState();
 }

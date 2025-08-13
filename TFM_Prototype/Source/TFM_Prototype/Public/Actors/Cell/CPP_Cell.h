@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include <optional>
 
 
 #include "CPP_Cell.generated.h"
@@ -28,11 +29,15 @@ class UCPP_SM_Cell_Life_Base;
 DECLARE_DYNAMIC_DELEGATE(FUnclickEvent);
 DECLARE_DYNAMIC_DELEGATE(FMoveCellEvent);
 DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(ACPP_Cell*, FDivideEvent, FVector2f, NewAxialLocation);
-DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(bool, FDifferentiateEvent, const UCPP_DA_CellType*, Newtype);
+DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(bool, FBeginDifferentiateEvent, const UCPP_DA_CellType*, Newtype);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFinishDifferentiateEvent);
+
 DECLARE_DYNAMIC_DELEGATE_OneParam(FShiftEvent, bool, ShouldShift);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAnimShiftLocationEvent, FVector2f, NewAxialLocation);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAnimReturnToOriginEvent);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginCellApoptosisEvent);
 
 
 
@@ -66,10 +71,17 @@ public: /*Properties*/
 	FDivideEvent DivideEventDelegate;
 
 	UPROPERTY()
-	FDifferentiateEvent DifferentiateEventDelegate;
+	FBeginDifferentiateEvent BeginDifferentiateEventDelegate;
+
+	UPROPERTY()
+	FFinishDifferentiateEvent FinishDifferentiateEventDelegate;
 
 	UPROPERTY()
 	FShiftEvent ShiftEventDelegate;
+
+	UPROPERTY()
+	FBeginCellApoptosisEvent BeginCellApoptosisEventDelegate;
+
 
 
 
@@ -109,7 +121,10 @@ public: /*Functions*/
 	ACPP_Cell* Divide(FVector2f NewAxialLocation) const;
 
 	UFUNCTION()
-	bool Differentiate(const UCPP_DA_CellType* Newtype) const;
+	bool BeginDifferentiate(const UCPP_DA_CellType* Newtype) const;
+
+	UFUNCTION()
+	void FinishDifferentiate() const;
 
 	UFUNCTION()
 	bool LoadCellTypeComponents(const UCPP_DA_CellType* NewCellType);
@@ -126,7 +141,10 @@ public: /*Functions*/
 	UFUNCTION()
 	bool HasThisAbility(TSubclassOf<UCPP_AC_Cell_Base> Ability) const;
 
+	UFUNCTION()
+	int GetCellEnergy();
 
+	
 	void NotifyShiftingActivated() const;
 	void NotifyShiftingCanceled() const;
 
@@ -138,10 +156,23 @@ public: /*Functions*/
 	FVector2f GetTempAxialLocation() const;
 	void UpdateToTemporalLocation();
 
+	/**
+	 * @brief If a value is not passed to the function, the energy decreases by an amount of "CellType->EnergyDecreaseRate" units.
+	 * @param EnergyVariation: Amount of energy to increase (positive) or decrease (negative).
+	*/
+	void In_De_creaseCellEnergy(std::optional<int> EnergyVariation = std::nullopt);
+
+
+	void BeginCellApoptosis() const;
+	const UCPP_SM_Cell_Life_Base* GetCellLifeState() const;
+	void SetCellLifeState(const UCPP_SM_Cell_Life_Base* Newstate);
+	void DestroyYourself();
+	bool IsConnectedToOldestCell();
+
 
 protected: /*Properties*/	
 
-	static const UCPP_SS_CellsManager* CellsManager;
+	static UCPP_SS_CellsManager* CellsManager;
 
 		
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
@@ -164,6 +195,10 @@ protected: /*Properties*/
 
 
 	bool bIsClicked{ false };
+	int CellEnergy{ 0 };
+	bool bIsConnectedToOldestCell{ true };
+
+	
 
 
 protected: /*Functions*/

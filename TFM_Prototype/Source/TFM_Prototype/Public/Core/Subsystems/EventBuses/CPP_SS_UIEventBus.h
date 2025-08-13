@@ -12,7 +12,8 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginCellDivisionEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginCellDifferentiationEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFinishCellDifferentiationEvent, const UCPP_DA_CellType*, NewCellType);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginEliminateCellEvent);
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFinishDestroyCellEvent);
 
 
 
@@ -32,6 +33,10 @@ public: /*Properties*/
 
 	UPROPERTY(BlueprintAssignable)
 	FFinishCellDifferentiationEvent FinishCellDifferentiationEventDelegate;
+
+	UPROPERTY()
+	FBeginEliminateCellEvent BeginEliminateCellEventDelegate;
+
 
 
 
@@ -55,7 +60,13 @@ public: /*Functions*/
 	{
 		FinishCellDifferentiationEventDelegate.Broadcast(NewCellType);
 	}
-	
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void RaiseBeginEliminateCellEvent()
+	{
+		BeginEliminateCellEventDelegate.Broadcast();
+	}
+
 
 
 

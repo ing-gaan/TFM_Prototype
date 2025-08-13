@@ -9,7 +9,8 @@
 #include "Core/Subsystems/EventBuses/CPP_SS_UIEventBus.h"
 #include "Core/Subsystems/EventBuses/CPP_SS_CellsManagerEventBus.h"
 #include "Utils/Macros/Macros.h"
-
+#include "Actors/Cell/StateMachines/LifeSM/CPP_SM_Cell_LifeSt_OldAge.h"
+#include "Actors/Cell/CPP_Cell.h"
 
 
 
@@ -92,6 +93,8 @@ void ACPP_Grid::RegisterEventFunctions()
 
 	CellsManagerEventBus->FinishCellDivisionEventDelegate.AddUniqueDynamic(
 		this, &ACPP_Grid::FinishCellDivisionEvent);
+	CellsManagerEventBus->BeginDestroyCellEventDelegate.AddUniqueDynamic(
+		this, &ACPP_Grid::BeginDestroyCellEvent);
 }
 
 
@@ -107,6 +110,8 @@ void ACPP_Grid::UnRegisterEventFunctions()
 
 	CellsManagerEventBus->FinishCellDivisionEventDelegate.RemoveDynamic(
 		this, &ACPP_Grid::FinishCellDivisionEvent);
+	CellsManagerEventBus->BeginDestroyCellEventDelegate.RemoveDynamic(
+		this, &ACPP_Grid::BeginDestroyCellEvent);
 }
 
 
@@ -137,6 +142,14 @@ void ACPP_Grid::CancelEvent()
 
 void ACPP_Grid::BeginCellDivisionEvent()
 {
+	bool bIsOld = CurrentClickedCell->CellLifeStateIsEqualOrOlderThan(UCPP_SM_Cell_LifeSt_OldAge::StaticClass());
+
+	if (bIsOld)
+	{
+		return;
+	}
+
+	PRINT("CAN DIVIDE");
 	SetGridVisibility(true);
 }
 
@@ -144,6 +157,11 @@ void ACPP_Grid::BeginCellDivisionEvent()
 void ACPP_Grid::FinishCellDivisionEvent(FVector2f SpawnAxialLocation)
 {
 	//AddUsedAxialLocation(SpawnAxialLocation);
+}
+
+void ACPP_Grid::BeginDestroyCellEvent(FVector2f AxialLocation)
+{
+	AddFreeAxialLocation(AxialLocation);
 }
 
 
@@ -231,7 +249,6 @@ void ACPP_Grid::UpdateToTempLocations(FVector2f LastAxialLocation)
 {	
 	AddUsedAxialLocation(LastAxialLocation);	
 }
-
 
 
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
+#include "Actors/Cell/StateMachines/CPP_SM_Cell_Context.h"
 
 
 #include "CPP_SM_Cell_Cursor_Context.generated.h"
@@ -15,26 +15,19 @@ class UCPP_SM_Cell_Cursor_Base;
 
 
 UCLASS()
-class TFM_PROTOTYPE_API UCPP_SM_Cell_Cursor_Context : public UObject
+class TFM_PROTOTYPE_API UCPP_SM_Cell_Cursor_Context : public UCPP_SM_Cell_Context
 {
 	GENERATED_BODY()
 
 
 public:/*Properties*/
 
-	UPROPERTY()
-	ACPP_Cell* OwnerCell{ nullptr };
-
-	UPROPERTY()
-	UMaterialInstanceDynamic* CellMaterialInstance{ nullptr };
-
-
-
+	
 
 
 public:/*Functions*/
 
-	void InitStateMachine(ACPP_Cell* Cell, UMaterialInstanceDynamic* MaterialInstance);
+	virtual void InitStateMachine(ACPP_Cell* Cell, UMaterialInstanceDynamic* MaterialInstance, const UWorld* GameWorld) override;
 	UCPP_SM_Cell_Cursor_Base* GetCurrentState();
 	
 

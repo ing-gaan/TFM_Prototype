@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
+#include "Actors/Cell/StateMachines/CPP_SM_Cell_Base.h"
 
 
 #include "CPP_SM_Cell_Cursor_Base.generated.h"
@@ -13,7 +13,7 @@ class UCPP_SM_Cell_Cursor_Context;
 
 
 UCLASS()
-class TFM_PROTOTYPE_API UCPP_SM_Cell_Cursor_Base : public UObject
+class TFM_PROTOTYPE_API UCPP_SM_Cell_Cursor_Base : public UCPP_SM_Cell_Base
 {
 	GENERATED_BODY()
 
@@ -26,8 +26,7 @@ public:/*Properties*/
 
 public:/*Functions*/
 
-	virtual void InitializeState(UCPP_SM_Cell_Cursor_Context* Context);
-	virtual void SetState();
+	virtual void InitializeState(UCPP_SM_Cell_Context* Context) override;
 	
 
 	//--Transition functions
@@ -49,8 +48,6 @@ protected:/*Properties*/
 
 protected:/*Functions*/
 
-	virtual const FLinearColor& GetMaterialColor();
-	void SetMaterialColorParameter(const FLinearColor& MaterialColor);
 
 
 	

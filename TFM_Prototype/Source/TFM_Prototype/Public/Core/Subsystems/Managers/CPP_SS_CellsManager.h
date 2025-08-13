@@ -99,7 +99,12 @@ protected:/*Functions*/
 	void FinishCellDifferentiationEvent(const UCPP_DA_CellType* NewCellType);
 
 	UFUNCTION()
+	void BeginEliminateCellEvent();
+
+	UFUNCTION()
 	void Phase1StartedEvent();
+
+
 
 	
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
@@ -121,6 +126,8 @@ protected:/*Functions*/
 	void StartShiftingCellsLocations(const ACPP_Cell* FirstCellToShift) const;
 	void ReturnCellsToOriginLocation() const;
 	void UpdateCellToTempLocation(ACPP_Cell* Cellptr);
+
+	void DestroyCell(ACPP_Cell* Cell);
 
 
 	friend class ACPP_Cell;

@@ -7,11 +7,11 @@
 
 
 
-void UCPP_SM_Cell_Cursor_Context::InitStateMachine(ACPP_Cell* Cell, UMaterialInstanceDynamic* MaterialInstance)
+void UCPP_SM_Cell_Cursor_Context::InitStateMachine(ACPP_Cell* Cell, UMaterialInstanceDynamic* MaterialInstance, const UWorld* GameWorld)
 {
+	Super::InitStateMachine(Cell, MaterialInstance, GameWorld);
+
 	States.Empty();
-	OwnerCell = Cell;
-	CellMaterialInstance = MaterialInstance;
 	ChangeState(UCPP_SM_Cell_CursorSt_Init::StaticClass());
 	bIsInitialized = true;
 }
