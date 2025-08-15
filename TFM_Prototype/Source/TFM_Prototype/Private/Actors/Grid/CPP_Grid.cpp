@@ -95,6 +95,8 @@ void ACPP_Grid::RegisterEventFunctions()
 		this, &ACPP_Grid::FinishCellDivisionEvent);
 	CellsManagerEventBus->BeginDestroyCellEventDelegate.AddUniqueDynamic(
 		this, &ACPP_Grid::BeginDestroyCellEvent);
+	CellsManagerEventBus->MoveCellsEventDelegate.AddUniqueDynamic(
+		this, &ACPP_Grid::MoveCellsEvent);
 }
 
 
@@ -112,6 +114,8 @@ void ACPP_Grid::UnRegisterEventFunctions()
 		this, &ACPP_Grid::FinishCellDivisionEvent);
 	CellsManagerEventBus->BeginDestroyCellEventDelegate.RemoveDynamic(
 		this, &ACPP_Grid::BeginDestroyCellEvent);
+	CellsManagerEventBus->MoveCellsEventDelegate.RemoveDynamic(
+		this, &ACPP_Grid::MoveCellsEvent);
 }
 
 
@@ -163,6 +167,13 @@ void ACPP_Grid::BeginDestroyCellEvent(FVector2f AxialLocation)
 {
 	AddFreeAxialLocation(AxialLocation);
 }
+
+
+void ACPP_Grid::MoveCellsEvent(bool bGridMoving)
+{
+	MoveGridEventDelegate.ExecuteIfBound(bGridMoving);
+}
+
 
 
 void ACPP_Grid::AddNewFreeNeighbours(FVector2f SpawnAxialLocation)

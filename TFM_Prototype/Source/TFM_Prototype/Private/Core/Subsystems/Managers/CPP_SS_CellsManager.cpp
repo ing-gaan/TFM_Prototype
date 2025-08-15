@@ -129,16 +129,17 @@ void UCPP_SS_CellsManager::StartManager()
 
 
 
-void UCPP_SS_CellsManager::MoveCellsEvent()
+void UCPP_SS_CellsManager::MoveCellsEvent(bool bCellsMoving)
 {
 	for (TPair<FVector2f, ACPP_Cell*>& Elem : CellsMap)
 	{
 		if (Elem.Value->HasThisAbility(UCPP_AC_Cell_Movement::StaticClass()))
 		{
-			Elem.Value->MoveCell();
+			Elem.Value->MoveCell(bCellsMoving, false);
 		}		
 	}
 }
+
 
 
 void UCPP_SS_CellsManager::ClickOnCellEvent(const ACPP_Cell* ClickedCell)
@@ -211,6 +212,8 @@ ACPP_Cell* UCPP_SS_CellsManager::SpawnFirstCell()
 	FVector2f FirstCellAxialLocation = GridSettings->FirstAxialLocation;
 	ConfigureFirstCell(FirstCell, FirstCellAxialLocation);
 
+	FirstCell->CellEnergy = GameSettings->FirstCellInitEnergy;
+
 	return FirstCell;
 }
 
@@ -219,7 +222,7 @@ ACPP_Cell* UCPP_SS_CellsManager::SpawnCell(FVector CellLocation, FRotator CellRo
 	FActorSpawnParameters SpawnParam;
 	SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	ACPP_Cell* CellSpawned = GetWorld()->SpawnActor<ACPP_Cell>(CellClass, CellLocation, CellRotation, SpawnParam);
-	checkf(CellSpawned, TEXT("***> No CellSpawned (nullptr) <***"));
+	checkf(CellSpawned, TEXT("***> No CellSpawned (nullptr) <***"));	
 
 	return CellSpawned;
 }

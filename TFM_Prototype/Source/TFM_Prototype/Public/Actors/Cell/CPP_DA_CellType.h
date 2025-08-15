@@ -104,17 +104,17 @@ public:/*Properties*/
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Properties|Energy",
 		meta = (ToolTip = "", ClampMin = 0, Units = "Percent"))
-	int MaxEnergy{ 100 };
+	float MaxEnergy{ 100 };
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Properties|Energy",
 		meta = (ToolTip = "Amount of decrease for each time step", ClampMin = 0))
-	int EnergyDecreaseRate{ 1 };
+	float EnergyDecreaseRate{ 1 };
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Properties|Energy")
 	bool bCanTransferEnergy{ false };
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Properties|Energy",
 		meta = (EditCondition = "bCanTransferEnergy", ClampMin = 0, ClampMax = 100, Units = "Percent"))
-	int EnergyTransferCapacity{ 100 };
+	float EnergyTransferCapacity{ 100 };
 
 
 

@@ -141,7 +141,7 @@ void ACPP_Cell::SetRelativeLocation(FVector2f AxLocation)
 	UCPP_FuncLib_CellUtils::GetRelativeLocationFromAnOrigin(GridSettings->DistanceBetweenNeighbours,
 		OriginAxLocation, AxLocation, RelativeLocation);
 
-	MoveCell();
+	MoveCell(false, true);
 }
 
 
@@ -196,9 +196,9 @@ void ACPP_Cell::Unclick() const
 }
 
 
-void ACPP_Cell::MoveCell() const
+void ACPP_Cell::MoveCell(bool bCellsMoving, bool bIsShifting) const
 {	
-	MoveCellEventDelegate.ExecuteIfBound();
+	MoveCellEventDelegate.Broadcast(bCellsMoving, bIsShifting);
 }
 
 
@@ -285,14 +285,15 @@ void ACPP_Cell::UpdateToTemporalLocation()
 
 
 
-void ACPP_Cell::In_De_creaseCellEnergy(std::optional<int> EnergyVariation)
+void ACPP_Cell::In_De_creaseCellEnergy(float EnergyVariation)
 {
-	if (EnergyVariation.has_value())
+	/*if (EnergyVariation.has_value())
 	{
 		CellEnergy += EnergyVariation.value();
 		return;
 	}
-	CellEnergy -= CellType->EnergyDecreaseRate;
+	CellEnergy += CellType->EnergyDecreaseRate;*/
+	CellEnergy += EnergyVariation;
 }
 
 
@@ -326,7 +327,6 @@ bool ACPP_Cell::IsConnectedToOldestCell()
 {
 	return bIsConnectedToOldestCell;
 }
-
 
 
 int ACPP_Cell::GetCellEnergy()

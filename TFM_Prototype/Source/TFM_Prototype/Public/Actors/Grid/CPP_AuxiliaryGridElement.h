@@ -116,6 +116,9 @@ protected: /*Functions*/
 	void CellsShiftingReturnEvent();
 
 	UFUNCTION()
+	void MoveCellsEvent(bool bCellsMoving);
+
+	UFUNCTION()
 	void Phase2StartedEvent(UCPP_SS_CellsManager* TheCellsManager, ACPP_Grid* TheGrid);
 
 	UFUNCTION(BlueprintCallable)

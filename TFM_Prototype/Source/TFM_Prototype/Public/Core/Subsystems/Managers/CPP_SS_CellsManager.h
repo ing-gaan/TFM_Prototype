@@ -84,7 +84,7 @@ protected:/*Properties*/
 protected:/*Functions*/
 
 	UFUNCTION()
-	void MoveCellsEvent();
+	void MoveCellsEvent(bool bCellsMoving);
 
 	UFUNCTION()
 	void ClickOnCellEvent(const ACPP_Cell* ClickedCell);

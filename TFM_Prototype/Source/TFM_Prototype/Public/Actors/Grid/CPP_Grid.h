@@ -20,6 +20,11 @@ class ACPP_Cell;
 
 
 
+DECLARE_DYNAMIC_DELEGATE_OneParam(FMoveGridEvent, bool, bGridMoving);
+
+
+
+
 UCLASS()
 class TFM_PROTOTYPE_API ACPP_Grid : public AActor
 {
@@ -32,6 +37,8 @@ public:
 
 public:/*Properties*/
 
+	UPROPERTY()
+	const ACPP_Player* Player{ nullptr };
 
 
 
@@ -39,6 +46,9 @@ public:/*Fucntions*/
 
 	UFUNCTION()
 	void ClickOnStaticMeshInstance(FVector2f AxialLocation);
+
+	UPROPERTY()
+	FMoveGridEvent MoveGridEventDelegate;
 
 	const TSet<FVector2f>* GetAllFreeNeighbours() const;	
 	void UpdateToTempLocations(FVector2f LastAxialLocation);
@@ -48,10 +58,7 @@ public:/*Fucntions*/
 
 
 protected:/*Properties*/
-
-	UPROPERTY()
-	const ACPP_Player* Player{ nullptr };
-
+	
 	UPROPERTY()
 	const UCPP_DA_GridSettings* GridSettings { nullptr };
 
@@ -100,6 +107,9 @@ protected:/*Fucntions*/
 
 	UFUNCTION()
 	void ClickOnGrid(FVector2f AxialLocation);
+
+	UFUNCTION()
+	void MoveCellsEvent(bool bGridMoving);
 
 
 	virtual void BeginPlay() override;

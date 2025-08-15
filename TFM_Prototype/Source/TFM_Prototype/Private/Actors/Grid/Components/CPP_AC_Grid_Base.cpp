@@ -13,6 +13,7 @@ UCPP_AC_Grid_Base::UCPP_AC_Grid_Base()
 void UCPP_AC_Grid_Base::BeginPlay()
 {
 	Super::BeginPlay();
+	InitComponent();
 }
 
 void UCPP_AC_Grid_Base::EndPlay(const EEndPlayReason::Type EndPlayReason)

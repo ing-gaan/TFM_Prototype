@@ -67,6 +67,7 @@ protected:/*Properties*/
 	int LifeStateTimeStep{ 0 };
 	int EnergyTimeStep{ 0 };
 
+	float EnergyDecrease{ 0 };
 
 
 
@@ -81,6 +82,9 @@ protected:/*Functions*/
 
 	UFUNCTION()
 	void BeginCellApoptosisEvent();
+
+	UFUNCTION()
+	void MoveCellEvent(bool bCellsMoving, bool bIsShifting);
 	
 	/*UFUNCTION()
 	void FinishDestroyCellEvent();*/

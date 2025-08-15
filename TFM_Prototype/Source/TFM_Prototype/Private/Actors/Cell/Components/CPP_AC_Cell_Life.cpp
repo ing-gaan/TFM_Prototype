@@ -48,12 +48,16 @@ void UCPP_AC_Cell_Life::EndPlay(const EEndPlayReason::Type EndPlayReason)
 //}
 
 
-void UCPP_AC_Cell_Life::InitComponent()
-{
-	Super::InitComponent();
+void UCPP_AC_Cell_Life::InitComponent() /// Component initialized on Super::BeginPlay()
+{	
+	Super::InitComponent(); 
 
-	int InitEnergy = OwnerCell->CellType->MaxEnergy; //* GameSettings->MaxCellsEnergyMultiplier;
-	OwnerCell->In_De_creaseCellEnergy(InitEnergy);
+	//int InitEnergy = OwnerCell->CellType->MaxEnergy * GameSettings->MaxCellsEnergyMultiplier;
+	//OwnerCell->In_De_creaseCellEnergy(InitEnergy);
+
+	float DecreaseRate = OwnerCell->CellType->EnergyDecreaseRate;
+	float EnergyConsumptionMultiplier = GameSettings->StoppedEnergyConsumptionMultiplier;
+	EnergyDecrease = DecreaseRate * EnergyConsumptionMultiplier;
 
 	LifeStateTimeStep = GameSettings->LifeStateTimeStep * 100;
 	EnergyTimeStep = GameSettings->EnergyTimeStep * 100;
@@ -88,7 +92,8 @@ void UCPP_AC_Cell_Life::RegisterEventFunctions()
 		this, &UCPP_AC_Cell_Life::FinishDifferentiateEvent);
 	OwnerCell->BeginCellApoptosisEventDelegate.AddUniqueDynamic(
 		this, &UCPP_AC_Cell_Life::BeginCellApoptosisEvent);
-
+	OwnerCell->MoveCellEventDelegate.AddUniqueDynamic(
+		this, &UCPP_AC_Cell_Life::MoveCellEvent);
 
 	TimeEventBus->TenMilliSecondsEventDelegate.AddUniqueDynamic(
 		this, &UCPP_AC_Cell_Life::TenMilliSecondsEvent);
@@ -104,6 +109,8 @@ void UCPP_AC_Cell_Life::UnRegisterEventFunctions()
 		this, &UCPP_AC_Cell_Life::FinishDifferentiateEvent);
 	OwnerCell->BeginCellApoptosisEventDelegate.RemoveDynamic(
 		this, &UCPP_AC_Cell_Life::BeginCellApoptosisEvent);
+	OwnerCell->MoveCellEventDelegate.RemoveDynamic(
+		this, &UCPP_AC_Cell_Life::MoveCellEvent);
 
 	TimeEventBus->TenMilliSecondsEventDelegate.RemoveDynamic(
 		this, &UCPP_AC_Cell_Life::TenMilliSecondsEvent);
@@ -125,6 +132,19 @@ void UCPP_AC_Cell_Life::FinishDifferentiateEvent()
 void UCPP_AC_Cell_Life::BeginCellApoptosisEvent()
 {
 	ChangeCellLifeState(UCPP_SM_Cell_LifeSt_Dying::StaticClass());
+}
+
+
+void UCPP_AC_Cell_Life::MoveCellEvent(bool bCellsMoving, bool bIsShifting)
+{
+	float DecreaseRate = OwnerCell->CellType->EnergyDecreaseRate;
+	float EnergyConsumptionMultiplier = GameSettings->StoppedEnergyConsumptionMultiplier;
+
+	if (bCellsMoving)
+	{
+		EnergyConsumptionMultiplier = GameSettings->MovingEnergyConsumptionMultiplier;
+	}
+	EnergyDecrease = DecreaseRate * EnergyConsumptionMultiplier;
 }
 
 
@@ -180,7 +200,7 @@ void UCPP_AC_Cell_Life::DecreaseLifeStateTime()
 {
 	LifeSMContext->CurrentState->DecreaseStateTime();
 
-	PRINT("Cell state remaining time= %2.1f", LifeSMContext->CurrentState->GetRemainingStateTime());
+	//PRINT("Cell state remaining time= %2.1f", LifeSMContext->CurrentState->GetRemainingStateTime());
 
 	if (!LifeSMContext->CurrentState->StateTimeFinished())
 	{
@@ -203,8 +223,8 @@ void UCPP_AC_Cell_Life::DecreaseEnergy()
 		return;
 	}
 
-	OwnerCell->In_De_creaseCellEnergy();
-	//PRINT("Cell Energy= %i", OwnerCell->GetCellEnergy());
+	OwnerCell->In_De_creaseCellEnergy(-EnergyDecrease);
+	PRINT("Cell Energy= %i", OwnerCell->GetCellEnergy());
 	EnergySMContext->CheckEnergyState();
 
 	if (OwnerCell->GetCellEnergy() <= 0)

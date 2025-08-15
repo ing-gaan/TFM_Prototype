@@ -22,22 +22,17 @@ public:/*Properties*/
 
 public:/*Functions*/
 
-	
-
-
 
 
 private:/*Properties*/
 
-	UFUNCTION()
-	ACPP_Cell* DivideEvent(FVector2f AxialLocation);
-
-
-	ACPP_Cell* SpawnCell(FVector CellLocation, FRotator CellRotation, TSubclassOf<ACPP_Cell> CellClass);
-	void ConfigureNewCell(ACPP_Cell* NewCell, FVector2f AxialLocation);
-
+	
 
 private:/*Functions*/
+
+
+	UFUNCTION()
+	ACPP_Cell* DivideEvent(FVector2f AxialLocation);
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
@@ -46,4 +41,9 @@ private:/*Functions*/
 	void RegisterEventFunctions() const;
 	void UnRegisterEventFunctions() const;
 	
+	ACPP_Cell* SpawnCell(FVector CellLocation, FRotator CellRotation, TSubclassOf<ACPP_Cell> CellClass);
+	void ConfigureNewCell(ACPP_Cell* NewCell, FVector2f AxialLocation);
+	void ShareTheEnergy(ACPP_Cell* NewCell);
+
+
 };

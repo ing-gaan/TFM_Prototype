@@ -30,13 +30,15 @@ void UCPP_AC_Cell_Movement::TickComponent(float DeltaTime, ELevelTick TickType, 
 
 void UCPP_AC_Cell_Movement::RegisterEventFunctions() const
 {
-	OwnerCell->MoveCellEventDelegate.BindDynamic(this, &UCPP_AC_Cell_Movement::MoveCellEvent);
+	OwnerCell->MoveCellEventDelegate.AddUniqueDynamic(
+		this, &UCPP_AC_Cell_Movement::MoveCellEvent);
 }
 
 
 void UCPP_AC_Cell_Movement::UnRegisterEventFunctions() const
 {
-	OwnerCell->MoveCellEventDelegate.Clear();
+	OwnerCell->MoveCellEventDelegate.RemoveDynamic(
+		this, &UCPP_AC_Cell_Movement::MoveCellEvent);
 }
 
 
@@ -49,8 +51,14 @@ void UCPP_AC_Cell_Movement::InitComponent()
 }
 
 
-void UCPP_AC_Cell_Movement::MoveCellEvent()
+void UCPP_AC_Cell_Movement::MoveCellEvent(bool bCellsMoving, bool bIsShifting)
 {
+	if (!bCellsMoving && !bIsShifting)
+	{
+		return;
+	}
+
+
 	FVector RealLocation;
 	FRotator RealRotation;
 

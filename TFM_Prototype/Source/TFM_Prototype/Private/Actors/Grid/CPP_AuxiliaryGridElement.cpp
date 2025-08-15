@@ -78,6 +78,8 @@ void ACPP_AuxiliaryGridElement::RegisterEventFunctions()
 		this, &ACPP_AuxiliaryGridElement::CellsShiftingEvent);
 	CellsManagerEventBus->CellsShiftingReturnEventDelegate.AddUniqueDynamic(
 		this, &ACPP_AuxiliaryGridElement::CellsShiftingReturnEvent);
+	CellsManagerEventBus->MoveCellsEventDelegate.AddUniqueDynamic(
+		this, &ACPP_AuxiliaryGridElement::MoveCellsEvent);
 
 }
 
@@ -95,6 +97,8 @@ void ACPP_AuxiliaryGridElement::UnRegisterEventFunctions()
 		this, &ACPP_AuxiliaryGridElement::CellsShiftingEvent);
 	CellsManagerEventBus->CellsShiftingReturnEventDelegate.RemoveDynamic(
 		this, &ACPP_AuxiliaryGridElement::CellsShiftingReturnEvent);
+	CellsManagerEventBus->MoveCellsEventDelegate.RemoveDynamic(
+		this, &ACPP_AuxiliaryGridElement::MoveCellsEvent);
 
 }
 
@@ -183,6 +187,11 @@ void ACPP_AuxiliaryGridElement::CellsShiftingEvent(const ACPP_Cell* FirstCellToS
 	AnimShiftEventDelegate.Broadcast();
 }
 
+
+void ACPP_AuxiliaryGridElement::MoveCellsEvent(bool bCellsMoving)
+{
+	SetRelativeLocation(AxialLocation);
+}
 
 
 void ACPP_AuxiliaryGridElement::CellsShiftingReturnEvent()

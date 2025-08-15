@@ -22,6 +22,12 @@ class TFM_PROTOTYPE_API UCPP_DA_GameSettings : public UPrimaryDataAsset
 
 public:
 
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "BeginPlay|Defaults|Cells",
+		meta = (ToolTip = "", ClampMin = 0, Units = "Percent"))
+	int FirstCellInitEnergy{ 50 };
+
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Grid|Settings")
 	const UCPP_DA_GridSettings* GridSettings{ nullptr };
 	
@@ -50,18 +56,29 @@ public:
 	const UCPP_DA_CellType* FirstCellType{ nullptr };
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers")
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers|Age")
 	float MaxCellsBornTimeMultiplier{ 1 };
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers|Age")
 	float MaxCellsYouthTimeMultiplier{ 1 };
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers|Age")
 	float MaxCellsOldAgeTimeMultiplier{ 1 };
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers|Age")
 	float MaxCellsDyingTimeMultiplier{ 1 };
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers|Age")
 	float MaxCellsDeadTimeMultiplier{ 1 };
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers|Age")
 	float MaxCellsEnergyMultiplier{ 1 };
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers|Energy")
+	float StoppedEnergyConsumptionMultiplier{ 1 };
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers|Energy")
+	float MovingEnergyConsumptionMultiplier{ 1.1 };
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers|Energy")
+	float DivisionEnergyMultiplier{ 0.5 };
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers|Energy")
+	float DifferentiationEnergyMultiplier{ 0.5 };
 
 
 
@@ -74,6 +91,7 @@ public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Cells|Properties|Life",
 		meta = (ToolTip = "", ClampMin = 0, ForceUnits = "Seconds"))
 	int EnergyTimeStep{ 1 };
+
 
 
 

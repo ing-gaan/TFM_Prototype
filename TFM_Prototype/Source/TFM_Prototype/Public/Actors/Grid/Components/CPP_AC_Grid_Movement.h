@@ -1,17 +1,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actors/Cell/Components/CPP_AC_Cell_Base.h"
-#include "CPP_AC_Cell_Movement.generated.h"
+#include "Actors/Grid/Components/CPP_AC_Grid_Base.h"
+
+
+#include "CPP_AC_Grid_Movement.generated.h"
 
 
 
 
 
-UCLASS()
-class TFM_PROTOTYPE_API UCPP_AC_Cell_Movement : public UCPP_AC_Cell_Base
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+class TFM_PROTOTYPE_API UCPP_AC_Grid_Movement : public UCPP_AC_Grid_Base
 {
 	GENERATED_BODY()
+
+
 
 
 public:
@@ -35,7 +39,7 @@ protected:/*Properties*/
 protected:/*Functions*/
 
 	UFUNCTION()
-	void MoveCellEvent(bool bCellsMoving, bool bIsShifting);
+	void MoveGridEvent(bool bCellsMoving);
 
 
 	virtual void BeginPlay() override;
@@ -46,7 +50,4 @@ protected:/*Functions*/
 	void UnRegisterEventFunctions() const;
 
 	virtual void InitComponent() override;
-
-	
-
 };

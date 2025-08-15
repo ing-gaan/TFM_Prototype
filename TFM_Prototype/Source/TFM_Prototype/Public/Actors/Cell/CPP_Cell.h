@@ -27,16 +27,14 @@ class UCPP_SM_Cell_Life_Base;
 
 //DECLARE_DYNAMIC_DELEGATE(FClickEvent);
 DECLARE_DYNAMIC_DELEGATE(FUnclickEvent);
-DECLARE_DYNAMIC_DELEGATE(FMoveCellEvent);
 DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(ACPP_Cell*, FDivideEvent, FVector2f, NewAxialLocation);
 DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(bool, FBeginDifferentiateEvent, const UCPP_DA_CellType*, Newtype);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFinishDifferentiateEvent);
-
 DECLARE_DYNAMIC_DELEGATE_OneParam(FShiftEvent, bool, ShouldShift);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FMoveCellEvent, bool, bCellsMoving, bool, bIsShifting);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFinishDifferentiateEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAnimShiftLocationEvent, FVector2f, NewAxialLocation);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAnimReturnToOriginEvent);
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginCellApoptosisEvent);
 
 
@@ -81,7 +79,6 @@ public: /*Properties*/
 
 	UPROPERTY()
 	FBeginCellApoptosisEvent BeginCellApoptosisEventDelegate;
-
 
 
 
@@ -136,7 +133,7 @@ public: /*Functions*/
 	void Unclick() const;
 
 	UFUNCTION(BlueprintCallable)
-	void MoveCell() const;
+	void MoveCell(bool bCellsMoving, bool bIsShifting) const;
 
 	UFUNCTION()
 	bool HasThisAbility(TSubclassOf<UCPP_AC_Cell_Base> Ability) const;
@@ -157,10 +154,10 @@ public: /*Functions*/
 	void UpdateToTemporalLocation();
 
 	/**
-	 * @brief If a value is not passed to the function, the energy decreases by an amount of "CellType->EnergyDecreaseRate" units.
+	 * @brief Increases or decreases Energy.
 	 * @param EnergyVariation: Amount of energy to increase (positive) or decrease (negative).
 	*/
-	void In_De_creaseCellEnergy(std::optional<int> EnergyVariation = std::nullopt);
+	void In_De_creaseCellEnergy(float EnergyVariation);
 
 
 	void BeginCellApoptosis() const;
@@ -195,7 +192,7 @@ protected: /*Properties*/
 
 
 	bool bIsClicked{ false };
-	int CellEnergy{ 0 };
+	float CellEnergy{ 0 };
 	bool bIsConnectedToOldestCell{ true };
 
 	

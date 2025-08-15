@@ -77,4 +77,15 @@ void UCPP_AC_Cell_Division::ConfigureNewCell(ACPP_Cell* NewCell, FVector2f Axial
 	NewCell->LoadCellTypeComponents(OwnerCell->CellType);
 	NewCell->CellType = OwnerCell->CellType;
 	NewCell->SetAxialLocation(AxialLocation);
+
+	ShareTheEnergy(NewCell);
+}
+
+
+void UCPP_AC_Cell_Division::ShareTheEnergy(ACPP_Cell* NewCell)
+{
+	float EnergyToShare = OwnerCell->GetCellEnergy() / 2;
+
+	OwnerCell->In_De_creaseCellEnergy(-EnergyToShare);
+	NewCell->In_De_creaseCellEnergy(EnergyToShare);
 }
