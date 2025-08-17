@@ -12,7 +12,7 @@
 #include "Core/Subsystems/Managers/CPP_SS_CellsManager.h"
 #include "Utils/Enums/CPP_CellShiftState.h"
 #include "Actors/Cell/StateMachines/LifeSM/CPP_SM_Cell_Life_Base.h"
-
+#include "Actors/Molecules/CPP_Molecule.h"
 
 
 
@@ -198,7 +198,7 @@ void ACPP_Cell::Unclick() const
 
 void ACPP_Cell::MoveCell(bool bCellsMoving, bool bIsShifting) const
 {	
-	MoveCellEventDelegate.Broadcast(bCellsMoving, bIsShifting);
+	MoveCellEventDelegate.Broadcast(bCellsMoving, bIsShifting);	
 }
 
 
@@ -293,7 +293,10 @@ void ACPP_Cell::In_De_creaseCellEnergy(float EnergyVariation)
 		return;
 	}
 	CellEnergy += CellType->EnergyDecreaseRate;*/
+
 	CellEnergy += EnergyVariation;
+	CellEnergy = FMath::RoundToFloat(CellEnergy * 100.0f) / 100.0f;
+	BPIE_NotifyEnergy(CellEnergy);
 }
 
 
@@ -329,8 +332,20 @@ bool ACPP_Cell::IsConnectedToOldestCell()
 }
 
 
-int ACPP_Cell::GetCellEnergy()
+float ACPP_Cell::GetCellEnergy()
 {
 	return CellEnergy;
 }
 
+
+void ACPP_Cell::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	ACPP_Molecule* Molecule = Cast<ACPP_Molecule>(OtherActor);
+
+	if (Molecule)
+	{
+		PRINT("Overlap Molecule");
+		Molecule->Destroy();
+	}
+	
+}

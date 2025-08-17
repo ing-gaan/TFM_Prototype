@@ -138,8 +138,8 @@ public: /*Functions*/
 	UFUNCTION()
 	bool HasThisAbility(TSubclassOf<UCPP_AC_Cell_Base> Ability) const;
 
-	UFUNCTION()
-	int GetCellEnergy();
+	UFUNCTION(BlueprintCallable)
+	float GetCellEnergy();
 
 	
 	void NotifyShiftingActivated() const;
@@ -204,7 +204,8 @@ protected: /*Functions*/
 	UFUNCTION(BlueprintCallable)
 	void SetRelativeLocation(FVector2f AxLocation);
 
-	
+	UFUNCTION(BlueprintImplementableEvent)
+	void BPIE_NotifyEnergy(float Energy);
 
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -215,7 +216,7 @@ protected: /*Functions*/
 
 	void InitCell();
 
-	
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	
 	
 

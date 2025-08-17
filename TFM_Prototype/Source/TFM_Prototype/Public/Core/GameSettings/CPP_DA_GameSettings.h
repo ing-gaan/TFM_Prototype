@@ -23,6 +23,14 @@ class TFM_PROTOTYPE_API UCPP_DA_GameSettings : public UPrimaryDataAsset
 public:
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "BeginPlay|Defaults|Cells",
+		meta = (ToolTip = "", ClampMin = 0, ForceUnits = "m/s"))
+	float MoveSpeed{ 500 };
+	
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "BeginPlay|Defaults|Cells",
+		meta = (ToolTip = "", ClampMin = 0, ForceUnits = "dg/s"))
+	float RotationSpeed{ 1 };
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "BeginPlay|Defaults|Cells",
 		meta = (ToolTip = "", ClampMin = 0, Units = "Percent"))
 	int FirstCellInitEnergy{ 50 };
 

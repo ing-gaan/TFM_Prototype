@@ -86,6 +86,9 @@ protected:/*Functions*/
 	UFUNCTION()
 	void MoveCellEvent(bool bCellsMoving, bool bIsShifting);
 	
+	UFUNCTION()
+	
+
 	/*UFUNCTION()
 	void FinishDestroyCellEvent();*/
 
@@ -106,6 +109,7 @@ protected:/*Functions*/
 	void OneEnergyTimeStep();
 	void DecreaseLifeStateTime();
 	void DecreaseEnergy();
+	
 	void ChangeCellLifeState(std::optional<TSubclassOf<UCPP_SM_Cell_Life_Base>> StateType = std::nullopt);
 	void DestroyCell();
 	//void UpdateDeadCellNeighbours();

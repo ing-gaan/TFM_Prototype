@@ -224,7 +224,7 @@ void UCPP_AC_Cell_Life::DecreaseEnergy()
 	}
 
 	OwnerCell->In_De_creaseCellEnergy(-EnergyDecrease);
-	PRINT("Cell Energy= %i", OwnerCell->GetCellEnergy());
+	//PRINT("Cell Energy= %3.3f", OwnerCell->GetCellEnergy());
 	EnergySMContext->CheckEnergyState();
 
 	if (OwnerCell->GetCellEnergy() <= 0)

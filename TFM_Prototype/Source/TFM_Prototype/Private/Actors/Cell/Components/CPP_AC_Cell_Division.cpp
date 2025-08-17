@@ -84,7 +84,7 @@ void UCPP_AC_Cell_Division::ConfigureNewCell(ACPP_Cell* NewCell, FVector2f Axial
 
 void UCPP_AC_Cell_Division::ShareTheEnergy(ACPP_Cell* NewCell)
 {
-	float EnergyToShare = OwnerCell->GetCellEnergy() / 2;
+	float EnergyToShare = OwnerCell->GetCellEnergy() * GameSettings->DivisionEnergyMultiplier;
 
 	OwnerCell->In_De_creaseCellEnergy(-EnergyToShare);
 	NewCell->In_De_creaseCellEnergy(EnergyToShare);

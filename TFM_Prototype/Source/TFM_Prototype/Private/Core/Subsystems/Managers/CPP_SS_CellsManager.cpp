@@ -212,7 +212,7 @@ ACPP_Cell* UCPP_SS_CellsManager::SpawnFirstCell()
 	FVector2f FirstCellAxialLocation = GridSettings->FirstAxialLocation;
 	ConfigureFirstCell(FirstCell, FirstCellAxialLocation);
 
-	FirstCell->CellEnergy = GameSettings->FirstCellInitEnergy;
+	FirstCell->In_De_creaseCellEnergy(GameSettings->FirstCellInitEnergy);
 
 	return FirstCell;
 }
