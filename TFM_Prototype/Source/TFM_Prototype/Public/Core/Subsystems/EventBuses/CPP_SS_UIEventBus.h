@@ -11,7 +11,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginCellDivisionEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginCellDifferentiationEvent);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFinishCellDifferentiationEvent, const UCPP_DA_CellType*, NewCellType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFinishCellDifferentiationEvent, const TSoftObjectPtr<UCPP_DA_CellType>, NewCellType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginEliminateCellEvent);
 //DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFinishDestroyCellEvent);
 
@@ -44,25 +44,25 @@ public: /*Properties*/
 public: /*Functions*/
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void RaiseBeginCellDivisionEvent()
+	FORCEINLINE void RaiseBeginCellDivisionEvent() const
 	{
 		BeginCellDivisionEventDelegate.Broadcast();
 	}
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void RaiseBeginCellDifferentiationEvent()
+	FORCEINLINE void RaiseBeginCellDifferentiationEvent() const
 	{
 		BeginCellDifferentiationEventDelegate.Broadcast();
 	}
 	
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void RaiseFinishCellDifferentiationEvent(const UCPP_DA_CellType* NewCellType)
+	FORCEINLINE void RaiseFinishCellDifferentiationEvent(const TSoftObjectPtr<UCPP_DA_CellType> NewCellType) const
 	{
 		FinishCellDifferentiationEventDelegate.Broadcast(NewCellType);
 	}
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void RaiseBeginEliminateCellEvent()
+	FORCEINLINE void RaiseBeginEliminateCellEvent() const
 	{
 		BeginEliminateCellEventDelegate.Broadcast();
 	}

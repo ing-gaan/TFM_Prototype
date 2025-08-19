@@ -16,6 +16,7 @@
 #include "Actors/Cell/CPP_DA_CellType.h"
 #include "Core/Subsystems/Managers/CPP_SS_LocalGameManager.h"
 #include "Actors/Grid/CPP_Grid.h"
+#include "Engine/AssetManager.h"
 
 
 
@@ -170,7 +171,7 @@ void UCPP_SS_CellsManager::CancelEvent()
 }
 
 
-void UCPP_SS_CellsManager::FinishCellDifferentiationEvent(const UCPP_DA_CellType* NewCellType)
+void UCPP_SS_CellsManager::FinishCellDifferentiationEvent(const TSoftObjectPtr<UCPP_DA_CellType> NewCellType)
 {
 	if (!CurrentClickedCell->HasThisAbility(UCPP_AC_Cell_Differentiation::StaticClass())) 
 	{ 
@@ -178,7 +179,7 @@ void UCPP_SS_CellsManager::FinishCellDifferentiationEvent(const UCPP_DA_CellType
 	}
 
 	CurrentClickedCell->BeginDifferentiate(NewCellType);
-	UnclickCurrentCell();
+	//UnclickCurrentCell();
 }
 
 
@@ -195,27 +196,49 @@ void UCPP_SS_CellsManager::AddFirstCell()
 		return; 
 	}
 	
-	AddCellSpawned(SpawnFirstCell());
-	return;
+	SpawnFirstCell();
+	//AddCellSpawned();
 }
 
 
 
-ACPP_Cell* UCPP_SS_CellsManager::SpawnFirstCell()
+void UCPP_SS_CellsManager::SpawnFirstCell()
 {
+	TArray<FSoftObjectPath> AssetsToLoad;
+	FirstCellClass = GameSettings->FirstCellBPClass;
+	FirstCellType = GameSettings->FirstCellType;
+	AssetsToLoad.Add(FirstCellClass.ToSoftObjectPath());
+	AssetsToLoad.Add(FirstCellType.ToSoftObjectPath());
+
+	FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
+
+	StreamableManager.RequestAsyncLoad(AssetsToLoad,
+		FStreamableDelegate::CreateUObject(this, &UCPP_SS_CellsManager::FirstCellClassSoftRefLoaded));
+}
+
+
+void UCPP_SS_CellsManager::FirstCellClassSoftRefLoaded()
+{
+	if (!FirstCellClass.IsValid())
+	{
+		return;
+	}
+
 	FVector Location = FVector::ZeroVector;
 	Location.Z = GameSettings->CellsDefaultHeightFromGround;
 	FRotator Rotation = FRotator::ZeroRotator;
-	TSubclassOf<ACPP_Cell> FirstCellClass = GameSettings->FirstCellBPClass;
 
-	ACPP_Cell* FirstCell = SpawnCell(Location, Rotation, FirstCellClass);
+	ACPP_Cell* FirstCell = SpawnCell(Location, Rotation, FirstCellClass.Get());
 	FVector2f FirstCellAxialLocation = GridSettings->FirstAxialLocation;
+		
 	ConfigureFirstCell(FirstCell, FirstCellAxialLocation);
-
 	FirstCell->In_De_creaseCellEnergy(GameSettings->FirstCellInitEnergy);
+	AddCellSpawned(FirstCell);
 
-	return FirstCell;
+	
 }
+
+
 
 ACPP_Cell* UCPP_SS_CellsManager::SpawnCell(FVector CellLocation, FRotator CellRotation, TSubclassOf<ACPP_Cell> CellClass)
 {
@@ -227,12 +250,18 @@ ACPP_Cell* UCPP_SS_CellsManager::SpawnCell(FVector CellLocation, FRotator CellRo
 	return CellSpawned;
 }
 
+
+
 void UCPP_SS_CellsManager::ConfigureFirstCell(ACPP_Cell* FirstCell, FVector2f AxialLocation)
 {
 	const FString StrName = UCPP_FuncLib_CellUtils::GetCellOutlinerLabel(AxialLocation);
 	FirstCell->SetActorLabel(StrName);	
-	FirstCell->LoadCellTypeComponents(GameSettings->FirstCellType);
 	FirstCell->SetAxialLocation(AxialLocation);
+
+	if (FirstCellType.IsValid())
+	{
+		FirstCell->LoadCellTypeComponents(FirstCellType.Get());
+	}	
 }
 
 

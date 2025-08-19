@@ -29,12 +29,15 @@ public:/*Functions*/
 
 private:/*Properties*/
 
-	UFUNCTION()
-	bool BeginDifferentiateEvent(const UCPP_DA_CellType* NewType);
+	
 
 
 
 private:/*Functions*/
+
+	UFUNCTION()
+	void BeginDifferentiateEvent(TSoftObjectPtr<const UCPP_DA_CellType> NewType);
+
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
@@ -42,6 +45,6 @@ private:/*Functions*/
 
 	void RegisterEventFunctions() const;
 	void UnRegisterEventFunctions() const;
-	
+
 
 };

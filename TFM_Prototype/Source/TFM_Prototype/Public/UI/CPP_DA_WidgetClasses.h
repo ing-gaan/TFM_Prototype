@@ -8,6 +8,7 @@
 
 
 
+class UCPP_W_Base;
 
 
 UCLASS()
@@ -20,7 +21,7 @@ class TFM_PROTOTYPE_API UCPP_DA_WidgetClasses : public UPrimaryDataAsset
 public:/*Properties*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSet<TSubclassOf<UUserWidget>> WidgetClasses;
+	TSet<TSubclassOf<UCPP_W_Base>> WidgetClasses;
 
 
 

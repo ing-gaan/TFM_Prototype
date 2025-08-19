@@ -79,6 +79,11 @@ protected:/*Properties*/
 	UPROPERTY()
 	const ACPP_Cell* CurrentClickedCell{ nullptr };
 
+	UPROPERTY()
+	TSoftClassPtr<ACPP_Cell> FirstCellClass{ nullptr };
+
+	UPROPERTY()
+	TSoftObjectPtr<const UCPP_DA_CellType> FirstCellType{ nullptr };
 
 
 protected:/*Functions*/
@@ -96,7 +101,7 @@ protected:/*Functions*/
 	void CancelEvent();
 
 	UFUNCTION()
-	void FinishCellDifferentiationEvent(const UCPP_DA_CellType* NewCellType);
+	void FinishCellDifferentiationEvent(const TSoftObjectPtr<UCPP_DA_CellType> NewCellType);
 
 	UFUNCTION()
 	void BeginEliminateCellEvent();
@@ -115,7 +120,10 @@ protected:/*Functions*/
 	void UnRegisterEventFunctions() const;
 	
 	void AddFirstCell();
-	ACPP_Cell* SpawnFirstCell();
+	void SpawnFirstCell();
+
+	void FirstCellClassSoftRefLoaded();
+
 	ACPP_Cell* SpawnCell(FVector CellLocation, FRotator CellRotation, TSubclassOf<ACPP_Cell> CellClass);
 	void ConfigureFirstCell(ACPP_Cell* NewCell, FVector2f AxialLocation);
 	

@@ -43,12 +43,12 @@ public: /*Functions*/
 protected:/*Properties*/
 
 	UPROPERTY()
-	UCPP_SS_InputEventBus* InputEventBus{ nullptr };
+	const UCPP_SS_InputEventBus* InputEventBus{ nullptr };
 
 	UPROPERTY()
-	UCPP_SS_GameEventBus* GameEventBus{ nullptr };
+	const UCPP_SS_GameEventBus* GameEventBus{ nullptr };
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	const UCPP_DA_GameSettings* GameSettings { nullptr };
 
 	UPROPERTY()

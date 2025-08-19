@@ -36,14 +36,14 @@ public: /*Properties*/
 public: /*Functions*/
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void RaisePhase1StartedEvent()
+	FORCEINLINE void RaisePhase1StartedEvent()  const
 	{
 		Phase1StartedEventDelegate.Broadcast();
 	}
 
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void RaisePhase2StartedEvent(UCPP_SS_CellsManager* CellsManager, ACPP_Grid* Grid)
+	FORCEINLINE void RaisePhase2StartedEvent(UCPP_SS_CellsManager* CellsManager, ACPP_Grid* Grid)  const
 	{
 		Phase2StartedEventDelegate.Broadcast(CellsManager, Grid);
 	}

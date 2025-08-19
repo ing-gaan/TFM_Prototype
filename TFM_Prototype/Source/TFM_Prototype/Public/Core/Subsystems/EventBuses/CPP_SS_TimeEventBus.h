@@ -25,8 +25,10 @@ public: /*Properties*/
 
 	UPROPERTY()
 	FTenMilliSecondsEvent TenMilliSecondsEventDelegate;
+
 	UPROPERTY()
 	FOneSecondEvent OneSecondEventDelegate;
+
 	UPROPERTY()
 	FTenSecondsEvent TenSecondsEventDelegate;
 

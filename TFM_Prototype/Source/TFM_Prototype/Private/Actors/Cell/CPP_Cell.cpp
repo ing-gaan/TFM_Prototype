@@ -110,15 +110,16 @@ ACPP_Cell* ACPP_Cell::Divide(FVector2f NewAxialLocation) const
 
 
 
-bool ACPP_Cell::BeginDifferentiate(const UCPP_DA_CellType* Newtype) const
+void ACPP_Cell::BeginDifferentiate(const TSoftObjectPtr<UCPP_DA_CellType> Newtype) const
 {
-	return BeginDifferentiateEventDelegate.Execute(Newtype);
+	BeginDifferentiateEventDelegate.Execute(Newtype);
 }
 
 
 void ACPP_Cell::FinishDifferentiate() const
 {
 	FinishDifferentiateEventDelegate.Broadcast();
+	Unclick();
 }
 
 

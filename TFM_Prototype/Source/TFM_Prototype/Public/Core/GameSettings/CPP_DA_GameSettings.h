@@ -58,10 +58,12 @@ public:
 	float CellsDefaultHeightFromGround{ 10 };
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Cells|Types")
-	TSubclassOf<ACPP_Cell> FirstCellBPClass{ nullptr };
+	TSoftClassPtr<ACPP_Cell> FirstCellBPClass{ nullptr };
+	
+	
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Cells|Types")
-	const UCPP_DA_CellType* FirstCellType{ nullptr };
+	TSoftObjectPtr<const UCPP_DA_CellType> FirstCellType{ nullptr };
 
 
 

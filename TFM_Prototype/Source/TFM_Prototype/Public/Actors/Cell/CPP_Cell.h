@@ -28,7 +28,7 @@ class UCPP_SM_Cell_Life_Base;
 //DECLARE_DYNAMIC_DELEGATE(FClickEvent);
 DECLARE_DYNAMIC_DELEGATE(FUnclickEvent);
 DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(ACPP_Cell*, FDivideEvent, FVector2f, NewAxialLocation);
-DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(bool, FBeginDifferentiateEvent, const UCPP_DA_CellType*, Newtype);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FBeginDifferentiateEvent, TSoftObjectPtr<const UCPP_DA_CellType>, Newtype);
 DECLARE_DYNAMIC_DELEGATE_OneParam(FShiftEvent, bool, ShouldShift);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FMoveCellEvent, bool, bCellsMoving, bool, bIsShifting);
@@ -118,7 +118,7 @@ public: /*Functions*/
 	ACPP_Cell* Divide(FVector2f NewAxialLocation) const;
 
 	UFUNCTION()
-	bool BeginDifferentiate(const UCPP_DA_CellType* Newtype) const;
+	void BeginDifferentiate(const TSoftObjectPtr<UCPP_DA_CellType> Newtype) const;
 
 	UFUNCTION()
 	void FinishDifferentiate() const;

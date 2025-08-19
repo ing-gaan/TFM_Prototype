@@ -60,7 +60,7 @@ void ACPP_PlayerController::InitEventBuses()
 	UCPP_GameInstance* GameInstance = Cast<UCPP_GameInstance>(World->GetGameInstance());
 	checkf(GameInstance, TEXT("***> No GameInstance (nullptr) <***"));
 
-	GameSettings = GameInstance->GameSettings;
+	//GameSettings = GameInstance->GameSettings;
 	
 	InputEventBus = GameInstance->GetSubsystem<UCPP_SS_InputEventBus>();
 	checkf(InputEventBus, TEXT("***> No InputEventBus (nullptr) <***"));

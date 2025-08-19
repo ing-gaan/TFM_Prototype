@@ -85,6 +85,7 @@ void UCPP_AC_Cell_CursorInteraction::InitComponent()
 void UCPP_AC_Cell_CursorInteraction::BeginCursorOver(AActor* TouchedActor)
 {
 	SMContext->GetCurrentState()->BeginCursorOver();
+	
 }
 
 

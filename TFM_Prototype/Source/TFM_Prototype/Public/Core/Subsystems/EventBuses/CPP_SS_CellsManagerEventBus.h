@@ -54,34 +54,34 @@ public: /*Properties*/
 public: /*Functions*/
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void RaiseFinishCellDivisionEvent(FVector2f SpawnAxialLocation)
+	FORCEINLINE void RaiseFinishCellDivisionEvent(FVector2f SpawnAxialLocation)  const
 	{
 		FinishCellDivisionEventDelegate.Broadcast(SpawnAxialLocation);
 	}
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void RaiseMoveCellsEvent(bool bCellsMoving)
+	FORCEINLINE void RaiseMoveCellsEvent(bool bCellsMoving)  const
 	{
 		MoveCellsEventDelegate.Broadcast(bCellsMoving);
 	}
 
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void RaiseBeginCellsShiftingEvent(const ACPP_Cell* FirstCellToShift)
+	FORCEINLINE void RaiseBeginCellsShiftingEvent(const ACPP_Cell* FirstCellToShift)  const
 	{
 		BeginCellsShiftingEventDelegate.Broadcast(FirstCellToShift);
 	}
 
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void RaiseCellsShiftingReturnEvent()
+	FORCEINLINE void RaiseCellsShiftingReturnEvent() const
 	{
 		CellsShiftingReturnEventDelegate.Broadcast();
 	}
 
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void RaiseFinishCellsShiftingEvent()
+	FORCEINLINE void RaiseFinishCellsShiftingEvent() const
 	{
 		FinishCellsShiftingEventDelegate.Broadcast();
 
@@ -89,7 +89,7 @@ public: /*Functions*/
 
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void RaiseBeginDestroyCellEvent(FVector2f AxialLocation)
+	FORCEINLINE void RaiseBeginDestroyCellEvent(FVector2f AxialLocation) const
 	{
 		BeginDestroyCellEventDelegate.Broadcast(AxialLocation);
 
