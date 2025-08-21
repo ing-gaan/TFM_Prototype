@@ -13,6 +13,7 @@
 #include "Utils/Enums/CPP_CellShiftState.h"
 #include "Actors/Cell/StateMachines/LifeSM/CPP_SM_Cell_Life_Base.h"
 #include "Actors/Molecules/CPP_Molecule.h"
+#include "Actors/Molecules/CPP_DA_MoleculeType.h"
 
 
 
@@ -127,6 +128,7 @@ void ACPP_Cell::SetAxialLocation(FVector2f NewAxialLocation)
 {
 	AxialLocation = NewAxialLocation;
 	SetRelativeLocation(NewAxialLocation);
+	SetCellLabel();
 }
 
 
@@ -282,6 +284,15 @@ void ACPP_Cell::UpdateToTemporalLocation()
 	AxialLocation = TempAxialLocation;
 	CellShiftState = ECPP_CellShiftState::AtOriginLocation;
 	ShiftEventDelegate.ExecuteIfBound(false);
+	SetCellLabel();
+}
+
+
+
+void ACPP_Cell::SetCellLabel()
+{
+	CellLabel = UCPP_FuncLib_CellUtils::GetCellOutlinerLabel(AxialLocation);
+	SetActorLabel(CellLabel);
 }
 
 
@@ -341,6 +352,8 @@ float ACPP_Cell::GetCellEnergy()
 
 
 
+
+
 void ACPP_Cell::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	ACPP_Molecule* Molecule = Cast<ACPP_Molecule>(OtherActor);
@@ -348,6 +361,9 @@ void ACPP_Cell::NotifyActorBeginOverlap(AActor* OtherActor)
 	if (Molecule)
 	{
 		PRINT("Overlap Molecule");
+
+		CellEnergy += Molecule->MoleculeType->EnergyItProvides;
+
 		Molecule->Destroy();
 	}
 	

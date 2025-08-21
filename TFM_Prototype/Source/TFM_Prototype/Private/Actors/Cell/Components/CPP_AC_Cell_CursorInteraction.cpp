@@ -84,20 +84,25 @@ void UCPP_AC_Cell_CursorInteraction::InitComponent()
 
 void UCPP_AC_Cell_CursorInteraction::BeginCursorOver(AActor* TouchedActor)
 {
-	if (SMContext->GetCurrentState()->BeginCursorOver())
+	/*if (SMContext->GetCurrentState()->BeginCursorOver())
 	{
 		InputEventBus->RaiseBeginCursorOverEvent(OwnerCell);
-	}
+	}*/
+	SMContext->GetCurrentState()->BeginCursorOver();
+	InputEventBus->RaiseBeginCursorOverEvent(OwnerCell);
 	
 }
 
 
 void UCPP_AC_Cell_CursorInteraction::EndCursorOver(AActor* TouchedActor)
 {
-	if(SMContext->GetCurrentState()->EndCursorOver())
+	/*if(SMContext->GetCurrentState()->EndCursorOver())
 	{
 		InputEventBus->RaiseEndCursorOverEvent();
-	}
+	}*/
+	SMContext->GetCurrentState()->EndCursorOver();
+	InputEventBus->RaiseEndCursorOverEvent();
+
 }
 
 

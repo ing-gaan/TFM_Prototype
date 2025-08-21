@@ -21,7 +21,7 @@ public:/*Properties*/
 	/**************************************** CELL DATA ****************************************/
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Data")
-	FString CellTypeName;
+	FText CellTypeName;
 
 
 	/**************************************** CELL COLORS ****************************************/

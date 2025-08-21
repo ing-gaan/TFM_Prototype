@@ -253,8 +253,8 @@ ACPP_Cell* UCPP_SS_CellsManager::SpawnCell(FVector CellLocation, FRotator CellRo
 
 void UCPP_SS_CellsManager::ConfigureFirstCell(ACPP_Cell* FirstCell, FVector2f AxialLocation)
 {
-	const FString StrName = UCPP_FuncLib_CellUtils::GetCellOutlinerLabel(AxialLocation);
-	FirstCell->SetActorLabel(StrName);	
+	//const FString StrName = UCPP_FuncLib_CellUtils::GetCellOutlinerLabel(AxialLocation);
+	//FirstCell->SetActorLabel(StrName);	
 	FirstCell->SetAxialLocation(AxialLocation);
 
 	if (FirstCellType.IsValid())
@@ -396,8 +396,6 @@ void UCPP_SS_CellsManager::UpdateCellToTempLocation(ACPP_Cell* Cell)
 	CellsMap.Emplace(TempLocation, Cell);
 
 	Cell->UpdateToTemporalLocation();
-	const FString StrName = UCPP_FuncLib_CellUtils::GetCellOutlinerLabel(TempLocation);
-	Cell->SetActorLabel(StrName);
 	//Cell->ReturnToOriginAxialLocation();
 }
 

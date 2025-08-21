@@ -29,11 +29,16 @@ public:/*Properties*/
 	UPROPERTY()
 	UMaterialInstanceDynamic* CellMaterialInstance{ nullptr };
 
+	UPROPERTY()
+	FLinearColor CurrentCellColor;
+
 
 
 public:/*Functions*/
 
 	virtual void InitStateMachine(ACPP_Cell* Cell, UMaterialInstanceDynamic* MaterialInstance, const UWorld* GameWorld);
+
+
 
 
 protected:/*Properties*/

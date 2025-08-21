@@ -19,12 +19,14 @@ void UCPP_SM_Cell_CursorSt_Over::SetState()
 
 	//PRINT("Entra a estado Over");
 	
+	
 }
 
 
 const FLinearColor& UCPP_SM_Cell_CursorSt_Over::GetMaterialColor()
 {
-	return SMContext->OwnerCell->CellType->CursorOverColor;
+	//return SMContext->OwnerCell->CellType->CursorOverColor;
+	return SMContext->CurrentCellColor;
 }
 
 

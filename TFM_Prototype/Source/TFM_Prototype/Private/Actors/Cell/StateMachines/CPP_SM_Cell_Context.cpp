@@ -9,3 +9,5 @@ void UCPP_SM_Cell_Context::InitStateMachine(ACPP_Cell* Cell, UMaterialInstanceDy
 	CellMaterialInstance = MaterialInstance;
 	World = GameWorld;
 }
+
+

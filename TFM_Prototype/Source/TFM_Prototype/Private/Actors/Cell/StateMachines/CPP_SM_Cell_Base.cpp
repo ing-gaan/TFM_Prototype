@@ -21,7 +21,9 @@ void UCPP_SM_Cell_Base::InitializeState(UCPP_SM_Cell_Context* Context)
 
 void UCPP_SM_Cell_Base::SetState()
 {
-	SetMaterialColorParameter(GetMaterialColor());
+	const FLinearColor& MaterialColor = GetMaterialColor();
+	SetMaterialColorParameter(MaterialColor);
+	BaseSMContext->CurrentCellColor = MaterialColor;
 }
 
 

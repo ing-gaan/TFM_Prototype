@@ -141,7 +141,10 @@ public: /*Functions*/
 	UFUNCTION(BlueprintCallable)
 	float GetCellEnergy();
 
-		
+	
+
+
+
 	
 	void NotifyShiftingActivated() const;
 	void NotifyShiftingCanceled() const;
@@ -197,6 +200,9 @@ protected: /*Properties*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float CellEnergy{ 0 };
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FString CellLabel;
+
 
 	bool bIsClicked{ false };	
 	bool bIsConnectedToOldestCell{ true };
@@ -212,6 +218,11 @@ protected: /*Functions*/
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void BPIE_NotifyEnergy(float Energy);
+
+	UFUNCTION()
+	void SetCellLabel();
+
+
 
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
