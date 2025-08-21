@@ -24,8 +24,6 @@
 
 
 
-
-
 void UCPP_SS_CellsManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
@@ -82,6 +80,7 @@ void UCPP_SS_CellsManager::RegisterEventFunctions() const
 		this, &UCPP_SS_CellsManager::ClickOnGridEvent);
 	InputEventBus->CancelEventDelegate.AddUniqueDynamic(
 		this, &UCPP_SS_CellsManager::CancelEvent);
+
 
 	UIEventBus->FinishCellDifferentiationEventDelegate.AddUniqueDynamic(
 		this, &UCPP_SS_CellsManager::FinishCellDifferentiationEvent);
@@ -414,3 +413,5 @@ int UCPP_SS_CellsManager::CellsInMapNumber() const
 {
 	return CellsMap.Num();
 }
+
+

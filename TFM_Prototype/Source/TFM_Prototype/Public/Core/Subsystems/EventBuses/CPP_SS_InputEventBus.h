@@ -14,6 +14,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCancelEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FClickOnAuxGridElemEvent);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBeginCursorOverEvent, const AActor*, Actor);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEndCursorOverEvent);
 
 
 
@@ -41,7 +42,13 @@ public: /*Properties*/
 	UPROPERTY(BlueprintAssignable)
 	FClickOnAuxGridElemEvent ClickOnAuxGridElemEventDelegate;
 
-	
+	UPROPERTY(BlueprintAssignable)
+	FBeginCursorOverEvent BeginCursorOverEventDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FEndCursorOverEvent EndCursorOverEventDelegate;
+
+
 
 
 public: /*Functions*/
@@ -70,7 +77,17 @@ public: /*Functions*/
 		ClickOnAuxGridElemEventDelegate.Broadcast();
 	}
 
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void RaiseBeginCursorOverEvent(const AActor* Actor) const
+	{
+		BeginCursorOverEventDelegate.Broadcast(Actor);
+	}
 
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void RaiseEndCursorOverEvent() const
+	{
+		EndCursorOverEventDelegate.Broadcast();
+	}
 
 
 	

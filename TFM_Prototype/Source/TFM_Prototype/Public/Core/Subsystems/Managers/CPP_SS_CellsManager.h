@@ -138,5 +138,11 @@ protected:/*Functions*/
 	void DestroyCell(ACPP_Cell* Cell);
 
 
+
+
+
+
+
+
 	friend class ACPP_Cell;
 };

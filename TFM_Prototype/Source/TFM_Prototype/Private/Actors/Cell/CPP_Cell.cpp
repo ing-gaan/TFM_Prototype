@@ -318,6 +318,7 @@ const UCPP_SM_Cell_Life_Base* ACPP_Cell::GetCellLifeState() const
 void ACPP_Cell::SetCellLifeState(const UCPP_SM_Cell_Life_Base* Newstate)
 {
 	CellLifeState = Newstate;
+	CellLifeStateName = Newstate->GetLifeStateName();
 }
 
 
@@ -339,6 +340,7 @@ float ACPP_Cell::GetCellEnergy()
 }
 
 
+
 void ACPP_Cell::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	ACPP_Molecule* Molecule = Cast<ACPP_Molecule>(OtherActor);
@@ -349,4 +351,12 @@ void ACPP_Cell::NotifyActorBeginOverlap(AActor* OtherActor)
 		Molecule->Destroy();
 	}
 	
+}
+
+
+
+FText ACPP_Cell::GetTooltipText_Implementation() const
+{
+	FText TooltipText = FText::FromString(TEXT("Cell Tooltip"));
+	return TooltipText;
 }

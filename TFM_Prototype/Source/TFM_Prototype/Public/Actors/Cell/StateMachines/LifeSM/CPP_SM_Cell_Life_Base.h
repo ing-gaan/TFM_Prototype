@@ -27,6 +27,10 @@ public:/*Properties*/
 
 public:/*Functions*/
 
+	UFUNCTION()
+	FText GetLifeStateName() const;
+
+
 	virtual void InitializeState(UCPP_SM_Cell_Context* Context) override;
 	virtual void InitState(UCPP_SM_Cell_Context* Context, int StateSortPosition);
 
@@ -48,13 +52,14 @@ protected:/*Properties*/
 	UPROPERTY()
 	UCPP_SM_Cell_Life_Context* SMContext{ nullptr };
 
-
+	
 	float MaxStateTime{ 0 };
 	float RemainingStateTime{ 0 };
 	int SortPosition{ 0 };
 	int LifeStateTimeDecreaseRate{ 0 };
 
-
+	FText LifeStateName;
+	FName UserTextsStringTableId;
 
 
 protected:/*Functions*/

@@ -3,6 +3,8 @@
 #include "Actors/Cell/CPP_Cell.h"
 #include "Actors/Cell/CPP_DA_CellType.h"
 #include "Core/GameInstance/CPP_GameInstance.h"
+#include "Core/GameSettings/CPP_DA_GameSettings.h"
+#include "Internationalization/StringTable.h"
 
 
 
@@ -11,8 +13,15 @@ void UCPP_SM_Cell_Life_Base::InitState(UCPP_SM_Cell_Context* Context, int StateS
 {
 	SortPosition = StateSortPosition;
 	InitializeState(Context);
+	UserTextsStringTableId = GameSettings->GameTextsStringTable->GetStringTableId();
 }
 
+
+
+FText UCPP_SM_Cell_Life_Base::GetLifeStateName() const
+{
+	return LifeStateName;
+}
 
 
 void UCPP_SM_Cell_Life_Base::InitializeState(UCPP_SM_Cell_Context* Context)

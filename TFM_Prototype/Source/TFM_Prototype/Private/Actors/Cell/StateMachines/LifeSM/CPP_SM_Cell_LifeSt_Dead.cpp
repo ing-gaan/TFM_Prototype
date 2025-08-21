@@ -11,6 +11,7 @@ void UCPP_SM_Cell_LifeSt_Dead::InitState(UCPP_SM_Cell_Context* Context, int Stat
 {
 	Super::InitState(Context, StateSortPosition);
 	UpdateMaxStateTime();
+	LifeStateName = FText::FromStringTable(UserTextsStringTableId, TEXT("State_Dead"));
 }
 
 

@@ -12,6 +12,7 @@ void UCPP_SM_Cell_LifeSt_OldAge::InitState(UCPP_SM_Cell_Context* Context, int St
 {
 	Super::InitState(Context, StateSortPosition);
 	UpdateMaxStateTime();
+	LifeStateName = FText::FromStringTable(UserTextsStringTableId, TEXT("State_OldAge"));
 }
 
 

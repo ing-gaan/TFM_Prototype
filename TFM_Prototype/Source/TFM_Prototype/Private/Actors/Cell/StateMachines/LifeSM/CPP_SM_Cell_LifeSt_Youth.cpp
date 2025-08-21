@@ -11,6 +11,7 @@ void UCPP_SM_Cell_LifeSt_Youth::InitState(UCPP_SM_Cell_Context* Context, int Sta
 {
 	Super::InitState(Context, StateSortPosition);
 	UpdateMaxStateTime();
+	LifeStateName = FText::FromStringTable(UserTextsStringTableId, TEXT("State_Youth"));
 }
 
 

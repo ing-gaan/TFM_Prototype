@@ -18,6 +18,11 @@ class TFM_PROTOTYPE_API UCPP_DA_CellType : public UPrimaryDataAsset
 
 public:/*Properties*/
 
+	/**************************************** CELL DATA ****************************************/
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Data")
+	FString CellTypeName;
+
 
 	/**************************************** CELL COLORS ****************************************/
 

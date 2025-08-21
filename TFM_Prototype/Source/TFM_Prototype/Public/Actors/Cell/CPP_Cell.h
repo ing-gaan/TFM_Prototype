@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include <optional>
+#include "Core/Interfaces/CPPI_Tooltipable.h"
 
 
 #include "CPP_Cell.generated.h"
@@ -40,7 +40,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginCellApoptosisEvent);
 
 
 UCLASS()
-class TFM_PROTOTYPE_API ACPP_Cell : public AActor
+class TFM_PROTOTYPE_API ACPP_Cell : public AActor, public ICPPI_Tooltipable
 {
 	GENERATED_BODY()
 	
@@ -94,7 +94,7 @@ public: /*Properties*/
 	UPROPERTY()
 	const UCPP_DA_GameSettings* GameSettings{ nullptr };
 	
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	const UCPP_DA_CellType* CellType{ nullptr };
 	
 	UPROPERTY()
@@ -141,6 +141,7 @@ public: /*Functions*/
 	UFUNCTION(BlueprintCallable)
 	float GetCellEnergy();
 
+		
 	
 	void NotifyShiftingActivated() const;
 	void NotifyShiftingCanceled() const;
@@ -190,9 +191,14 @@ protected: /*Properties*/
 	UPROPERTY()
 	const UCPP_SM_Cell_Life_Base* CellLifeState;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FText CellLifeStateName;
 
-	bool bIsClicked{ false };
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float CellEnergy{ 0 };
+
+
+	bool bIsClicked{ false };	
 	bool bIsConnectedToOldestCell{ true };
 
 	
@@ -218,7 +224,11 @@ protected: /*Functions*/
 
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	
-	
+	FText GetTooltipText_Implementation() const override;
+
+
+
+
 
 
 

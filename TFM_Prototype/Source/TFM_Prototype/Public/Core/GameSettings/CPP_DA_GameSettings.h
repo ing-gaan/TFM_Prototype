@@ -22,6 +22,17 @@ class TFM_PROTOTYPE_API UCPP_DA_GameSettings : public UPrimaryDataAsset
 
 public:
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Timers",
+		meta = (ToolTip = "", ClampMin = 0, ForceUnits = "Seconds"))
+	float StartCellsManagerAfter{ 1 };
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Texts")
+	const UStringTable* GameTextsStringTable;
+
+
+
+
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "BeginPlay|Defaults|Cells",
 		meta = (ToolTip = "", ClampMin = 0, ForceUnits = "m/s"))
 	float MoveSpeed{ 500 };
@@ -48,10 +59,7 @@ public:
 
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Timers", 
-		meta = (ToolTip = "", ClampMin = 0, ForceUnits = "Seconds"))
-	float StartCellsManagerAfter{ 1 };
-
+	
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Locations")
