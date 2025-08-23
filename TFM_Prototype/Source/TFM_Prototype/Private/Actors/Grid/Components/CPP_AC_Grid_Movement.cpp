@@ -1,5 +1,6 @@
 #include "Actors/Grid/Components/CPP_AC_Grid_Movement.h"
 #include "Actors/Grid/CPP_Grid.h"
+#include "Core/GameSettings/CPP_DA_GridSettings.h"
 #include "Utils/FunctionLibraries/CPP_FuncLib_CellUtils.h"
 #include "Core/GameSettings/CPP_DA_GameSettings.h"
 #include "Characters/Player/CPP_Player.h"
@@ -12,7 +13,7 @@ void UCPP_AC_Grid_Movement::BeginPlay()
 {
 	Super::BeginPlay();
 	RegisterEventFunctions();
-	CurrentZLocation = GameSettings->HiddenHeightFromGround;
+	CurrentZLocation = GridSettings->GridHiddenHeightFromGround;
 }
 
 void UCPP_AC_Grid_Movement::EndPlay(const EEndPlayReason::Type EndPlayReason)

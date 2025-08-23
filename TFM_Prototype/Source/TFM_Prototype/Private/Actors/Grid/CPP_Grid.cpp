@@ -214,10 +214,10 @@ void ACPP_Grid::RemoveFreeNeighbours(FVector2f AxialLocation)
 
 void ACPP_Grid::SetGridVisibility(bool bIsVisible)
 {
-	float Z = GameSettings->HiddenHeightFromGround;
+	float Z = GridSettings->GridHiddenHeightFromGround;
 	if (bIsVisible)
 	{
-		Z = GameSettings->GridDefaultHeightFromGround;
+		Z = GridSettings->GridDefaultHeightFromGround;
 	}
 	
 	float X = Player->GetActorLocation().X;

@@ -11,6 +11,7 @@
 
 class ACPP_Cell;
 class UCPP_DA_GridSettings;
+class UCPP_DA_CameraSettings;
 class UCPP_DA_CellType;
 
 
@@ -22,15 +23,19 @@ class TFM_PROTOTYPE_API UCPP_DA_GameSettings : public UPrimaryDataAsset
 
 public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Timers",
-		meta = (ToolTip = "", ClampMin = 0, ForceUnits = "Seconds"))
-	float StartCellsManagerAfter{ 1 };
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Main|Settings|Grid")
+	const UCPP_DA_GridSettings* GridSettings{ nullptr };
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Main|Settings|Camera")
+	const UCPP_DA_CameraSettings* CameraSettings { nullptr };
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Texts")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Main|Settings|Texts")
 	const UStringTable* GameTextsStringTable;
 
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Timers",
+		meta = (ToolTip = "", ClampMin = 0, ForceUnits = "Seconds"))
+	float StartCellsManagerAfter{ 1 };
 
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "BeginPlay|Defaults|Cells",
@@ -45,21 +50,6 @@ public:
 		meta = (ToolTip = "", ClampMin = 0, Units = "Percent"))
 	int FirstCellInitEnergy{ 50 };
 
-
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Grid|Settings")
-	const UCPP_DA_GridSettings* GridSettings{ nullptr };
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Grid|Locations")
-	float GridDefaultHeightFromGround{ 10 };
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Grid|Locations")
-	float HiddenHeightFromGround{ -100 };
-
-
-
-
-	
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Locations")

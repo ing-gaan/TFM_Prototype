@@ -18,19 +18,31 @@ class TFM_PROTOTYPE_API UCPP_DA_CameraSettings : public UPrimaryDataAsset
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Properties")
+	bool bIsOrthographic{ true };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Properties")
+	float AspectRatio{ 1.777778 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Properties")
+	float FOV{ 90 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Properties")
 	FVector2D OffsetFromPlayer{ FVector2D(0, 0) };
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Properties")
-	int ZoomStep{ 100 };
+	int OrthoWidthChangeStep{ 100 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Properties")
-	int ZeroZoom{ 2000 };
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Properties")
-	int MinZoom{ 500 };
+	int OrthoWidthChangeStepSpeed{ 2 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Properties")
-	int MaxZoom{ 5000 };
+	int MinOrthoWidth{ 1000 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Properties")
+	int DefaultOrthoWidth{ 3000 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Properties")
+	int MaxOrthoWidth{ 10000 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Properties")
 	FRotator CameraRotation{ FRotator(0, -90, 0)};
@@ -42,7 +54,9 @@ public:
 	float MovementInterpSpeed{ 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Properties")
-	float FOV{ 90 };
+	int PANMovementMultiplier{ 200 };
+
+	
 
 	
 

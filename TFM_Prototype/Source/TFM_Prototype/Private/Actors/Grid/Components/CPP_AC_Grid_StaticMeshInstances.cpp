@@ -58,7 +58,7 @@ void UCPP_AC_Grid_StaticMeshInstances::AddNewInstances(int InstancesNum)
 	TArray<FTransform> InstancesTransforms;
 	float X = 0;
 	float Y = 0;
-	float Z = GameSettings->HiddenHeightFromGround;
+	float Z = GridSettings->GridHiddenHeightFromGround;
 
 	for (int i = 0; i < InstancesNum; i++)
 	{

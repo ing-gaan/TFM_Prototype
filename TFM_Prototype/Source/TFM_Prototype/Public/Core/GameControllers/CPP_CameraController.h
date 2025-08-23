@@ -8,6 +8,8 @@
 
 
 
+
+class UCPP_DA_GameSettings;
 class UCPP_DA_CameraSettings;
 class ACPP_Player;
 
@@ -25,8 +27,12 @@ public:
 
 public:/*Properties*/
 
+	UPROPERTY()
+	const UCPP_DA_GameSettings* GameSettings { nullptr };
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UCPP_DA_CameraSettings* CameraSettings{ nullptr };
+	const UCPP_DA_CameraSettings* CameraSettings{ nullptr };
 
 	UPROPERTY()
 	ACPP_Player* Player{ nullptr };
@@ -37,21 +43,34 @@ public:/*Functions*/
 	UFUNCTION(BlueprintCallable)
 	void SetZoomDirection(int ZoomDirection);
 
+	UFUNCTION(BlueprintCallable)
+	void SetPANDirection(FVector2f PANDirection);
+
 
 
 protected:/*Properties*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	int CameraZoom{ 0 };
+	int OrthoWidth{ 0 };
 
+	bool bIsInitialized{ false };
 
+	FVector2f LastPlayerLocation{ FVector2f(0, 0) };
+	FVector2f PANMovement{ FVector2f(0, 0) };
+
+	float LerpAlpha{ 0.0f };
+
+	float CurrentOrthoWidth{ 0.0f };
+	float CurrentOrthoWidth2{ 0.0f };
 
 protected:/*Functions*/
 
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
-	virtual void UpdateViewTargetInternal(FTViewTarget& OutVT, float DeltaTime) override;
+	void InitCameraController();
+	virtual void UpdateViewTarget(FTViewTarget& OutVT, float DeltaTime) override;
 
+	bool IsPlayerMoving();
 
 };

@@ -245,10 +245,10 @@ void ACPP_AuxiliaryGridElement::SetRelativeLocation(FVector2f AxLocation)
 
 void ACPP_AuxiliaryGridElement::SetElementVisibility(bool bIsVisible)
 {
-	CurrentZLocation = GameSettings->HiddenHeightFromGround;
+	CurrentZLocation = GridSettings->GridHiddenHeightFromGround;
 	if (bIsVisible)
 	{
-		CurrentZLocation = GameSettings->GridDefaultHeightFromGround;
+		CurrentZLocation = GridSettings->GridDefaultHeightFromGround;
 	}
 	SetRelativeLocation(AxialLocation);
 }

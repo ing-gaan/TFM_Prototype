@@ -4,7 +4,6 @@
 #include "Engine/DataAsset.h"
 
 
-
 #include "CPP_DA_GridSettings.generated.h"
 
 
@@ -16,6 +15,13 @@ class TFM_PROTOTYPE_API UCPP_DA_GridSettings : public UPrimaryDataAsset
 	GENERATED_BODY()
 
 public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Settings")
+	float GridDefaultHeightFromGround{ 100 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Settings")
+	float GridHiddenHeightFromGround{ -300 };
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Settings")
 	int InitGridElementsNum{ 10 };
 
