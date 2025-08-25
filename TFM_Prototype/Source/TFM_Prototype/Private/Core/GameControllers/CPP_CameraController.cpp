@@ -101,6 +101,8 @@ void ACPP_CameraController::UpdateViewTarget(FTViewTarget& OutVT, float DeltaTim
 	OutVT.POV.Location = FMath::VInterpTo(GetCameraLocation(), NewCameraLoc, DeltaTime, CameraSettings->MovementInterpSpeed);
 	OutVT.POV.Rotation = FMath::RInterpTo(GetCameraRotation(), NewCameraRot, DeltaTime, CameraSettings->RotationInterpSpeed);
 
+	
+
 }
 
 
