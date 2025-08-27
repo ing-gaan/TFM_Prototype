@@ -5,7 +5,7 @@
 #include "Core/GameSettings/CPP_DA_GameSettings.h"
 #include "Actors/Cell/CPP_Cell.h"
 #include "Actors/Cell/CPP_DA_CellType.h"
-#include "Utils/Enums/CPP_NeighbourShortName.h"
+#include "Utils/Enums/CPPE_NeighbourShortName.h"
 #include "Core/Subsystems/Managers/CPP_SS_CellsManager.h"
 #include "Actors/Grid/CPP_Grid.h"
 #include "Utils/Macros/Macros.h"
@@ -179,7 +179,7 @@ int UCPP_Util_AC_Grid_ShiftPathsAdmin::ChangeCellsLocations(const ACPP_Cell* Fir
 	}
 
 	//if (CellShiftingState->bAreShiftingLocations)
-	if (CellShiftingState->ShiftingTo == ECPP_CellShiftState::ShiftingToTemp)
+	if (CellShiftingState->ShiftingTo == ECPPE_CellShiftState::ShiftingToTemp)
 	{
 		return 0;
 	}
@@ -200,7 +200,7 @@ int UCPP_Util_AC_Grid_ShiftPathsAdmin::ChangeCellsLocations(const ACPP_Cell* Fir
 		CellInPath = CellsManager->GetCellInMap(CurrentPath[i - 1]);
 		CellInPath->ShiftAxialLocation(CurrentPath[i]);	
 	}
-	CellShiftingState->ShiftingTo = ECPP_CellShiftState::ShiftingToTemp;
+	CellShiftingState->ShiftingTo = ECPPE_CellShiftState::ShiftingToTemp;
 
 	return CurrentPath.Num();
 }
@@ -236,7 +236,7 @@ bool UCPP_Util_AC_Grid_ShiftPathsAdmin::ChangeCurrentPath(const ACPP_Cell* Cell,
 }
 
 
-void UCPP_Util_AC_Grid_ShiftPathsAdmin::TurnVectorsPathInShortNamesPath(TArray<FVector2f>& VectorsPath, TArray<ECPP_NeighbourShortName>& OutShortNamesPath)
+void UCPP_Util_AC_Grid_ShiftPathsAdmin::TurnVectorsPathInShortNamesPath(TArray<FVector2f>& VectorsPath, TArray<ECPPE_NeighbourShortName>& OutShortNamesPath)
 {
 	FVector2f BasicAxialLoc;
 	int i = 0;
@@ -254,7 +254,7 @@ void UCPP_Util_AC_Grid_ShiftPathsAdmin::TurnVectorsPathInShortNamesPath(TArray<F
 }
 
 
-void UCPP_Util_AC_Grid_ShiftPathsAdmin::TurnShortNamesPathInVectorsPath(TArray<ECPP_NeighbourShortName>& ShortNamesPath, TArray<FVector2f>& OutVectorsPath)
+void UCPP_Util_AC_Grid_ShiftPathsAdmin::TurnShortNamesPathInVectorsPath(TArray<ECPPE_NeighbourShortName>& ShortNamesPath, TArray<FVector2f>& OutVectorsPath)
 {
 	FVector2f AddedAxialLoc;
 	int i = 0;
@@ -293,7 +293,7 @@ void UCPP_Util_AC_Grid_ShiftPathsAdmin::ReturnCellsToLocation(const ACPP_Cell* S
 	FShiftPathsState& CellShiftingState = NeighboursShiftPathsStates[StartCell];
 
 	//if (CellShiftingState.bAreInOriginalLocation)
-	if (CellShiftingState.ShiftingTo == ECPP_CellShiftState::ShiftingToOrigin)
+	if (CellShiftingState.ShiftingTo == ECPPE_CellShiftState::ShiftingToOrigin)
 	{
 		return;
 	}
@@ -311,7 +311,7 @@ void UCPP_Util_AC_Grid_ShiftPathsAdmin::ReturnCellsToLocation(const ACPP_Cell* S
 
 	/*CellShiftingState.bAreInOriginalLocation = true;
 	CellShiftingState.bAreShiftingLocations = false;*/
-	CellShiftingState.ShiftingTo = ECPP_CellShiftState::ShiftingToOrigin;
+	CellShiftingState.ShiftingTo = ECPPE_CellShiftState::ShiftingToOrigin;
 }
 
 

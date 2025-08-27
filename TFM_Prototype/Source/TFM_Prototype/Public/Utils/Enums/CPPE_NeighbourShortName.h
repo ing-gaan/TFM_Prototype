@@ -2,7 +2,7 @@
 
 
 UENUM(BlueprintType)
-enum class ECPP_NeighbourShortName : uint8
+enum class ECPPE_NeighbourShortName : uint8
 {
 	None,	/// NOT EXIST= Axial(-1, -1) 
 	N,	/// North= Axial(1, 0) or Vertex 1 - Triangle(0, 1, 6)

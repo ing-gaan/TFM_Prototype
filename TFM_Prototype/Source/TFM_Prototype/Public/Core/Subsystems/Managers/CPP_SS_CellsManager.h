@@ -36,6 +36,13 @@ public:/*Properties*/
 
 
 public:/*Functions*/
+
+	UFUNCTION(BlueprintCallable)
+	float GetCurrentOrganismSpeed();
+
+	UFUNCTION(BlueprintCallable)
+	float GetCurrentOrganismRotationSpeed();
+
 	
 	void StartManager();
 	const ACPP_Cell* GetCellInMap(FVector2f CellAxialLocation) const;
@@ -88,6 +95,9 @@ protected:/*Properties*/
 	TSoftObjectPtr<const UCPP_DA_CellType> FirstCellType{ nullptr };
 
 
+	float CurrentOrganismSpeed{ 0.f };
+
+
 protected:/*Functions*/
 
 	UFUNCTION()
@@ -138,8 +148,6 @@ protected:/*Functions*/
 	void UpdateCellToTempLocation(ACPP_Cell* Cellptr);
 
 	void DestroyCell(ACPP_Cell* Cell);
-
-
 
 
 

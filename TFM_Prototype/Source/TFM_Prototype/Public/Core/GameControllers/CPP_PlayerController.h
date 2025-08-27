@@ -57,7 +57,7 @@ protected:/*Properties*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TSet<FVector2f> FreeNeighbours;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	UCPP_SS_CellsManager* CellsManager { nullptr };
 
 	UPROPERTY()

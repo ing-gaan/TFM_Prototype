@@ -15,7 +15,6 @@
 #include "Actors/Cell/Components/CPP_AC_Cell_Movement.h"
 #include "Actors/Cell/CPP_DA_CellType.h"
 #include "Core/Subsystems/Managers/CPP_SS_LocalGameManager.h"
-#include "Actors/Grid/CPP_Grid.h"
 #include "Engine/AssetManager.h"
 
 
@@ -435,4 +434,30 @@ void UCPP_SS_CellsManager::GetNeighboursInRange(FVector2f AxialLocation, int Ran
 
 
 
+float UCPP_SS_CellsManager::GetCurrentOrganismSpeed()
+{
+	float SpeedSum = 0.f;
+	for (TPair<FVector2f, ACPP_Cell*>& Elem : CellsMap)
+	{
+		SpeedSum += Elem.Value->CurrentMovementSpeed;
+	}
+	CurrentOrganismSpeed = SpeedSum / CellsMap.Num();
+	CurrentOrganismSpeed *= GameSettings->BaseOrganismMoveSpeed;
 
+	return CurrentOrganismSpeed;
+}
+
+
+
+float UCPP_SS_CellsManager::GetCurrentOrganismRotationSpeed()
+{
+	float RotationSpeedSum = 0.f;
+	for (TPair<FVector2f, ACPP_Cell*>& Elem : CellsMap)
+	{
+		RotationSpeedSum += Elem.Value->CurrentRotationSpeed;
+	}
+	CurrentOrganismSpeed = RotationSpeedSum / CellsMap.Num();
+	CurrentOrganismSpeed *= GameSettings->BaseRotationSpeed;
+
+	return CurrentOrganismSpeed;
+}

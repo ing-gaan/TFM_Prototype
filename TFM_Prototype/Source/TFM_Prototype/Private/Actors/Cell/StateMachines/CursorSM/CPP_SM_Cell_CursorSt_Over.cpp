@@ -6,7 +6,7 @@
 #include "Actors/Cell/CPP_Cell.h"
 #include "Actors/Cell/CPP_DA_CellType.h"
 #include "Utils/Macros/Macros.h"
-#include "Utils/Enums/CPP_CellShiftState.h"
+#include "Utils/Enums/CPPE_CellShiftState.h"
 #include "Core/Subsystems/Managers/CPP_SS_LocalGameManager.h"
 
 
@@ -48,7 +48,7 @@ bool UCPP_SM_Cell_CursorSt_Over::EndCursorOver()
 
 bool UCPP_SM_Cell_CursorSt_Over::Clicked()
 {
-	/*bool bCellIsAtOrigin = SMContext->OwnerCell->GetCellShiftState() == ECPP_CellShiftState::AtOriginLocation;
+	/*bool bCellIsAtOrigin = SMContext->OwnerCell->GetCellShiftState() == ECPPE_CellShiftState::AtOriginLocation;
 
 	if (!bCellIsAtOrigin)
 	{

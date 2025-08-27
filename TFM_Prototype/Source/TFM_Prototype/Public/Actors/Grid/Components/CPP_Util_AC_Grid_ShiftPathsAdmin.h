@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "Utils/Enums/CPP_CellShiftState.h"
+#include "Utils/Enums/CPPE_CellShiftState.h"
 
 
 #include "CPP_Util_AC_Grid_ShiftPathsAdmin.generated.h"
@@ -14,8 +14,8 @@ class ACPP_Cell;
 class UCPP_SS_LocalGameManager;
 class UCPP_SS_CellsManager;
 class ACPP_Grid;
-enum class ECPP_NeighbourShortName : uint8;
-enum class ECPP_CellShiftState : uint8;
+enum class ECPPE_NeighbourShortName : uint8;
+enum class ECPPE_CellShiftState : uint8;
 class UCPP_DA_GameSettings;
 class UCPP_DA_GridSettings;
 
@@ -29,7 +29,7 @@ struct FPathAndCost
 	GENERATED_USTRUCT_BODY()
 
 	int Cost{ 0 };
-	TArray<ECPP_NeighbourShortName> Path;
+	TArray<ECPPE_NeighbourShortName> Path;
 };
 
 
@@ -44,7 +44,7 @@ struct FShiftPathsState
 	UPROPERTY()
 	TArray<FVector2f> CurrentPath;
 
-	ECPP_CellShiftState ShiftingTo{ ECPP_CellShiftState::None };
+	ECPPE_CellShiftState ShiftingTo{ ECPPE_CellShiftState::None };
 
 
 	/*Fucntions*/
@@ -126,8 +126,8 @@ private:/*Fucntions*/
 	void UpdateBaseCellNeighbours();
 	void GetOrdererPathsCosts(const ACPP_Cell* StartCell, TArray<FPathAndCost>& OutPathsCosts);
 	void CalculatePath(const ACPP_Cell* StartCell, FVector2f EndLocation, TArray<FPathAndCost>& OutPathsCosts);
-	void TurnVectorsPathInShortNamesPath(TArray<FVector2f>& VectorsPath, TArray<ECPP_NeighbourShortName>& OutShortNamesPath);
-	void TurnShortNamesPathInVectorsPath(TArray<ECPP_NeighbourShortName>& OutShortNamesPath, TArray<FVector2f>& VectorsPath);
+	void TurnVectorsPathInShortNamesPath(TArray<FVector2f>& VectorsPath, TArray<ECPPE_NeighbourShortName>& OutShortNamesPath);
+	void TurnShortNamesPathInVectorsPath(TArray<ECPPE_NeighbourShortName>& OutShortNamesPath, TArray<FVector2f>& VectorsPath);
 	bool GetAStarPath(FVector2f StartLocation, FVector2f EndLocation,
 		TArray<FVector2f>& OutPath, int& OutPathCost);
 	bool ChangeCurrentPath(const ACPP_Cell* Cell, int PathIndex = -1);

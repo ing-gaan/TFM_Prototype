@@ -39,12 +39,12 @@ public:
 
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "BeginPlay|Defaults|Cells",
-		meta = (ToolTip = "", ClampMin = 0, ForceUnits = "m/s"))
-	float MoveSpeed{ 500 };
+		meta = (ToolTip = "", ClampMin = 0, ForceUnits = "cm/s"))
+	float BaseOrganismMoveSpeed{ 500 };
 	
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "BeginPlay|Defaults|Cells",
 		meta = (ToolTip = "", ClampMin = 0, ForceUnits = "dg/s"))
-	float RotationSpeed{ 1 };
+	float BaseRotationSpeed{ 1 };
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "BeginPlay|Defaults|Cells",
 		meta = (ToolTip = "", ClampMin = 0, Units = "Percent"))

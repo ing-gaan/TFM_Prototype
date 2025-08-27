@@ -190,8 +190,8 @@ void UCPP_AC_Grid_ShiftPathController::ClickOnAuxGridElemEvent()
 
 bool UCPP_AC_Grid_ShiftPathController::UpdateLocationsOfCellsInPath()
 {
-	ECPP_CellShiftState AuxGridElement = UCPP_SS_LocalGameManager::AuxGridElemShiftState;
-	ECPP_CellShiftState AtTemporal = ECPP_CellShiftState::AtTempLocation;
+	ECPPE_CellShiftState AuxGridElement = UCPP_SS_LocalGameManager::AuxGridElemShiftState;
+	ECPPE_CellShiftState AtTemporal = ECPPE_CellShiftState::AtTempLocation;
 
 	if (AuxGridElement != AtTemporal)
 	{

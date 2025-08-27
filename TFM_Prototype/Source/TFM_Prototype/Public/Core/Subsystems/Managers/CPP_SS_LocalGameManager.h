@@ -16,7 +16,7 @@ class UCPP_SS_UIEventBus;
 class UCPP_SS_CellsManager;
 class UCPP_SS_GameEventBus;
 class ACPP_Grid;
-enum class ECPP_CellShiftState : uint8;
+enum class ECPPE_CellShiftState : uint8;
 
 
 
@@ -31,7 +31,7 @@ class TFM_PROTOTYPE_API UCPP_SS_LocalGameManager : public ULocalPlayerSubsystem
 
 public:/*Properties*/
 
-	static ECPP_CellShiftState AuxGridElemShiftState;
+	static ECPPE_CellShiftState AuxGridElemShiftState;
 
 
 

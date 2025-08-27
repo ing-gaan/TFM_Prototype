@@ -17,7 +17,7 @@ class UCPP_DA_CellType;
 class ACPP_Player;
 class UCPP_AC_Cell_Base;
 class UCPP_SS_CellsManager;
-enum class ECPP_CellShiftState : uint8;
+enum class ECPPE_CellShiftState : uint8;
 class UCPP_SM_Cell_Life_Base;
 
 
@@ -141,8 +141,6 @@ public: /*Functions*/
 	UFUNCTION(BlueprintCallable)
 	float GetCellEnergy() const;
 
-	
-
 
 
 	
@@ -151,7 +149,7 @@ public: /*Functions*/
 
 	void ShiftAxialLocation(FVector2f NewTempAxialLocation) const;
 	void ReturnToOriginAxialLocation() const;
-	ECPP_CellShiftState GetCellShiftState() const;
+	ECPPE_CellShiftState GetCellShiftState() const;
 	bool CellLifeStateIsEqualOrOlderThan(TSubclassOf<UCPP_SM_Cell_Life_Base> LifeStage) const;
 	bool IsClicked() const;
 	FVector2f GetTempAxialLocation() const;
@@ -194,7 +192,7 @@ protected: /*Properties*/
 	bool bIsCellMoving{false};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	ECPP_CellShiftState CellShiftState;
+	ECPPE_CellShiftState CellShiftState;
 
 	UPROPERTY()
 	const UCPP_SM_Cell_Life_Base* CellLifeState;
@@ -211,18 +209,21 @@ protected: /*Properties*/
 
 	bool bIsClicked{ false };	
 	bool bIsConnectedToOldestCell{ true };
-
+	float CurrentMovementSpeed{ 0 };
+	float CurrentRotationSpeed{ 0 };
 	
 
 
 protected: /*Functions*/
 	
-	
-	UFUNCTION(BlueprintCallable)
-	void SetRelativeLocation(FVector2f AxLocation);
-
+	/// Called in In_De_creaseCellEnergy. Only to be implemented in Blueprint. 
 	UFUNCTION(BlueprintImplementableEvent)
 	void BPIE_NotifyEnergy(float Energy);
+
+
+
+	UFUNCTION(BlueprintCallable)
+	void SetRelativeLocation(FVector2f AxLocation);
 
 	UFUNCTION()
 	void SetCellLabel();

@@ -10,7 +10,7 @@
 #include "Actors/Cell/Components/CPP_AC_Cell_Base.h"
 #include "Core/GameInstance/CPP_GameInstance.h"
 #include "Core/Subsystems/Managers/CPP_SS_CellsManager.h"
-#include "Utils/Enums/CPP_CellShiftState.h"
+#include "Utils/Enums/CPPE_CellShiftState.h"
 #include "Actors/Cell/StateMachines/LifeSM/CPP_SM_Cell_Life_Base.h"
 #include "Actors/Molecules/CPP_Molecule.h"
 #include "Actors/Molecules/CPP_DA_MoleculeType.h"
@@ -25,7 +25,7 @@ UCPP_SS_CellsManager* ACPP_Cell::CellsManager{ nullptr };
 ACPP_Cell::ACPP_Cell()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	CellShiftState = ECPP_CellShiftState::AtOriginLocation;
+	CellShiftState = ECPPE_CellShiftState::AtOriginLocation;
 }
 
 
@@ -41,6 +41,9 @@ void ACPP_Cell::BeginPlay()
 
 	RegisterEventFunctions();
 	InitCell();	
+
+	CurrentMovementSpeed = CellType->MovementSpeedMultiplier;
+	CurrentRotationSpeed = CellType->RotationSpeedMultiplier;
 }
 
 
@@ -119,7 +122,7 @@ void ACPP_Cell::BeginDifferentiate(const TSoftObjectPtr<UCPP_DA_CellType> Newtyp
 
 void ACPP_Cell::FinishDifferentiate() const
 {
-	FinishDifferentiateEventDelegate.Broadcast();
+	FinishDifferentiateEventDelegate.Broadcast();	
 	Unclick();
 }
 
@@ -181,6 +184,10 @@ bool ACPP_Cell::LoadCellTypeComponents(const UCPP_DA_CellType* NewCellType)
 		}
 	}
 	
+	//****** Temporal solution ******///
+	CurrentMovementSpeed = CellType->MovementSpeedMultiplier;
+	CurrentRotationSpeed = CellType->RotationSpeedMultiplier;
+
 	return true;
 }
 
@@ -226,7 +233,7 @@ void ACPP_Cell::NotifyShiftingCanceled() const
 
 void ACPP_Cell::ShiftAxialLocation(FVector2f NewTempAxialLocation) const
 {	
-	bool bIsOnTempLocation = CellShiftState == ECPP_CellShiftState::AtTempLocation;
+	bool bIsOnTempLocation = CellShiftState == ECPPE_CellShiftState::AtTempLocation;
 
 	if (bIsOnTempLocation)
 	{
@@ -249,7 +256,7 @@ void ACPP_Cell::ReturnToOriginAxialLocation() const
 }
 
 
-ECPP_CellShiftState ACPP_Cell::GetCellShiftState() const
+ECPPE_CellShiftState ACPP_Cell::GetCellShiftState() const
 {
 	return CellShiftState;
 }
@@ -282,7 +289,7 @@ FVector2f ACPP_Cell::GetTempAxialLocation() const
 void ACPP_Cell::UpdateToTemporalLocation()
 {
 	AxialLocation = TempAxialLocation;
-	CellShiftState = ECPP_CellShiftState::AtOriginLocation;
+	CellShiftState = ECPPE_CellShiftState::AtOriginLocation;
 	ShiftEventDelegate.ExecuteIfBound(false);
 	SetCellLabel();
 }
@@ -349,8 +356,6 @@ float ACPP_Cell::GetCellEnergy() const
 {
 	return CellEnergy;
 }
-
-
 
 
 

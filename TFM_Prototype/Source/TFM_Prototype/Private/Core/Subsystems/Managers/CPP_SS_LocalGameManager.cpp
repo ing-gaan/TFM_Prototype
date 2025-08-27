@@ -4,7 +4,7 @@
 #include "Core/Subsystems/EventBuses/CPP_SS_UIEventBus.h"
 #include "Core/Subsystems/EventBuses/CPP_SS_CellsManagerEventBus.h"
 #include "Core/Subsystems/EventBuses/CPP_SS_GameEventBus.h"
-#include "Utils/Enums/CPP_CellShiftState.h"
+#include "Utils/Enums/CPPE_CellShiftState.h"
 #include "Actors/Grid/CPP_Grid.h"
 
 
@@ -15,7 +15,7 @@ const ACPP_Cell* UCPP_SS_LocalGameManager::BeforeClickedCell{ nullptr };
 bool UCPP_SS_LocalGameManager::bIsGridActive{ false };
 bool UCPP_SS_LocalGameManager::bAreCellsShifting{ false };
 bool UCPP_SS_LocalGameManager::bIsACellDividing{ false };
-ECPP_CellShiftState UCPP_SS_LocalGameManager::AuxGridElemShiftState{ ECPP_CellShiftState::AtOriginLocation };
+ECPPE_CellShiftState UCPP_SS_LocalGameManager::AuxGridElemShiftState{ ECPPE_CellShiftState::AtOriginLocation };
 
 
 

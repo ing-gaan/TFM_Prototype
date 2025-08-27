@@ -11,7 +11,7 @@
 #include "Core/Subsystems/Managers/CPP_SS_LocalGameManager.h"
 #include "Actors/Cell/CPP_Cell.h"
 #include "Actors/Grid/CPP_Grid.h"
-#include "Utils/Enums/CPP_CellShiftState.h"
+#include "Utils/Enums/CPPE_CellShiftState.h"
 #include "Utils/Macros/Macros.h"
 
 
@@ -21,7 +21,7 @@
 ACPP_AuxiliaryGridElement::ACPP_AuxiliaryGridElement()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	ShiftState = ECPP_CellShiftState::AtOriginLocation;
+	ShiftState = ECPPE_CellShiftState::AtOriginLocation;
 }
 
 
@@ -205,7 +205,7 @@ void ACPP_AuxiliaryGridElement::CellsShiftingReturnEvent()
 
 
 
-void ACPP_AuxiliaryGridElement::SetShiftState(ECPP_CellShiftState CurrentShiftState)
+void ACPP_AuxiliaryGridElement::SetShiftState(ECPPE_CellShiftState CurrentShiftState)
 {
 	ShiftState = CurrentShiftState;
 	UCPP_SS_LocalGameManager::AuxGridElemShiftState = CurrentShiftState;

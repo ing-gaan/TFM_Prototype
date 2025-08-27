@@ -2,7 +2,7 @@
 
 
 UENUM(BlueprintType)
-enum class ECPP_CellShiftState : uint8
+enum class ECPPE_CellShiftState : uint8
 {
 	None,				/// No state - Error
 	AtOriginLocation,	/// The cell stays at the origin axial location.

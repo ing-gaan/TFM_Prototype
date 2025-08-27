@@ -9,7 +9,7 @@
 
 
 class ACPP_Player;
-enum class ECPP_NeighbourShortName : uint8;
+enum class ECPPE_NeighbourShortName : uint8;
 
 
 UCLASS()
@@ -60,8 +60,8 @@ public:
 	static int GetDistanceBetweenAxialLocations(FVector2f StartAxialLocation, FVector2f EndAxialLocation);
 
 	static FString GetCellOutlinerLabel(FVector2f AxialLocation);
-	static ECPP_NeighbourShortName GetNeighbourShortName(FVector2f AxialLocation);
-	static FVector2f GetAxialLocationByShortName(ECPP_NeighbourShortName ShortName);
+	static ECPPE_NeighbourShortName GetNeighbourShortName(FVector2f AxialLocation);
+	static FVector2f GetAxialLocationByShortName(ECPPE_NeighbourShortName ShortName);
 
 
 	template <typename T>

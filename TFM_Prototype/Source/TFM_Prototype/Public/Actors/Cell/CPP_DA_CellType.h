@@ -2,11 +2,16 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+//#include "Utils/Enums/CPPE_MoleculeType.h"
+
+
 #include "CPP_DA_CellType.generated.h"
 
 
 
 class UCPP_AC_Cell_Base;
+enum class ECPPE_MoleculeType : uint8;
+
 
 
 
@@ -130,28 +135,50 @@ public:/*Properties*/
 
 	/// Energy for subsistence. Cannot be transferred.
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Properties|Energy",
-		meta = (EditCondition = "bCanTransferEnergy", ToolTip = "Energy for subsistence. Cannot be transferred."))
+		meta = (EditCondition = "bCanTransferEnergyByItSelf", ToolTip = "Energy for subsistence. Cannot be transferred."))
 	float SubsistenceEnergy{ 10 };
 
 	/// Maximum distance at which it can transfer (e.g. 1 the 6 neighbors that surround it)
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Properties|Energy",
-		meta = (EditCondition = "bCanTransferEnergy", ToolTip = "Maximum distance at which it can transfer (e.g. 1 the 6 neighbors that surround it)"))
+		meta = (EditCondition = "bCanTransferEnergyByItSelf", ToolTip = "Maximum distance at which it can transfer (e.g. 1 the 6 neighbors that surround it)"))
 	int TransferRange{ 3 };
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Properties|Energy",
-		meta = (EditCondition = "bCanTransferEnergy", ForceUnits = "Seconds"))
+		meta = (EditCondition = "bCanTransferEnergyByItSelf", ForceUnits = "Seconds"))
 	float TransferEnergyTimeInterval{ 2 };
 
+
+
 	
+	/**************************************** CELL MOVEMENT ****************************************/
+
+	/// This value is averaged with the others
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Properties|Movement",
+		meta = (ToolTip = "This value is averaged with the speeds of the others"))
+	float MovementSpeedMultiplier{ 1 };
+
+	/// This value is averaged with the others
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Properties|Movement",
+		meta = (ToolTip = "This value is averaged with the speeds of the others"))
+	float RotationSpeedMultiplier{ 1 };
 
 
 
 
+	/**************************************** CELL DIGESTION ****************************************/
 
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Properties|Digestion")
+	bool bCanDigestByItSelf{ false };
 
+	/*/// The maximum size of molecule that it can digest
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Properties|Energy",
+		meta = (EditCondition = "bCanDigestByItSelf", ToolTip = "The maximum size of molecule that it can digest"))
+	float DigestionCapacity{ 10 };*/
 
-
-
+	/// Types of molecules that it can digest
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Properties|Digestion",
+		meta = (ToolTip = "Types of molecules that it can digest"))
+	TSet<ECPPE_MoleculeType> MoleculesCanBeDigested;
 
 	
 };

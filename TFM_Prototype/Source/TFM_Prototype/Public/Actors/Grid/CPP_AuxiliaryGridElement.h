@@ -15,7 +15,7 @@ class ACPP_Player;
 class ACPP_Grid;
 class UCPP_SS_CellsManagerEventBus;
 class UCPP_SS_GameEventBus;
-enum class ECPP_CellShiftState : uint8;
+enum class ECPPE_CellShiftState : uint8;
 
 
 
@@ -91,7 +91,7 @@ protected: /*Properties*/
 	float CurrentZLocation{ 0.0 };
 
 	UPROPERTY(BlueprintReadOnly)
-	ECPP_CellShiftState ShiftState;
+	ECPPE_CellShiftState ShiftState;
 
 
 
@@ -122,7 +122,7 @@ protected: /*Functions*/
 	void Phase2StartedEvent(UCPP_SS_CellsManager* TheCellsManager, ACPP_Grid* TheGrid);
 
 	UFUNCTION(BlueprintCallable)
-	void SetShiftState(ECPP_CellShiftState CurrentShiftState);
+	void SetShiftState(ECPPE_CellShiftState CurrentShiftState);
 
 	UFUNCTION(BlueprintCallable)
 	void SetElementVisibility(bool bIsVisible);

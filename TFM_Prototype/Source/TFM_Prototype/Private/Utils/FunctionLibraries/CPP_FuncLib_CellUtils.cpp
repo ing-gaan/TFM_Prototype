@@ -1,6 +1,6 @@
 #include "Utils/FunctionLibraries/CPP_FuncLib_CellUtils.h"
 #include "GameFramework/Character.h"
-#include "Utils/Enums/CPP_NeighbourShortName.h"
+#include "Utils/Enums/CPPE_NeighbourShortName.h"
 #include "Characters/Player/CPP_Player.h"
 
 
@@ -114,61 +114,61 @@ FString UCPP_FuncLib_CellUtils::GetCellOutlinerLabel(FVector2f AxialLocation)
 
 
 
-ECPP_NeighbourShortName UCPP_FuncLib_CellUtils::GetNeighbourShortName(FVector2f AxialLocation)
+ECPPE_NeighbourShortName UCPP_FuncLib_CellUtils::GetNeighbourShortName(FVector2f AxialLocation)
 {
 	if (AxialLocation == FVector2f(1, 0))
 	{
-		return ECPP_NeighbourShortName::N;
+		return ECPPE_NeighbourShortName::N;
 	}
 	if (AxialLocation == FVector2f(0, 1))
 	{
-		return ECPP_NeighbourShortName::NE;
+		return ECPPE_NeighbourShortName::NE;
 	}
 	if (AxialLocation == FVector2f(-1, 1))
 	{
-		return ECPP_NeighbourShortName::SE;
+		return ECPPE_NeighbourShortName::SE;
 	}
 	if (AxialLocation == FVector2f(-1, 0))
 	{
-		return ECPP_NeighbourShortName::S;
+		return ECPPE_NeighbourShortName::S;
 	}
 	if (AxialLocation == FVector2f(0, -1))
 	{
-		return ECPP_NeighbourShortName::SW;
+		return ECPPE_NeighbourShortName::SW;
 	}
 	if (AxialLocation == FVector2f(1, -1))
 	{
-		return ECPP_NeighbourShortName::NW;
+		return ECPPE_NeighbourShortName::NW;
 	}
 
-	return ECPP_NeighbourShortName::None;
+	return ECPPE_NeighbourShortName::None;
 }
 
 
 
-FVector2f UCPP_FuncLib_CellUtils::GetAxialLocationByShortName(ECPP_NeighbourShortName ShortName)
+FVector2f UCPP_FuncLib_CellUtils::GetAxialLocationByShortName(ECPPE_NeighbourShortName ShortName)
 {
-	if (ShortName == ECPP_NeighbourShortName::N)
+	if (ShortName == ECPPE_NeighbourShortName::N)
 	{
 		return FVector2f(1, 0);
 	}
-	if (ShortName == ECPP_NeighbourShortName::NE)
+	if (ShortName == ECPPE_NeighbourShortName::NE)
 	{
 		return FVector2f(0, 1);
 	}
-	if (ShortName == ECPP_NeighbourShortName::SE)
+	if (ShortName == ECPPE_NeighbourShortName::SE)
 	{
 		return FVector2f(-1, 1);
 	}
-	if (ShortName == ECPP_NeighbourShortName::S)
+	if (ShortName == ECPPE_NeighbourShortName::S)
 	{
 		return FVector2f(-1, 0);
 	}
-	if (ShortName == ECPP_NeighbourShortName::SW)
+	if (ShortName == ECPPE_NeighbourShortName::SW)
 	{
 		return FVector2f(0, -1);
 	}
-	if (ShortName == ECPP_NeighbourShortName::NW)
+	if (ShortName == ECPPE_NeighbourShortName::NW)
 	{
 		return FVector2f(1, -1);
 	}

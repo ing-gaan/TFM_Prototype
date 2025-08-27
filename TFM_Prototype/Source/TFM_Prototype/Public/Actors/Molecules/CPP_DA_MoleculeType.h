@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 
@@ -7,6 +8,8 @@
 #include "CPP_DA_MoleculeType.generated.h"
 
 
+
+enum class ECPPE_MoleculeType : uint8;
 
 
 
@@ -19,9 +22,8 @@ class TFM_PROTOTYPE_API UCPP_DA_MoleculeType : public UPrimaryDataAsset
 public:/*Properties*/
 
 
-
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Data")
-	FText MoleculeTypeName;
+	ECPPE_MoleculeType MoleculeType;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "General|Basics")
 	UStaticMesh* MoleculeStaticMesh{ nullptr };
@@ -37,6 +39,10 @@ public:/*Properties*/
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Properties|Basics",
 		meta = (ToolTip = "", ClampMin = 0, Units = "Percent"))
 	float ToxicityLevel{ 0 };
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Properties|Basics",
+		meta = (ToolTip = "", ClampMin = 0, Units = "Percent"))
+	float Size{ 0 };
 
 
 	
