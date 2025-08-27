@@ -345,7 +345,7 @@ bool ACPP_Cell::IsConnectedToOldestCell()
 }
 
 
-float ACPP_Cell::GetCellEnergy()
+float ACPP_Cell::GetCellEnergy() const
 {
 	return CellEnergy;
 }
@@ -365,8 +365,7 @@ void ACPP_Cell::NotifyActorBeginOverlap(AActor* OtherActor)
 		CellEnergy += Molecule->MoleculeType->EnergyItProvides;
 
 		Molecule->Destroy();
-	}
-	
+	}	
 }
 
 
@@ -375,4 +374,11 @@ FText ACPP_Cell::GetTooltipText_Implementation() const
 {
 	FText TooltipText = FText::FromString(TEXT("Cell Tooltip"));
 	return TooltipText;
+}
+
+
+
+void ACPP_Cell::GetCellsNeighborsInRange(int RangeDistance, TArray<ACPP_Cell*>& OutNeighboursInRange) const
+{
+	CellsManager->GetNeighboursInRange(AxialLocation, RangeDistance, OutNeighboursInRange);
 }

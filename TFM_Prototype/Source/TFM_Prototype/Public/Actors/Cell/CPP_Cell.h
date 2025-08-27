@@ -139,7 +139,7 @@ public: /*Functions*/
 	bool HasThisAbility(TSubclassOf<UCPP_AC_Cell_Base> Ability) const;
 
 	UFUNCTION(BlueprintCallable)
-	float GetCellEnergy();
+	float GetCellEnergy() const;
 
 	
 
@@ -169,6 +169,11 @@ public: /*Functions*/
 	void SetCellLifeState(const UCPP_SM_Cell_Life_Base* Newstate);
 	void DestroyYourself();
 	bool IsConnectedToOldestCell();
+
+	void GetCellsNeighborsInRange(int RangeDistance, TArray<ACPP_Cell*>& OutNeighboursInRange) const;
+
+
+
 
 
 protected: /*Properties*/	

@@ -8,8 +8,8 @@
 
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTenMilliSecondsEvent);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOneSecondEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTenMilliSecondsEvent, int, TensMilliSecondsCount);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOneSecondEvent, int, SecondsCount);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTenSecondsEvent);
 
 
@@ -37,16 +37,16 @@ public: /*Properties*/
 public: /*Functions*/
 
 	UFUNCTION()
-	FORCEINLINE void RaiseTenMilliSecondsEvent() const
+	FORCEINLINE void RaiseTenMilliSecondsEvent(int TensMilliSecondsCount) const
 	{
-		TenMilliSecondsEventDelegate.Broadcast();
+		TenMilliSecondsEventDelegate.Broadcast(TensMilliSecondsCount);
 	}
 
 
 	UFUNCTION()
-	FORCEINLINE void RaiseOneSecondEvent() const
+	FORCEINLINE void RaiseOneSecondEvent(int SecondsCount) const
 	{
-		OneSecondEventDelegate.Broadcast();
+		OneSecondEventDelegate.Broadcast(SecondsCount);
 	}
 
 

@@ -46,13 +46,20 @@ void ACPP_GameState::StartTenMilliSecondsTimer()
 
 void ACPP_GameState::TenMilliSecondsPassed()
 {
+	if (TensMilliSecondsPassed == INT_MAX)
+	{
+		/// When TensMilliSecondsPassed = INT_MAX = 2147483647 then
+		/// 47 have passed since the last multiple of 100
+		TensMilliSecondsPassed = 47;
+	}
 	TensMilliSecondsPassed++;
-	TimeEventBus->RaiseTenMilliSecondsEvent();
+
+	TimeEventBus->RaiseTenMilliSecondsEvent(TensMilliSecondsPassed);
 
 	if (TensMilliSecondsPassed % 100 == 0)
 	{
 		OneSecondPassed();
-		TensMilliSecondsPassed = 0;
+		//TensMilliSecondsPassed = 0;
 	}
 }
 
@@ -61,12 +68,12 @@ void ACPP_GameState::TenMilliSecondsPassed()
 void ACPP_GameState::OneSecondPassed()
 {
 	SecondsPassed++;
-	TimeEventBus->RaiseOneSecondEvent();
+	TimeEventBus->RaiseOneSecondEvent(SecondsPassed);
 
 	if (SecondsPassed % 10 == 0)
 	{
 		TimeEventBus->RaiseTenSecondsEvent();
-		SecondsPassed = 0;
+		//SecondsPassed = 0;
 	}
 }
 

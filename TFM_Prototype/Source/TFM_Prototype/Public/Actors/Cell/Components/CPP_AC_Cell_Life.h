@@ -63,10 +63,8 @@ protected:/*Properties*/
 	FTimerDelegate LifeTimerDelegate;
 
 
-	int TensMilliSecondsPassed{ 0 };
 	int LifeStateTimeStep{ 0 };
 	int EnergyTimeStep{ 0 };
-
 	float EnergyDecrease{ 0 };
 
 
@@ -75,7 +73,7 @@ protected:/*Properties*/
 protected:/*Functions*/
 
 	UFUNCTION()
-	void TenMilliSecondsEvent();
+	void TenMilliSecondsEvent(int TensMilliSecondsCount);
 
 	UFUNCTION()
 	void FinishDifferentiateEvent();

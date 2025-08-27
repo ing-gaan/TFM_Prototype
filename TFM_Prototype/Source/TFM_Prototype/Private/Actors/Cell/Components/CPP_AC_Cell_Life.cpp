@@ -1,11 +1,7 @@
 #include "Actors/Cell/Components/CPP_AC_Cell_Life.h"
 #include "Actors/Cell/CPP_Cell.h"
-
 #include "Core/GameSettings/CPP_DA_GameSettings.h"
 #include "Core/Subsystems/EventBuses/CPP_SS_TimeEventBus.h"
-#include "Core/Subsystems/EventBuses/CPP_SS_GameEventBus.h"
-#include "Core/Subsystems/EventBuses/CPP_SS_UIEventBus.h"
-#include "Core/Subsystems/EventBuses/CPP_SS_InputEventBus.h"
 #include "Actors/Cell/StateMachines/LifeSM/CPP_SM_Cell_Life_Context.h"
 #include "Actors/Cell/StateMachines/LifeSM/CPP_SM_Cell_LifeSt_Dying.h"
 #include "Actors/Cell/StateMachines/LifeSM/CPP_SM_Cell_LifeSt_Dead.h"
@@ -55,7 +51,7 @@ void UCPP_AC_Cell_Life::InitComponent() /// Component initialized on Super::Begi
 	//int InitEnergy = OwnerCell->CellType->MaxEnergy * GameSettings->MaxCellsEnergyMultiplier;
 	//OwnerCell->In_De_creaseCellEnergy(InitEnergy);
 
-	float DecreaseRate = OwnerCell->CellType->EnergyDecreaseRate;
+	float DecreaseRate = OwnerCell->CellType->EnergyConsumptionRate;
 	float EnergyConsumptionMultiplier = GameSettings->StoppedEnergyConsumptionMultiplier;
 	EnergyDecrease = DecreaseRate * EnergyConsumptionMultiplier;
 
@@ -137,7 +133,7 @@ void UCPP_AC_Cell_Life::BeginCellApoptosisEvent()
 
 void UCPP_AC_Cell_Life::MoveCellEvent(bool bCellsMoving, bool bIsShifting)
 {
-	float DecreaseRate = OwnerCell->CellType->EnergyDecreaseRate;
+	float DecreaseRate = OwnerCell->CellType->EnergyConsumptionRate;
 	float EnergyConsumptionMultiplier = GameSettings->StoppedEnergyConsumptionMultiplier;
 
 	if (bCellsMoving)
@@ -148,22 +144,14 @@ void UCPP_AC_Cell_Life::MoveCellEvent(bool bCellsMoving, bool bIsShifting)
 }
 
 
-void UCPP_AC_Cell_Life::TenMilliSecondsEvent()
+void UCPP_AC_Cell_Life::TenMilliSecondsEvent(int TensMilliSecondsCount)
 {
-	if (TensMilliSecondsPassed == INT_MAX)
-	{
-		/// When TensMilliSecondsPassed = INT_MAX = 2147483647 then
-		/// 47 have passed since the last multiple of 100
-		TensMilliSecondsPassed = 47;
-	}
-	TensMilliSecondsPassed++;
-
-	if (TensMilliSecondsPassed % LifeStateTimeStep == 0)
+	if (TensMilliSecondsCount % LifeStateTimeStep == 0)
 	{
 		OneLifeStateTimeStep();
 	}
 
-	if (TensMilliSecondsPassed % EnergyTimeStep == 0)
+	if (TensMilliSecondsCount % EnergyTimeStep == 0)
 	{
 		OneEnergyTimeStep();
 	}

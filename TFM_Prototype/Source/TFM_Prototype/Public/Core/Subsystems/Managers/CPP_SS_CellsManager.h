@@ -43,6 +43,8 @@ public:/*Functions*/
 	void UpdateToTempLocations(TArray<FVector2f>& AxialLocations);
 	int CellsInMapNumber() const;
 
+
+	void GetNeighboursInRange(FVector2f AxialLocation, int RangeDistance, TArray<ACPP_Cell*>& OutNeighboursInRange) const;
 	
 
 

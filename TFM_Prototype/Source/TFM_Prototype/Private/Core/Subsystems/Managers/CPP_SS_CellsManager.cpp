@@ -413,3 +413,26 @@ int UCPP_SS_CellsManager::CellsInMapNumber() const
 }
 
 
+
+void UCPP_SS_CellsManager::GetNeighboursInRange(FVector2f AxialLocation, int RangeDistance, TArray<ACPP_Cell*>& OutNeighboursInRange) const
+{
+	TArray<FVector2f> CellsMapKeys;
+	CellsMap.GetKeys(CellsMapKeys);
+	int NeighboursDistance;
+
+	CellsMapKeys.Remove(AxialLocation);
+
+	for (FVector2f AxLoc : CellsMapKeys)
+	{
+		NeighboursDistance = UCPP_FuncLib_CellUtils::GetDistanceBetweenAxialLocations(AxialLocation, AxLoc);
+
+		if (NeighboursDistance <= RangeDistance)
+		{
+			OutNeighboursInRange.Emplace(CellsMap[AxLoc]);
+		}
+	}
+}
+
+
+
+

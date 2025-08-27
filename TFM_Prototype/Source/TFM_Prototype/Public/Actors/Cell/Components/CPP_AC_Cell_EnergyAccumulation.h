@@ -33,15 +33,24 @@ public:/*Functions*/
 
 protected:/*Properties*/
 
-
-
+	int TensMilliSecondsPassed{ 0 };
+	int TransferEnergyTimeInterval{ 0 };
 
 
 
 protected:/*Functions*/
 
+	UFUNCTION()
+	void TenMilliSecondsEvent(int TensMilliSecondsCount);
 
 
+	void BeginPlay() override;
+	void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	void RegisterEventFunctions();
 
+	void UnRegisterEventFunctions();
+	virtual void InitComponent() override;
+
+	void GetThoseWhoReceiveTheEnergy();
 
 };

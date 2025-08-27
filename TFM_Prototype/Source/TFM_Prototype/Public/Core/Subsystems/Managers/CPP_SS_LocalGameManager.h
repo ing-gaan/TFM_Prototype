@@ -43,6 +43,7 @@ public:/*Functions*/
 	static bool AreCellsShifting();
 	static bool IsACellDividing();
 
+
 	void StartManager(const UCPP_SS_CellsManager* TheCellsManager, const ACPP_Grid* TheGrid);
 	const UCPP_SS_CellsManager* GetCellsManager() const;
 	const ACPP_Grid* GetGrid() const;
