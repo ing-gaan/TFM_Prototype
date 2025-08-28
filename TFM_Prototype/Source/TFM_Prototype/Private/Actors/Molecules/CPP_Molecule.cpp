@@ -18,6 +18,8 @@ void ACPP_Molecule::BeginPlay()
 {
 	Super::BeginPlay();
 
+	SetActorScale3D(MoleculeType->MeshScale);
+
 	InitEventBuses();
 	InitMolecule();
 	RegisterEventFunctions();

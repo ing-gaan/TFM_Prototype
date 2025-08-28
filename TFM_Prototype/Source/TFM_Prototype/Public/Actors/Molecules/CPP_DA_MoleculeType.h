@@ -42,7 +42,7 @@ public:/*Properties*/
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Properties|Basics",
 		meta = (ToolTip = "", ClampMin = 0, Units = "Percent"))
-	float Size{ 0 };
+	FVector MeshScale{ FVector(1.0, 1.0, 1.0) };
 
 
 	
