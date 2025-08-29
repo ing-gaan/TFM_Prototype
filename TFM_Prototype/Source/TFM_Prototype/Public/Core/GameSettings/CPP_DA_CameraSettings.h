@@ -30,19 +30,19 @@ public:
 	FVector2D OffsetFromPlayer{ FVector2D(0, 0) };
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Properties")
-	int OrthoWidthChangeStep{ 100 };
+	int ZoomChangeStep{ 100 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Properties")
-	int OrthoWidthChangeStepSpeed{ 2 };
+	int ZoomChangeStepSpeed{ 2 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Properties")
-	int MinOrthoWidth{ 1000 };
+	int MinZoom{ 1000 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Properties")
-	int DefaultOrthoWidth{ 3000 };
+	int DefaultZoom{ 3000 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Properties")
-	int MaxOrthoWidth{ 10000 };
+	int MaxZoom{ 10000 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General|Properties")
 	FRotator CameraRotation{ FRotator(0, -90, 0)};

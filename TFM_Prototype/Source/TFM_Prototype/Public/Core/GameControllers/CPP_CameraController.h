@@ -51,7 +51,7 @@ public:/*Functions*/
 protected:/*Properties*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	int OrthoWidth{ 0 };
+	int Zoom{ 0 };
 
 	bool bIsInitialized{ false };
 
@@ -60,8 +60,8 @@ protected:/*Properties*/
 
 	float LerpAlpha{ 0.0f };
 
-	float CurrentOrthoWidth{ 0.0f };
-	float CurrentOrthoWidth2{ 0.0f };
+	float CurrentZoom{ 0.0f };
+	float CurrentZoom2{ 0.0f };
 
 protected:/*Functions*/
 
