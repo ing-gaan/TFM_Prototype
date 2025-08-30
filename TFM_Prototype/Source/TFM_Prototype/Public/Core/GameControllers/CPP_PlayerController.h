@@ -17,6 +17,8 @@ class UCPP_SS_CellsManager;
 class UCPP_SS_LocalGameManager;
 class ACPP_Grid;
 class ACPP_Player;
+class ACPP_PlayerCamera;
+class UCPP_DA_CameraSettings;
 
 
 
@@ -63,10 +65,11 @@ protected:/*Properties*/
 	UPROPERTY()
 	UCPP_SS_LocalGameManager* LocalGameManager { nullptr };
 
-	/*UPROPERTY()
-	const ACPP_Grid* GetGrid() const;*/
+	UPROPERTY(BlueprintReadOnly)
+	ACPP_PlayerCamera* CameraActor;
 
-	
+	UPROPERTY(BlueprintReadOnly)
+	const UCPP_DA_CameraSettings* CameraSettings{ nullptr };
 
 
 protected:/*Functions*/
@@ -87,6 +90,7 @@ protected:/*Functions*/
 	void RegisterEventFunctions() const;
 	void UnRegisterEventFunctions() const;
 
+	void SpawnCamera();
 	const AActor* CursorOverActor();
 
 };

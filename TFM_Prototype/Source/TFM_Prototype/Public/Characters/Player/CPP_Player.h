@@ -27,8 +27,9 @@ public:
 
 public:/*Properties*/
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	const UCPP_DA_CameraSettings* CameraSettings{ nullptr };
+	
+
+
 
 
 public:/*Functions*/
@@ -42,11 +43,7 @@ public:/*Functions*/
 	UFUNCTION(BlueprintCallable)
 	FVector2D GetRelativeLocation() const;
 
-	UFUNCTION(BlueprintCallable)
-	void SetZoomDirection(int ZoomDirection);
-
-	UFUNCTION(BlueprintCallable)
-	void SetPANDirection(FVector2f PANDirection);
+	
 
 
 protected:/*Properties*/
@@ -63,21 +60,7 @@ protected:/*Properties*/
 	UPROPERTY()
 	const UCPP_DA_GameSettings* GameSettings { nullptr };
 
-	UPROPERTY()
-	USpringArmComponent* CameraSpringArm;
-
-	UPROPERTY()
-	UCameraComponent* PlayerCamera;
-
-
-
-	float CurrentZoom{ 0.0f };
-	float CurrentZoom2{ 0.0f };
-	int Zoom{ 0 };
-	float LerpAlpha{ 0.0f };
-	FVector LastPlayerLocation{ FVector::Zero()};
-	FVector2f PANMovement{ FVector2f(0, 0) };
-	FVector LocationChange{ FVector::Zero() };
+	
 
 
 protected:/*Functions*/
@@ -87,12 +70,9 @@ protected:/*Functions*/
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
-	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void InitPlayer();
-	void InitCamera();
-	void UpdateCamera(float DeltaTime);
-	bool IsPlayerMoving();
+
 	
 
 };

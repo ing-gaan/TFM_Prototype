@@ -9,6 +9,10 @@
 #include "Actors/Grid/CPP_AuxiliaryGridElement.h"
 #include "Kismet/GameplayStatics.h"
 #include "Utils/Macros/Macros.h"
+#include "Actors/Camera/CPP_PlayerCamera.h"
+#include "Core/GameSettings/CPP_DA_GameSettings.h"
+#include "Core/GameSettings/CPP_DA_CameraSettings.h"
+
 
 
 
@@ -35,6 +39,10 @@ void ACPP_PlayerController::BeginPlay()
 	////GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, GameSettings->StartCellsManagerAfter, false);
 	//GetWorldTimerManager().SetTimerForNextTick(TimerDelegate);
 
+
+	SpawnCamera();
+	
+
 	ExecInitializationPhases();
 }
 
@@ -60,7 +68,7 @@ void ACPP_PlayerController::InitEventBuses()
 	UCPP_GameInstance* GameInstance = Cast<UCPP_GameInstance>(World->GetGameInstance());
 	checkf(GameInstance, TEXT("***> No GameInstance (nullptr) <***"));
 
-	//GameSettings = GameInstance->GameSettings;
+	GameSettings = GameInstance->GameSettings;
 	
 	InputEventBus = GameInstance->GetSubsystem<UCPP_SS_InputEventBus>();
 	checkf(InputEventBus, TEXT("***> No InputEventBus (nullptr) <***"));
@@ -68,6 +76,22 @@ void ACPP_PlayerController::InitEventBuses()
 	GameEventBus = GameInstance->GetSubsystem<UCPP_SS_GameEventBus>();
 	checkf(GameEventBus, TEXT("***> No InputEventBus (nullptr) <***"));
 
+	
+}
+
+
+void ACPP_PlayerController::SpawnCamera()
+{
+	CameraSettings = GameSettings->CameraSettings;
+	FVector Location = FVector::Zero();
+	FActorSpawnParameters SpawnParam;
+
+	SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	CameraActor = GetWorld()->SpawnActor<ACPP_PlayerCamera>(
+		ACPP_PlayerCamera::StaticClass(), Location, CameraSettings->CameraRotation, SpawnParam);
+	checkf(CameraActor, TEXT("***> No PlayerCamera (nullptr) <***"));
+
+	SetViewTargetWithBlend(CameraActor);
 }
 
 
