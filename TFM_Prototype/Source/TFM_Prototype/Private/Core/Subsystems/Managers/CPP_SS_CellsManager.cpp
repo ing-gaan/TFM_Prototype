@@ -255,6 +255,7 @@ void UCPP_SS_CellsManager::ConfigureFirstCell(ACPP_Cell* FirstCell, FVector2f Ax
 	//const FString StrName = UCPP_FuncLib_CellUtils::GetCellOutlinerLabel(AxialLocation);
 	//FirstCell->SetActorLabel(StrName);	
 	FirstCell->SetAxialLocation(AxialLocation);
+	FirstCell->SetNewHayflickLimit(GameSettings->InitHayflickLimit);
 
 	if (FirstCellType.IsValid())
 	{
@@ -274,7 +275,10 @@ void UCPP_SS_CellsManager::DivideCellEvent(FVector2f AxialLocation)
 	{ 
 		return; 
 	}
-		
+	if (CurrentClickedCell->HayflickLimit <= 0)
+	{
+		return;
+	}
 	ACPP_Cell* CellSpawned = CurrentClickedCell->Divide(AxialLocation);
 	if (!CellSpawned) 
 	{	

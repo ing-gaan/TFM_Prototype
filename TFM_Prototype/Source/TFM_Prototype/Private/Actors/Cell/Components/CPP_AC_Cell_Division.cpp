@@ -78,6 +78,9 @@ void UCPP_AC_Cell_Division::ConfigureNewCell(ACPP_Cell* NewCell, FVector2f Axial
 	NewCell->CellType = OwnerCell->CellType;
 	NewCell->SetAxialLocation(AxialLocation);
 
+	OwnerCell->ReduceHayflickLimit();
+	NewCell->SetNewHayflickLimit(OwnerCell->GetHayflickLimit());
+
 	ShareTheEnergy(NewCell);
 }
 

@@ -65,6 +65,19 @@ public:
 
 
 
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Cells|Properties|Life",
+		meta = (ToolTip = "", ClampMin = 0, ForceUnits = "Seconds"))
+	int LifeStateTimeStep{ 1 };
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Cells|Properties|Life",
+		meta = (ToolTip = "", ClampMin = 0, ForceUnits = "Seconds"))
+	int EnergyTimeStep{ 1 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Life")
+	int InitHayflickLimit{ 3 };
+
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers|Age")
 	float MaxCellsBornTimeMultiplier{ 1 };
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers|Age")
@@ -90,17 +103,7 @@ public:
 
 
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Cells|Properties|Life",
-		meta = (ToolTip = "", ClampMin = 0, ForceUnits = "Seconds"))
-	int LifeStateTimeStep{ 1 };
-
-
-
-	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Cells|Properties|Life",
-		meta = (ToolTip = "", ClampMin = 0, ForceUnits = "Seconds"))
-	int EnergyTimeStep{ 1 };
-
-
+	
 
 
 	

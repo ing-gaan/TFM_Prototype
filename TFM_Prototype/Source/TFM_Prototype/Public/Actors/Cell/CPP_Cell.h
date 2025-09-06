@@ -141,6 +141,9 @@ public: /*Functions*/
 	UFUNCTION(BlueprintCallable)
 	float GetCellEnergy() const;
 
+	UFUNCTION(BlueprintCallable)
+	int GetHayflickLimit();
+
 
 
 	
@@ -170,7 +173,8 @@ public: /*Functions*/
 
 	void GetCellsNeighborsInRange(int RangeDistance, TArray<ACPP_Cell*>& OutNeighboursInRange) const;
 
-
+	void SetNewHayflickLimit(int NewHayflickLimit);
+	void ReduceHayflickLimit();
 
 
 
@@ -206,11 +210,13 @@ protected: /*Properties*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FString CellLabel;
 
-
+	int HayflickLimit{ 0 };
 	bool bIsClicked{ false };	
 	bool bIsConnectedToOldestCell{ true };
 	float CurrentMovementSpeed{ 0 };
 	float CurrentRotationSpeed{ 0 };
+	
+	
 	
 
 

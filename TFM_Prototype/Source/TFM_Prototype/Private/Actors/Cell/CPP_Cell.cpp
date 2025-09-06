@@ -387,3 +387,21 @@ void ACPP_Cell::GetCellsNeighborsInRange(int RangeDistance, TArray<ACPP_Cell*>& 
 {
 	CellsManager->GetNeighboursInRange(AxialLocation, RangeDistance, OutNeighboursInRange);
 }
+
+
+int ACPP_Cell::GetHayflickLimit()
+{
+	return HayflickLimit;
+}
+
+
+void ACPP_Cell::SetNewHayflickLimit(int NewHayflickLimit)
+{
+	HayflickLimit = NewHayflickLimit;
+}
+
+
+void ACPP_Cell::ReduceHayflickLimit()
+{
+	HayflickLimit--;
+}
