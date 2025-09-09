@@ -16,6 +16,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FClickOnAuxGridElemEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBeginCursorOverEvent, const AActor*, Actor);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEndCursorOverEvent);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPauseGameEvent, bool, bIsGamePaused);
+
 
 
 class ACPP_Cell;
@@ -47,6 +49,9 @@ public: /*Properties*/
 
 	UPROPERTY(BlueprintAssignable)
 	FEndCursorOverEvent EndCursorOverEventDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FPauseGameEvent PauseGameEventDelegate;
 
 
 
@@ -87,6 +92,13 @@ public: /*Functions*/
 	FORCEINLINE void RaiseEndCursorOverEvent() const
 	{
 		EndCursorOverEventDelegate.Broadcast();
+	}
+
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void RaisePauseGameEvent(bool bIsGamePaused) const
+	{
+		PauseGameEventDelegate.Broadcast(bIsGamePaused);
 	}
 
 
