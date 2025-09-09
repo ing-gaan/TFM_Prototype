@@ -12,7 +12,8 @@
 class UCPP_SM_Cell_Cursor_Context;
 
 
-UCLASS()
+
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TFM_PROTOTYPE_API UCPP_AC_Cell_CursorInteraction : public UCPP_AC_Cell_Base
 {
 	GENERATED_BODY()

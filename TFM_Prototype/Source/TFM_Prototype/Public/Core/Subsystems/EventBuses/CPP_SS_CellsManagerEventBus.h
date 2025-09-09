@@ -7,6 +7,8 @@
 #include "CPP_SS_CellsManagerEventBus.generated.h"
 
 
+class ACPP_Bacteria;
+
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFinishCellDivisionEvent, FVector2f, SpawnAxialLocation);
@@ -18,6 +20,15 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCellsShiftingReturnEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFinishCellsShiftingEvent);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBeginDestroyCellEvent, FVector2f, SpawnAxialLocation);
+
+
+//******* TESTING BACTERIA *******//
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBacteriaAttachedEvent, ACPP_Bacteria*, AttachedBacteria);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBacteriaFreeEvent, bool, bIsBacteriaFree);
+
+
+
+
 
 
 
@@ -48,6 +59,15 @@ public: /*Properties*/
 
 	UPROPERTY()
 	FBeginDestroyCellEvent BeginDestroyCellEventDelegate;
+
+
+
+	//******* TESTING BACTERIA *******//
+	UPROPERTY(BlueprintAssignable)
+	FBacteriaAttachedEvent BacteriaAttachedEventDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FBacteriaFreeEvent BacteriaFreeEventDelegate;
 
 
 
@@ -93,6 +113,21 @@ public: /*Functions*/
 	{
 		BeginDestroyCellEventDelegate.Broadcast(AxialLocation);
 
+	}
+
+
+	//******* TESTING BACTERIA *******//
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void RaiseBacteriaAttachedEvent(ACPP_Bacteria* AttachedBacteria) const
+	{
+		BacteriaAttachedEventDelegate.Broadcast(AttachedBacteria);
+	}
+
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void RaiseBacteriaFreeEvent(bool bIsBacteriaFree) const
+	{
+		BacteriaFreeEventDelegate.Broadcast(bIsBacteriaFree);
 	}
 
 };

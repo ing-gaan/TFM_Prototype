@@ -11,7 +11,9 @@
 class UCPP_DA_CellType;
 
 
-UCLASS()
+
+
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TFM_PROTOTYPE_API UCPP_AC_Cell_Differentiation : public UCPP_AC_Cell_Base
 {
 	GENERATED_BODY()

@@ -17,8 +17,14 @@ class UCPP_SS_InputEventBus;
 class UCPP_SS_CellsManagerEventBus;
 class UCPP_SS_UIEventBus;
 class UCPP_SS_GameEventBus;
+class UCPP_SS_TimeEventBus;
 class UCPP_DA_CellType;
 class UCPP_SS_LocalGameManager;
+class ACPP_Player;
+
+
+
+class ACPP_Bacteria;
 
 
 
@@ -32,6 +38,9 @@ class TFM_PROTOTYPE_API UCPP_SS_CellsManager : public ULocalPlayerSubsystem
 
 public:/*Properties*/
 
+	//******* TESTING BACTERIA *******//
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	ACPP_Bacteria* CurrentAttachedBacteria{ nullptr };
 
 
 
@@ -82,6 +91,10 @@ protected:/*Properties*/
 	UPROPERTY()
 	UCPP_SS_GameEventBus* GameEventBus{ nullptr };
 
+	UPROPERTY()
+	UCPP_SS_TimeEventBus* TimeEventBus{ nullptr };
+
+
 	/*UPROPERTY()
 	const ACPP_PlayerController* PlayerContller { nullptr };*/
 
@@ -92,10 +105,33 @@ protected:/*Properties*/
 	TSoftClassPtr<ACPP_Cell> FirstCellClass{ nullptr };
 
 	UPROPERTY()
+	TSoftClassPtr<ACPP_Cell> PhantomCellClass{ nullptr };
+
+	UPROPERTY()
+	ACPP_Cell* PhantomCell{ nullptr };
+
+	UPROPERTY()
 	TSoftObjectPtr<const UCPP_DA_CellType> FirstCellType{ nullptr };
+
+	UPROPERTY()
+	TSoftObjectPtr<const UCPP_DA_CellType> PhantomCellType{ nullptr };
+
+	UPROPERTY()
+	ACPP_Grid* Grid;
+
+	UPROPERTY()
+	ACPP_Player* Player { nullptr };
 
 
 	float CurrentOrganismSpeed{ 0.f };
+
+
+	//******* TESTING BACTERIA *******//
+	TArray<ACPP_Cell*> NeighborsAffectedByBacteria;
+
+	int DistanceToFarthestNeighbor{0};
+
+	
 
 
 protected:/*Functions*/
@@ -119,7 +155,15 @@ protected:/*Functions*/
 	void BeginEliminateCellEvent();
 
 	UFUNCTION()
-	void Phase1StartedEvent();
+	void Phase1StartedEvent(ACPP_Grid* TheGrid);
+
+	UFUNCTION()
+	void OneSecondEvent(int SecondsCount);
+
+
+	//******* TESTING BACTERIA *******//
+	UFUNCTION()
+	void BacteriaAttachedEvent(ACPP_Bacteria* AttachedBacteria);
 
 
 

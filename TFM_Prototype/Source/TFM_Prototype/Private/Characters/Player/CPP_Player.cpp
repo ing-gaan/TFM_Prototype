@@ -2,13 +2,16 @@
 #include "Core/GameInstance/CPP_GameInstance.h"
 #include "Core/GameSettings/CPP_DA_GridSettings.h"
 #include "Core/GameSettings/CPP_DA_GameSettings.h"
-
+#include "Components/SphereComponent.h"
 
 
 
 ACPP_Player::ACPP_Player()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	SphereCollision = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));	
+	SphereCollision->SetupAttachment(RootComponent);	
+	SphereCollision->SetSphereRadius(10);
 }
 
 
@@ -18,6 +21,7 @@ void ACPP_Player::BeginPlay()
 
 	InitPlayer();
 	SetAxialLocation(GridSettings->FirstAxialLocation);
+
 }
 
 
@@ -38,6 +42,8 @@ void ACPP_Player::InitPlayer()
 
 	GameSettings = GameInstance->GameSettings;
 	GridSettings = GameSettings->GridSettings;	
+
+	
 }
 
 
@@ -52,7 +58,13 @@ FVector2f ACPP_Player::GetAxialLocation() const
 FVector2D ACPP_Player::GetRelativeLocation() const
 {
 	return RelativeLocation;
-};
+}
+
+
+void ACPP_Player::SetSphereCollisionRadius(int Radius)
+{
+	SphereCollision->SetSphereRadius(Radius);
+}
 
 
 

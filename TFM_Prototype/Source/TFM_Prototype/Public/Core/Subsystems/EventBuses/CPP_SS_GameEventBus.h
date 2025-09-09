@@ -9,8 +9,9 @@
 
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPhase1StartedEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPhase1StartedEvent, ACPP_Grid*, TheGrid);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FPhase2StartedEvent, UCPP_SS_CellsManager*, CellsManager, ACPP_Grid*, Grid);
+
 
 
 
@@ -36,9 +37,9 @@ public: /*Properties*/
 public: /*Functions*/
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void RaisePhase1StartedEvent()  const
+	FORCEINLINE void RaisePhase1StartedEvent(ACPP_Grid* TheGrid)  const
 	{
-		Phase1StartedEventDelegate.Broadcast();
+		Phase1StartedEventDelegate.Broadcast(TheGrid);
 	}
 
 

@@ -124,7 +124,7 @@ void ACPP_PlayerController::ExecInitializationPhases()
 	ACPP_Grid* Grid = Cast<ACPP_Grid>(FoundActors[0]);
 
 	//CellsManager->StartManager();
-	GameEventBus->RaisePhase1StartedEvent();
+	GameEventBus->RaisePhase1StartedEvent(Grid);
 
 	//LocalGameManager->StartManager(CellsManager, Grid);
 	GameEventBus->RaisePhase2StartedEvent(CellsManager, Grid);

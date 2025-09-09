@@ -315,7 +315,7 @@ void ACPP_Cell::In_De_creaseCellEnergy(float EnergyVariation)
 
 	CellEnergy += EnergyVariation;
 	CellEnergy = FMath::RoundToFloat(CellEnergy * 100.0f) / 100.0f;
-	BPIE_NotifyEnergy(CellEnergy);
+	//BPIE_NotifyEnergy(CellEnergy);
 }
 
 
@@ -359,22 +359,6 @@ float ACPP_Cell::GetCellEnergy() const
 
 
 
-void ACPP_Cell::NotifyActorBeginOverlap(AActor* OtherActor)
-{
-	ACPP_Molecule* Molecule = Cast<ACPP_Molecule>(OtherActor);
-
-	if (Molecule)
-	{
-		PRINT("Overlap Molecule");
-
-		CellEnergy += Molecule->MoleculeType->EnergyItProvides;
-
-		Molecule->Destroy();
-	}	
-}
-
-
-
 FText ACPP_Cell::GetTooltipText_Implementation() const
 {
 	FText TooltipText = FText::FromString(TEXT("Cell Tooltip"));
@@ -389,9 +373,18 @@ void ACPP_Cell::GetCellsNeighborsInRange(int RangeDistance, TArray<ACPP_Cell*>& 
 }
 
 
-int ACPP_Cell::GetHayflickLimit()
+int ACPP_Cell::GetHayflickLimit() const
 {
 	return HayflickLimit;
+}
+
+
+
+void ACPP_Cell::AffectedByBacteria(bool bIsAffected)
+{
+	CanShift = !bIsAffected;
+	CanDivide = !bIsAffected;
+	CanTransform = !bIsAffected;
 }
 
 
@@ -404,4 +397,20 @@ void ACPP_Cell::SetNewHayflickLimit(int NewHayflickLimit)
 void ACPP_Cell::ReduceHayflickLimit()
 {
 	HayflickLimit--;
+}
+
+
+
+void ACPP_Cell::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	ACPP_Molecule* Molecule = Cast<ACPP_Molecule>(OtherActor);
+
+	if (Molecule)
+	{
+		PRINT("Overlap Molecule");
+
+		CellEnergy += Molecule->MoleculeType->EnergyItProvides;
+
+		Molecule->Destroy();
+	}
 }

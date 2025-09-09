@@ -9,6 +9,7 @@
 #include "Core/Subsystems/EventBuses/CPP_SS_CellsManagerEventBus.h"
 #include "Core/Subsystems/EventBuses/CPP_SS_UIEventBus.h"
 #include "Core/Subsystems/EventBuses/CPP_SS_GameEventBus.h"
+#include "Core/Subsystems/EventBuses/CPP_SS_TimeEventBus.h"
 #include "Core/GameInstance/CPP_GameInstance.h"
 #include "Actors/Cell/Components/CPP_AC_Cell_Division.h"
 #include "Actors/Cell/Components/CPP_AC_Cell_Differentiation.h"
@@ -16,6 +17,11 @@
 #include "Actors/Cell/CPP_DA_CellType.h"
 #include "Core/Subsystems/Managers/CPP_SS_LocalGameManager.h"
 #include "Engine/AssetManager.h"
+#include "Actors/Grid/CPP_Grid.h"
+#include <Kismet/GameplayStatics.h>
+#include "Characters/Player/CPP_Player.h"
+#include "Characters/Bacteria/CPP_Bacteria.h"
+
 
 
 
@@ -62,6 +68,9 @@ void UCPP_SS_CellsManager::InitEventBuses()
 	GameEventBus = GameInstance->GetSubsystem<UCPP_SS_GameEventBus>();
 	checkf(GameEventBus, TEXT("***> No UIEventBus (nullptr) <***"));
 
+	TimeEventBus = GameInstance->GetSubsystem<UCPP_SS_TimeEventBus>();
+	checkf(TimeEventBus, TEXT("***> No UIEventBus (nullptr) <***"));
+
 }
 
 
@@ -72,6 +81,13 @@ void UCPP_SS_CellsManager::RegisterEventFunctions() const
 
 	CellsManagerEventBus->MoveCellsEventDelegate.AddUniqueDynamic(
 		this, &UCPP_SS_CellsManager::MoveCellsEvent);
+
+
+	//******* TESTING BACTERIA *******//
+	CellsManagerEventBus->BacteriaAttachedEventDelegate.AddUniqueDynamic(
+		this, &UCPP_SS_CellsManager::BacteriaAttachedEvent);
+
+
 
 	InputEventBus->ClickOnCellEventDelegate.AddUniqueDynamic(
 		this, &UCPP_SS_CellsManager::ClickOnCellEvent);
@@ -86,6 +102,9 @@ void UCPP_SS_CellsManager::RegisterEventFunctions() const
 
 	UIEventBus->BeginEliminateCellEventDelegate.AddUniqueDynamic(
 		this, &UCPP_SS_CellsManager::BeginEliminateCellEvent);
+
+	TimeEventBus->OneSecondEventDelegate.AddUniqueDynamic(
+		this, &UCPP_SS_CellsManager::OneSecondEvent);
 }
 
 
@@ -96,6 +115,13 @@ void UCPP_SS_CellsManager::UnRegisterEventFunctions() const
 
 	CellsManagerEventBus->MoveCellsEventDelegate.RemoveDynamic(
 		this, &UCPP_SS_CellsManager::MoveCellsEvent);
+
+
+	//******* TESTING BACTERIA *******//
+	CellsManagerEventBus->BacteriaAttachedEventDelegate.RemoveDynamic(
+		this, &UCPP_SS_CellsManager::BacteriaAttachedEvent);
+
+
 
 	InputEventBus->ClickOnCellEventDelegate.RemoveDynamic(
 		this, &UCPP_SS_CellsManager::ClickOnCellEvent);
@@ -109,13 +135,17 @@ void UCPP_SS_CellsManager::UnRegisterEventFunctions() const
 
 	UIEventBus->BeginEliminateCellEventDelegate.RemoveDynamic(
 		this, &UCPP_SS_CellsManager::BeginEliminateCellEvent);
+
+	TimeEventBus->OneSecondEventDelegate.RemoveDynamic(
+		this, &UCPP_SS_CellsManager::OneSecondEvent);
 }
 
 
 
-void UCPP_SS_CellsManager::Phase1StartedEvent()
+void UCPP_SS_CellsManager::Phase1StartedEvent(ACPP_Grid* TheGrid)
 {
 	StartManager();
+	Grid = TheGrid;
 }
 
 
@@ -124,6 +154,8 @@ void UCPP_SS_CellsManager::StartManager()
 	CellsMap.Empty();	
 	AddFirstCell();	
 	ACPP_Cell::CellsManager = this;
+	Player = Cast<ACPP_Player>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	checkf(Player, TEXT("***> No PlayerPawn. Cast fail (nullptr) <***"));
 }
 
 
@@ -137,6 +169,7 @@ void UCPP_SS_CellsManager::MoveCellsEvent(bool bCellsMoving)
 			Elem.Value->MoveCell(bCellsMoving, false);
 		}		
 	}
+	PhantomCell->MoveCell(bCellsMoving, false);
 }
 
 
@@ -170,8 +203,8 @@ void UCPP_SS_CellsManager::CancelEvent()
 
 
 void UCPP_SS_CellsManager::FinishCellDifferentiationEvent(const TSoftObjectPtr<UCPP_DA_CellType> NewCellType)
-{
-	if (!CurrentClickedCell->HasThisAbility(UCPP_AC_Cell_Differentiation::StaticClass())) 
+{	
+	if (!CurrentClickedCell->HasThisAbility(UCPP_AC_Cell_Differentiation::StaticClass()) || !CurrentClickedCell->CanTransform)
 	{ 
 		return; 
 	}
@@ -203,10 +236,15 @@ void UCPP_SS_CellsManager::AddFirstCell()
 void UCPP_SS_CellsManager::SpawnFirstCell()
 {
 	TArray<FSoftObjectPath> AssetsToLoad;
-	FirstCellClass = GameSettings->FirstCellBPClass;
+	FirstCellClass = GameSettings->FirstCellBPClass;	
 	FirstCellType = GameSettings->FirstCellType;
+	PhantomCellClass = GameSettings->PhantomCellClass;
+	PhantomCellType = GameSettings->PhantomCellType;
+
 	AssetsToLoad.Add(FirstCellClass.ToSoftObjectPath());
 	AssetsToLoad.Add(FirstCellType.ToSoftObjectPath());
+	AssetsToLoad.Add(PhantomCellClass.ToSoftObjectPath());
+	AssetsToLoad.Add(PhantomCellType.ToSoftObjectPath());
 
 	FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
 
@@ -233,7 +271,12 @@ void UCPP_SS_CellsManager::FirstCellClassSoftRefLoaded()
 	FirstCell->In_De_creaseCellEnergy(GameSettings->FirstCellInitEnergy);
 	AddCellSpawned(FirstCell);
 
-	
+	Location.Z = GridSettings->GridHiddenHeightFromGround;
+
+	PhantomCell = SpawnCell(Location, Rotation, PhantomCellClass.Get());
+	PhantomCell->SetAxialLocation(FirstCellAxialLocation);
+	PhantomCell->LoadCellTypeComponents(PhantomCellType.Get());
+	Player->PhantomCell = PhantomCell;
 }
 
 
@@ -271,7 +314,7 @@ void UCPP_SS_CellsManager::DivideCellEvent(FVector2f AxialLocation)
 	{ 
 		return; 
 	}
-	if (!CurrentClickedCell->HasThisAbility(UCPP_AC_Cell_Division::StaticClass())) 
+	if (!CurrentClickedCell->HasThisAbility(UCPP_AC_Cell_Division::StaticClass()) || !CurrentClickedCell->CanDivide) 
 	{ 
 		return; 
 	}
@@ -279,10 +322,20 @@ void UCPP_SS_CellsManager::DivideCellEvent(FVector2f AxialLocation)
 	{
 		return;
 	}
+
 	ACPP_Cell* CellSpawned = CurrentClickedCell->Divide(AxialLocation);
 	if (!CellSpawned) 
 	{	
 		return;	
+	}
+
+	int DistanceToNewCell = UCPP_FuncLib_CellUtils::GetDistanceBetweenAxialLocations(FVector2f::Zero(), AxialLocation);
+
+	if (DistanceToNewCell > DistanceToFarthestNeighbor)
+	{
+		DistanceToFarthestNeighbor = DistanceToNewCell;
+		int CollRadius = (DistanceToFarthestNeighbor + 1) * 10;
+		Player->SetSphereCollisionRadius(CollRadius);
 	}
 
 	AddCellSpawned(CellSpawned);
@@ -310,6 +363,9 @@ void UCPP_SS_CellsManager::AddCellSpawned(ACPP_Cell* NewCell)
 	//CellsBirthOrder.Emplace(NewCell);
 
 	CellsManagerEventBus->RaiseFinishCellDivisionEvent(NewAxialLoc);
+
+
+
 	//UnclickCurrentCell();
 }
 
@@ -328,9 +384,8 @@ void UCPP_SS_CellsManager::UnclickCurrentCell()
 
 void UCPP_SS_CellsManager::StartShiftingCellsLocations(const ACPP_Cell* FirstCellToShift) const
 {		
-	if (UCPP_SS_LocalGameManager::AreCellsShifting())
-	{ 
-		
+	if (UCPP_SS_LocalGameManager::AreCellsShifting() || !CurrentClickedCell->CanShift)
+	{ 		
 		return; 
 	}
 	CellsManagerEventBus->RaiseBeginCellsShiftingEvent(FirstCellToShift);
@@ -402,6 +457,7 @@ void UCPP_SS_CellsManager::UpdateCellToTempLocation(ACPP_Cell* Cell)
 	//Cell->ReturnToOriginAxialLocation();
 }
 
+
 void UCPP_SS_CellsManager::DestroyCell(ACPP_Cell* Cell)
 {
 	CellsManagerEventBus->RaiseBeginDestroyCellEvent(Cell->GetAxialLocation());
@@ -465,3 +521,80 @@ float UCPP_SS_CellsManager::GetCurrentOrganismRotationSpeed()
 
 	return CurrentOrganismSpeed;
 }
+
+
+
+//******* TESTING BACTERIA *******//
+void UCPP_SS_CellsManager::BacteriaAttachedEvent(ACPP_Bacteria* AttachedBacteria)
+{
+	if (CurrentAttachedBacteria)
+	{
+		return;
+	}
+
+	CurrentAttachedBacteria = AttachedBacteria;
+	
+	/////////
+	TArray<FVector2f> CellsKeys;
+	CellsMap.GetKeys(CellsKeys);
+	FVector2f RandCellAxLoc;
+	for (FVector2f AxLoc : CellsKeys)
+	{
+		RandCellAxLoc = AxLoc;
+		break;
+	}
+	///////
+
+	const TSet<FVector2f>* FreeAxLocs = Grid->GetAllFreeNeighbours();
+	FVector2f BactAxLoc;
+	for (FVector2f AxLoc : *FreeAxLocs)
+	{
+		if (UCPP_FuncLib_CellUtils::GetDistanceBetweenAxialLocations(AxLoc, RandCellAxLoc) == 1)
+		{
+			BactAxLoc = AxLoc;
+			break;
+		}		
+	}
+	PhantomCell->SetAxialLocation(BactAxLoc);
+	Grid->BacteriaOnGrid(BactAxLoc);
+	AddCellSpawned(PhantomCell);
+
+	PhantomCell->GetCellsNeighborsInRange(1, NeighborsAffectedByBacteria);
+
+	for (ACPP_Cell* Cell : NeighborsAffectedByBacteria)
+	{
+		Cell->AffectedByBacteria(true);
+	}
+
+}
+
+
+void UCPP_SS_CellsManager::OneSecondEvent(int SecondsCount)
+{
+	if (!CurrentAttachedBacteria)
+	{
+		return;
+	}
+
+	float StolenPoints = 0;
+
+	for (ACPP_Cell* Cell : NeighborsAffectedByBacteria)
+	{
+		Cell->In_De_creaseCellEnergy(-1);
+		StolenPoints++;
+	}
+
+	if (CurrentAttachedBacteria->AddStolenLifePoints(StolenPoints))
+	{
+		CurrentAttachedBacteria = nullptr;
+		for (ACPP_Cell* Cell : NeighborsAffectedByBacteria)
+		{
+			Cell->AffectedByBacteria(false);
+		}
+		DestroyCell(PhantomCell);
+		CellsManagerEventBus->RaiseBacteriaFreeEvent(true);
+		NeighborsAffectedByBacteria.Empty();
+	}
+}
+
+

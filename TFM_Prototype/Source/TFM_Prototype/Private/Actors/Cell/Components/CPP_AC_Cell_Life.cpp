@@ -236,7 +236,7 @@ void UCPP_AC_Cell_Life::ChangeCellLifeState(std::optional<TSubclassOf<UCPP_SM_Ce
 	}
 	OwnerCell->SetCellLifeState(LifeSMContext->CurrentState);
 
-	//PRINT("%s in STATE= %s", *(OwnerCell->GetActorLabel()), *(OwnerCell->CellLifeState->GetName()));
+	//PRINT("%s in STATE= %s", *(OwnerCell->GetActorLabel()), *(OwnerCell->GetCellLifeState()->GetName()));
 }
 
 

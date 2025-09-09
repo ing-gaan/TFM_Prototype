@@ -94,11 +94,22 @@ public: /*Properties*/
 	UPROPERTY()
 	const UCPP_DA_GameSettings* GameSettings{ nullptr };
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	const UCPP_DA_CellType* CellType{ nullptr };
 	
 	UPROPERTY()
 	UStaticMeshComponent* CellStaticMeshComponent{ nullptr };
+
+
+	//******* TESTING BACTERIA *******//
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool CanDivide{ true };
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool CanTransform{ true };
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool CanShift{ true };
+
+
 
 
 
@@ -142,7 +153,13 @@ public: /*Functions*/
 	float GetCellEnergy() const;
 
 	UFUNCTION(BlueprintCallable)
-	int GetHayflickLimit();
+	int GetHayflickLimit() const;
+
+
+	
+	//******* TESTING BACTERIA *******//
+	UFUNCTION()
+	void AffectedByBacteria(bool bIsAffected);
 
 
 
@@ -157,6 +174,7 @@ public: /*Functions*/
 	bool IsClicked() const;
 	FVector2f GetTempAxialLocation() const;
 	void UpdateToTemporalLocation();
+
 
 	/**
 	 * @brief Increases or decreases Energy.
@@ -220,11 +238,12 @@ protected: /*Properties*/
 	
 
 
+
 protected: /*Functions*/
 	
 	/// Called in In_De_creaseCellEnergy. Only to be implemented in Blueprint. 
-	UFUNCTION(BlueprintImplementableEvent)
-	void BPIE_NotifyEnergy(float Energy);
+	/*UFUNCTION(BlueprintImplementableEvent)
+	void BPIE_NotifyEnergy(float Energy);*/
 
 
 

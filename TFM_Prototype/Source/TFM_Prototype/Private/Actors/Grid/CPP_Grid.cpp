@@ -160,7 +160,7 @@ void ACPP_Grid::BeginCellDivisionEvent()
 
 void ACPP_Grid::FinishCellDivisionEvent(FVector2f SpawnAxialLocation)
 {
-	//AddUsedAxialLocation(SpawnAxialLocation);
+	StaticMeshInstancesComponent->SetInstancesTransforms(FreeNeighbours);
 }
 
 void ACPP_Grid::BeginDestroyCellEvent(FVector2f AxialLocation)
@@ -237,6 +237,10 @@ void ACPP_Grid::ClickOnStaticMeshInstance(FVector2f AxialLocation)
 
 void ACPP_Grid::ClickOnGrid(FVector2f AxialLocation)
 {		
+	if (CurrentClickedCell->GetHayflickLimit() <=0)
+	{
+		return;
+	}
 	AddUsedAxialLocation(AxialLocation);
 	InputEventBus->RaiseClickOnGridEvent(AxialLocation);	
 }
@@ -277,4 +281,11 @@ void ACPP_Grid::AddUsedAxialLocation(FVector2f UsedAxialLocation)
 	UsedAxialLocations.Emplace(UsedAxialLocation);
 	AddNewFreeNeighbours(UsedAxialLocation);
 	StaticMeshInstancesComponent->SetInstancesTransforms(FreeNeighbours);
+}
+
+
+
+void ACPP_Grid::BacteriaOnGrid(FVector2f AttachedAxialLocation)
+{
+	AddUsedAxialLocation(AttachedAxialLocation);
 }

@@ -39,10 +39,16 @@ bool UCPP_SM_Cell_CursorSt_Normal::BeginCursorOver()
 {			
 
 	if (UCPP_SS_LocalGameManager::IsACellDividing())
-	{		
-		FVector2f ClickedCellAxLoc = UCPP_SS_LocalGameManager::GetCurrentClickedCell()->GetAxialLocation();
+	{	
+		const ACPP_Cell* ClickedCell = UCPP_SS_LocalGameManager::GetCurrentClickedCell();
+		FVector2f ClickedCellAxLoc = ClickedCell->GetAxialLocation();
 		FVector2f OwnerCellAxLoc = SMContext->OwnerCell->GetAxialLocation();
 		bool ClickedAndOwnerCellsAreNeighbours = UCPP_FuncLib_CellUtils::AreNeighbours(OwnerCellAxLoc, ClickedCellAxLoc);
+
+		if (ClickedCell->GetHayflickLimit() <= 0)
+		{
+			return false;
+		}
 
 		if (ClickedAndOwnerCellsAreNeighbours)
 		{			

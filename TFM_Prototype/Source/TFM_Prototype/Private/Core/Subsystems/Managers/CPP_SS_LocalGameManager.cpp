@@ -6,6 +6,7 @@
 #include "Core/Subsystems/EventBuses/CPP_SS_GameEventBus.h"
 #include "Utils/Enums/CPPE_CellShiftState.h"
 #include "Actors/Grid/CPP_Grid.h"
+#include "Core/Subsystems/Managers/CPP_SS_CellsManager.h"
 
 
 
@@ -201,6 +202,7 @@ const UCPP_SS_CellsManager* UCPP_SS_LocalGameManager::GetCellsManager() const
 {
 	return CellsManager;
 }
+
 
 
 const ACPP_Grid* UCPP_SS_LocalGameManager::GetGrid() const

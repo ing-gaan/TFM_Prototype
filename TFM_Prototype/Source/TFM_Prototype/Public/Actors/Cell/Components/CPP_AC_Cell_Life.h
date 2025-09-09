@@ -22,7 +22,8 @@ class UCPP_SM_Cell_Life_Base;
 
 
 
-UCLASS()
+
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TFM_PROTOTYPE_API UCPP_AC_Cell_Life : public UCPP_AC_Cell_Base
 {
 	GENERATED_BODY()

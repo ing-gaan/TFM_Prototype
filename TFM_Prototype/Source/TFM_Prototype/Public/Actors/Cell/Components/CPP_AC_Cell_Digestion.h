@@ -9,8 +9,7 @@
 
 
 
-
-UCLASS()
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TFM_PROTOTYPE_API UCPP_AC_Cell_Digestion : public UCPP_AC_Cell_Base
 {
 	GENERATED_BODY()

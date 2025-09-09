@@ -38,6 +38,9 @@ public:
 public:/*Properties*/
 
 	UPROPERTY()
+	FMoveGridEvent MoveGridEventDelegate;
+
+	UPROPERTY()
 	const ACPP_Player* Player{ nullptr };
 
 
@@ -47,8 +50,10 @@ public:/*Fucntions*/
 	UFUNCTION()
 	void ClickOnStaticMeshInstance(FVector2f AxialLocation);
 
-	UPROPERTY()
-	FMoveGridEvent MoveGridEventDelegate;
+	UFUNCTION()
+	void BacteriaOnGrid(FVector2f AttachedAxialLocation);
+		
+
 
 	const TSet<FVector2f>* GetAllFreeNeighbours() const;	
 	void UpdateToTempLocations(FVector2f LastAxialLocation);

@@ -38,30 +38,37 @@ public:
 	float StartCellsManagerAfter{ 1 };
 
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "BeginPlay|Defaults|Cells",
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "BeginPlay|Defaults",
 		meta = (ToolTip = "", ClampMin = 0, ForceUnits = "cm/s"))
 	float BaseOrganismMoveSpeed{ 500 };
 	
-	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "BeginPlay|Defaults|Cells",
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "BeginPlay|Defaults",
 		meta = (ToolTip = "", ClampMin = 0, ForceUnits = "dg/s"))
 	float BaseRotationSpeed{ 1 };
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "BeginPlay|Defaults|Cells",
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "BeginPlay|Defaults",
 		meta = (ToolTip = "", ClampMin = 0, Units = "Percent"))
 	int FirstCellInitEnergy{ 50 };
+
 
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Locations")
 	float CellsDefaultHeightFromGround{ 10 };
 
+
+
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Cells|Types")
 	TSoftClassPtr<ACPP_Cell> FirstCellBPClass{ nullptr };
-	
-	
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Cells|Types")
 	TSoftObjectPtr<const UCPP_DA_CellType> FirstCellType{ nullptr };
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Cells|Types")
+	TSoftClassPtr<ACPP_Cell> PhantomCellClass{ nullptr };
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Cells|Types")
+	TSoftObjectPtr<const UCPP_DA_CellType> PhantomCellType{ nullptr };
 
 
 

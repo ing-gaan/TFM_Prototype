@@ -13,6 +13,9 @@ class UCPP_DA_GameSettings;
 class UCPP_DA_CameraSettings;
 class USpringArmComponent;
 class UCameraComponent;
+class ACPP_Cell;
+class USphereComponent;
+
 
 
 
@@ -27,8 +30,10 @@ public:
 
 public:/*Properties*/
 
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	ACPP_Cell* PhantomCell{ nullptr };
 
+	
 
 
 
@@ -43,7 +48,8 @@ public:/*Functions*/
 	UFUNCTION(BlueprintCallable)
 	FVector2D GetRelativeLocation() const;
 
-	
+	UFUNCTION(BlueprintCallable)
+	void SetSphereCollisionRadius(int Radius);
 
 
 protected:/*Properties*/
@@ -60,7 +66,8 @@ protected:/*Properties*/
 	UPROPERTY()
 	const UCPP_DA_GameSettings* GameSettings { nullptr };
 
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	USphereComponent* SphereCollision;
 
 
 protected:/*Functions*/

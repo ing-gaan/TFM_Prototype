@@ -211,11 +211,12 @@ void UCPP_AC_Grid_StaticMeshInstances::SetInstancesInteractivity(FVector2f Axial
 
 	FVector2f ClickedAxLoc = Clicked->GetAxialLocation();
 	bool bIsCloseToCLicked = UCPP_FuncLib_CellUtils::AreNeighbours(AxialLocation, ClickedAxLoc);
-	InstancesInteractivity[Index] = bIsCloseToCLicked;
 	
-	if (bIsCloseToCLicked)
+	InstancesInteractivity[Index] = false;
+	if (bIsCloseToCLicked && Clicked->GetHayflickLimit() > 0 && Clicked->CanDivide)
 	{
 		SetValuesToOneInstance(Index, GridSettings->DefaultColor);
+		InstancesInteractivity[Index] = true;
 		return;
 	}
 
