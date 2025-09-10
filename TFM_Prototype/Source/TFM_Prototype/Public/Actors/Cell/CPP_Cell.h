@@ -268,7 +268,8 @@ protected: /*Functions*/
 	
 	FText GetTooltipText_Implementation() const override;
 
-
+	UFUNCTION(BlueprintImplementableEvent)
+	void BPIE_NotifyEnergy();
 
 
 

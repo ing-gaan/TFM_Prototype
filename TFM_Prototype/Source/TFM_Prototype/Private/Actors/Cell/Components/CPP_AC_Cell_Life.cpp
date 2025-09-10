@@ -218,7 +218,7 @@ void UCPP_AC_Cell_Life::DecreaseEnergy()
 	if (OwnerCell->GetCellEnergy() <= 0)
 	{
 		ChangeCellLifeState(UCPP_SM_Cell_LifeSt_Dying::StaticClass());
-		PRINT("%s DYING - NO ENERGY", *(OwnerCell->GetActorLabel()));
+		//PRINT("%s DYING - NO ENERGY", *(OwnerCell->GetActorLabel()));
 	}
 }
 

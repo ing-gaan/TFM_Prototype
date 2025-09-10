@@ -26,6 +26,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBeginDestroyCellEvent, FVector2f, S
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBacteriaAttachedEvent, ACPP_Bacteria*, AttachedBacteria);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBacteriaFreeEvent, bool, bIsBacteriaFree);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FLastCellDiedEvent);
+
 
 
 
@@ -68,6 +70,9 @@ public: /*Properties*/
 
 	UPROPERTY(BlueprintAssignable)
 	FBacteriaFreeEvent BacteriaFreeEventDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FLastCellDiedEvent LastCellDiedEventDelegate;
 
 
 
@@ -129,5 +134,13 @@ public: /*Functions*/
 	{
 		BacteriaFreeEventDelegate.Broadcast(bIsBacteriaFree);
 	}
+
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void RaiseLastCellDiedEvent() const
+	{
+		LastCellDiedEventDelegate.Broadcast();
+	}
+
 
 };

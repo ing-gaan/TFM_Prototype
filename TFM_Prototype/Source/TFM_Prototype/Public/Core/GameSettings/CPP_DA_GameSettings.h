@@ -83,6 +83,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Life")
 	int InitHayflickLimit{ 3 };
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Life")
+	float EnergyNeededToDivide{ 60};
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Life")
+	float EnergyNeededToDifferentiate{ 60 };
+
+
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cells|Properties|Multipliers|Age")

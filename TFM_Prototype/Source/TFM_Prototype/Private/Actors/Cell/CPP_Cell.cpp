@@ -299,7 +299,7 @@ void ACPP_Cell::UpdateToTemporalLocation()
 void ACPP_Cell::SetCellLabel()
 {
 	CellLabel = UCPP_FuncLib_CellUtils::GetCellOutlinerLabel(AxialLocation);
-	SetActorLabel(CellLabel);
+	//SetActorLabel(CellLabel);
 }
 
 
@@ -315,7 +315,14 @@ void ACPP_Cell::In_De_creaseCellEnergy(float EnergyVariation)
 
 	CellEnergy += EnergyVariation;
 	CellEnergy = FMath::RoundToFloat(CellEnergy * 100.0f) / 100.0f;
-	//BPIE_NotifyEnergy(CellEnergy);
+
+
+	if (CellEnergy<= 0)
+	{
+		CellEnergy = 0;
+	}
+
+	BPIE_NotifyEnergy();
 }
 
 
@@ -407,7 +414,7 @@ void ACPP_Cell::NotifyActorBeginOverlap(AActor* OtherActor)
 
 	if (Molecule)
 	{
-		PRINT("Overlap Molecule");
+		//PRINT("Overlap Molecule");
 
 		CellEnergy += Molecule->MoleculeType->EnergyItProvides;
 

@@ -73,7 +73,7 @@ ACPP_Cell* UCPP_AC_Cell_Division::SpawnCell(FVector CellLocation, FRotator CellR
 void UCPP_AC_Cell_Division::ConfigureNewCell(ACPP_Cell* NewCell, FVector2f AxialLocation)
 {
 	const FString StrName = UCPP_FuncLib_CellUtils::GetCellOutlinerLabel(AxialLocation);
-	NewCell->SetActorLabel(StrName);	
+	//NewCell->SetActorLabel(StrName);	
 	NewCell->LoadCellTypeComponents(OwnerCell->CellType);
 	NewCell->CellType = OwnerCell->CellType;
 	NewCell->SetAxialLocation(AxialLocation);

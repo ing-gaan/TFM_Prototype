@@ -462,6 +462,12 @@ void UCPP_SS_CellsManager::DestroyCell(ACPP_Cell* Cell)
 {
 	CellsManagerEventBus->RaiseBeginDestroyCellEvent(Cell->GetAxialLocation());
 	CellsMap.Remove(Cell->GetAxialLocation());
+	
+	if (CellsMap.Num() == 0)
+	{
+		CellsManagerEventBus->RaiseLastCellDiedEvent();
+	}
+	
 }
 
 
